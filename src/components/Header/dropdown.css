@@ -1,0 +1,42 @@
+/* Base dropdown styling */
+.dropdown-menu {
+	position: absolute;
+	top: 140%;
+	left: 50%;
+	transform: translateX(-50%);
+	transition: all 0.2s ease;
+	padding: 1rem 2rem;
+	width: 600px;
+	z-index: 9999;
+	border-radius: 8px;
+	background-color: var(--secondary);
+}
+
+/* Flex container for the columns */
+.dropdown-menu {
+	display: flex;
+	justify-content: space-between;
+}
+
+/* Styling for each column */
+.dropdown-column {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+    p{
+        font-size: 15px;
+        
+        color: var(--tertiary);
+    }
+}
+
+/* Link styling */
+.dropdown-link {
+	color: var(--primary) !important;
+	text-decoration: none;
+	font-size: 1rem;
+    font-weight: 600;
+	&:hover {
+		color: #03a3bd !important;
+	}
+}

@@ -1,0 +1,71 @@
+body {
+	font-family: "Poppins", sans-serif;
+	padding: 0;
+	margin: 0;
+	overflow-x: hidden;
+}
+.tax-header {
+	position: sticky;
+	top: 0px;
+	background-color: var(--primary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 999;
+	
+}
+.tax-header-wrap {
+	/* border: 1px solid white; */
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 30px 70px;
+	width: 70%;
+}
+.tax-logo {
+	/* border: 1px solid white; */
+	img {
+		width: 165px;
+	}
+}
+
+.tax-top-nav {
+	/* border: 1px solid white; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 30px;
+	a {
+        position: relative;
+        font-size: 17px;
+		text-decoration: none;
+		color: var(--secondary);
+        &:hover{
+            color: var(--accent);
+        }
+        i{
+            margin-left: 5px;
+        }
+	}
+}
+
+.tax-top-nav .active {
+	color: var(--accent);
+}
+.tax-header-btn{
+    button{
+        border: 1px solid white;
+        border-radius: 5px;
+        color: var(--secondary);
+        font-size: 16px;
+        border: none;
+        outline: none;
+        padding: 15px 30px;
+        background-color: #03a3bd;
+
+        &:hover{
+            cursor: pointer;
+            background-color: #69bcb2;
+        }
+    }
+}

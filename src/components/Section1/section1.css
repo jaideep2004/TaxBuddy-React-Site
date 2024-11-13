@@ -1,0 +1,72 @@
+.tax-section1 {
+	/* border: 1px solid white; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 500px;
+	padding-top: 20px;
+	background-color: var(--primary);
+	color: var(--secondary);
+}
+.tax-section1-wrap {
+	/* border: 1px solid white; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 70%;
+}
+.tax-section1-left {
+	/* border: 1px solid white; */
+	gap: 20px;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	h1 {
+		padding: 0;
+		margin: 0;
+		font-size: 55px;
+		font-weight: 600;
+	}
+}
+.tax-type-animate {
+	color: var(--accent);
+	height: 40px;
+}
+.tax-section1-input {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	input {
+		border: none;
+		outline: none;
+		font-size: 16px;
+		padding: 15px;
+		min-width: 250px;
+		border-radius: 9px;
+	}
+	button {
+		border: none;
+		outline: none;
+		padding: 15px 30px;
+		background-color: #03a3bd;
+		font-size: 16px;
+		color: var(--secondary);
+		border-radius: 9px;
+		&:hover {
+			cursor: pointer;
+			background-color: #69bcb2;
+		}
+	}
+}
+.tax-section1-right {
+	/* border: 1px solid white; */
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	img {
+		width: 551px;
+		margin: 0;
+	}
+}

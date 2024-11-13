@@ -1,0 +1,15 @@
+.tax-section2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--tertiary);
+    min-height: 100px;
+}
+.tax-section2-wrap{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    gap: 45px;
+    width: 70%;
+}

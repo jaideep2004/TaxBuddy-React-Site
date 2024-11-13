@@ -1,0 +1,38 @@
+.tax-section3 {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* height: 50vh; */
+}
+.tax-section3wrap {
+	min-height: 100px;
+	width: 70%;
+	display: flex;
+	padding: 50px 0px;
+	/* align-items: center; */
+	justify-content: space-between;
+}
+.tax-section3-col {
+	display: flex;
+	flex-direction: column;
+	border-right: 1px solid lightgray;
+	padding: 10px 30px;
+	p:nth-child(3) {
+		/* border: 1px solid black; */
+		max-width: 300px;
+		text-wrap: wrap;
+		font-size: 15px;
+	}
+}
+
+.tax-user {
+	margin: 0;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	h1 {
+		font-size: 30px;
+		font-weight: 500;
+		min-width: 100px;
+	}
+}

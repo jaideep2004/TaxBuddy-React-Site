@@ -1,0 +1,32 @@
+.tax-section6{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tax-section6-wrap{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   margin-top: 30px;
+   /* padding: 20px 10px; */
+}
+.tax-section6-left{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e8f3b5a3;
+    border-radius: 5px;
+    flex: 1;
+    img{
+        width: 550px;
+    };
+}
+.tax-section6-right{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 25px;
+    h1{
+        font-size: 45px;
+    }
+}
