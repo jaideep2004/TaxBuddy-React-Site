@@ -22,12 +22,16 @@
 .faq-list {
 	border-radius: 8px;
 	overflow: hidden;
+	padding: 10px;
+	color: var(--secondary);
 }
 
 .faq-item {
-	border-bottom: 1px solid #ddd;
+	box-shadow: inset 2px 2px 4px var(--secondary);
+	margin-top: 10px;
+	border-radius: 10px;
 	padding: 15px 20px;
-	background-color: #f9f9f9;
+	background-color: var(--primary);
 	transition: background-color 0.3s;
 }
 
@@ -40,18 +44,18 @@
 	justify-content: space-between;
 	align-items: center;
 	cursor: pointer;
-	font-size: 19px;
+	font-size: 18px;
 }
 
 .faq-question:hover {
-	color: var(--primary);
+	color: var(--accent);
 }
 
 .faq-answer {
     overflow: hidden;
     max-height: 0;
     opacity: 0;
-    transition: max-height 0.4s ease, opacity 0.4s ease;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
 }
 
 .faq-answer.open {

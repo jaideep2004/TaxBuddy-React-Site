@@ -1,6 +1,9 @@
 import React from "react";
 import "./section7.css";
 const Section7 = () => {
+	const boxStyle = {
+		backgroundImage: `url(${'./images/s13.png'})`,
+	}
 	return (
 		<div className='tax-section7'>
 			<div className='tax-section7-wrap'>
@@ -33,7 +36,7 @@ const Section7 = () => {
 						<button className='tax-form-btn'>Register</button>
 					</form>
 				</div>
-				<div className='tax-section7-right'>
+				<div className='tax-section7-right' style={boxStyle}>
 					<img src='./images/s8.png' alt='' />
 				</div>
 			</div>

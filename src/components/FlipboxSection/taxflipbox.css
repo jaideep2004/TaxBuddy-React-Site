@@ -1,0 +1,61 @@
+.flip-box {
+    perspective: 1000px;
+    cursor: pointer;
+    width: 270px;
+    height: 280px;
+    
+  }
+  
+  .flip-box-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+  
+  .flip-box-inner.flipped {
+    transform: rotateY(180deg);
+  }
+  
+  .flip-box-front, .flip-box-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    color: var(--tertiary);
+    border-radius: 8px;
+  }
+  
+  .flip-box-front {
+    background-color: lightblue;
+    i{
+        color: var(--primary);
+    }
+    h2{
+        font-size: 22px;
+		font-weight: 500;
+    }
+  }
+  
+  .flip-box-back {
+    background-color: var(--primary);
+    color: var(--secondary);
+    transform: rotateY(180deg);
+    box-shadow: inset  2px 2px var(--accent);
+    /* padding: 10px; */
+    p{
+        font-size: 16px;
+        padding: 10px;
+    }
+    i{
+        color: var(--accent);
+    }
+  }
+  

@@ -13,11 +13,12 @@
 	h1 {
 		font-size: 40px;
 		color: var(--secondary);
+		margin: 0;
 	}
 }
 .tax-section7-head {
 	p {
-		max-width: 550px;
+		max-width: 540px;
 		font-size: 14px;
 		color: white;
 	}
@@ -31,14 +32,16 @@
 	border-radius: 8px;
 	display: flex;
 	flex-direction: column;
+	background-color: var(--secondary);
 	/* border-top: 6px solid var(--accent); */
-	padding: 15px;
-	box-shadow:  2px 2px 4px white;
+	padding: 19px;
+	max-width: 480px;
+	box-shadow:  inset 1px 1px 5px var(--primary);
 	backdrop-filter: blur(20px);
 	gap: 15px;
 	/* box-shadow: 2px 2px 0px var(--accent); */
 	label {
-		color: var(--secondary);
+		color: var(--primary);
 	}
 	input {
         margin: 0;
@@ -64,11 +67,11 @@
 
 .tax-section7-right {
 	
-	background-image: url("./images/s13.png");
+	/* background-image: url("./images/s13.png"); */
 	background-repeat: no-repeat;
 	background-size: contain;
 	background-position: center;
-   
+   padding-top: 10px;
     
 }
 

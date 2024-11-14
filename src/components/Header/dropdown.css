@@ -16,6 +16,8 @@
 .dropdown-menu {
 	display: flex;
 	justify-content: space-between;
+	gap: 20px;
+	box-shadow: 1px 1px 2px gray;
 }
 
 /* Styling for each column */
@@ -25,7 +27,7 @@
 	gap: 1rem;
     p{
         font-size: 15px;
-        
+        margin: 0;
         color: var(--tertiary);
     }
 }

@@ -28,7 +28,7 @@ export const Section8 = () => {
         infinite: true,
         autoplay: true,
         fade: true, 
-		speed: 600,
+		speed: 750,
 		slidesToShow: 1,
         slidesToScroll: 1,
         centerMode: true,
@@ -50,7 +50,7 @@ export const Section8 = () => {
 		},
 		{
 			id: 3,
-			img: "./images/s5.png",
+			img: "./images/s3.jpg",
 			name: "Jack",
 			desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Saepe ratione odio fuga nemo illo quasi temporibus, officia a voluptatem quia sed ab quibusdam, autem deleniti at perferendis alias harum ex",
 		},

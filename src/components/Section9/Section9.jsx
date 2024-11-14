@@ -4,22 +4,27 @@ import "./section9.css";
 const Section9 = () => {
 	const faqData = [
 		{
-			question: "Lorem ipsum dolor, sit amet consectetur adipisicing elit ",
+			question: "Lorem ipsum dolor, sit amet consectetur adipisicing elit ?",
 			answer:
 				"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vitae quae ea placeat necessitatibus tempore animi est, magni id cumque dicta fugiat similique sunt aut distinctio, a perspiciatis quod quaerat! placeat necessitatibus tempore animi est, magni id eos, cumque dicta fugiat similique sunt aut distinctio, a perspiciatis quod quaerat ",
 		},
 		{
-			question: "Lorem ipsum dolor, sit amet consectetur adipisicing elit ",
+			question: "Lorem ipsum dolor, sit amet consectetur adipisicing elit ?",
 			answer:
 				"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vitae quae ea placeat necessitatibus tempore animi est, magni id cumque dicta fugiat similique sunt aut distinctio, a perspiciatis quod quaerat! placeat necessitatibus tempore animi est, magni id eos, cumque dicta fugiat similique sunt aut distinctio, a perspiciatis quod quaerat ",
 		},
 		{
-			question: "Lorem ipsum dolor, sit amet consectetur adipisicing elit ",
+			question: "Lorem ipsum dolor, sit amet consectetur adipisicing elit ?",
 			answer:
 				"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vitae quae ea placeat necessitatibus tempore animi est, magni id cumque dicta fugiat similique sunt aut distinctio, a perspiciatis quod quaerat! placeat necessitatibus tempore animi est, magni id eos, cumque dicta fugiat similique sunt aut distinctio, a perspiciatis quod quaerat ",
 		},
 		{
-			question: "Lorem ipsum dolor, sit amet consectetur adipisicing elit ",
+			question: "Lorem ipsum dolor, sit amet consectetur adipisicing elit ?",
+			answer:
+				"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vitae quae ea placeat necessitatibus tempore animi est, magni id cumque dicta fugiat similique sunt aut distinctio, a perspiciatis quod quaerat! placeat necessitatibus tempore animi est, magni id eos, cumque dicta fugiat similique sunt aut distinctio, a perspiciatis quod quaerat ",
+		},
+		{
+			question: "Lorem ipsum dolor, sit amet consectetur adipisicing elit ? ",
 			answer:
 				"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vitae quae ea placeat necessitatibus tempore animi est, magni id cumque dicta fugiat similique sunt aut distinctio, a perspiciatis quod quaerat! placeat necessitatibus tempore animi est, magni id eos, cumque dicta fugiat similique sunt aut distinctio, a perspiciatis quod quaerat ",
 		},

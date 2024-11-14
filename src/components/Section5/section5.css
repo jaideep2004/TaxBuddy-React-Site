@@ -29,32 +29,3 @@
 	align-content: center;
 	perspective: 1000px;
 }
-.tax-flipbox {
-	transform-style: preserve-3d;
-
-	/* border: 1px solid black; */
-	padding: 38px 25px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	backdrop-filter: blur(20px);
-	box-shadow: inset 7px 7px 15px lightblue;
-	border-radius: 10px;
-	gap: 5px;
-	h2 {
-		font-size: 22px;
-		font-weight: 500;
-	}
-	p {
-		margin: 0;
-		padding: 0;
-	}
-	i {
-		color: var(--tertiary);
-	}
-	&:hover {
-		transition: all 0.8s ease;
-		transform: rotateY(360deg);
-	}
-}
