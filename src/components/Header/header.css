@@ -7,7 +7,7 @@ body {
 .tax-header {
 	position: sticky;
 	top: 0px;
-	background-color: var(--primary);
+	background-color: var(--secondary);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -27,7 +27,22 @@ body {
 	img {
 		width: 165px;
 	}
+	div{
+		color:var(--primary);
+		font-size: 35px;
+		font-weight: 700;
+
+		span{
+			font-weight: 500;
+			color: var(--accent);
+			font-style: italic;
+		}
+	}
+		
+	
+	
 }
+
 
 .tax-top-nav {
 	/* border: 1px solid white; */
@@ -39,7 +54,7 @@ body {
         position: relative;
         font-size: 17px;
 		text-decoration: none;
-		color: var(--secondary);
+		color: var(--primary);
         &:hover{
             color: var(--accent);
         }
@@ -61,11 +76,12 @@ body {
         border: none;
         outline: none;
         padding: 15px 30px;
-        background-color: #03a3bd;
+        background-color: var(--primary);
 
         &:hover{
+			transition: all 0.3s ease;
             cursor: pointer;
-            background-color: #69bcb2;
+            background-color: var(--accent);
         }
     }
 }

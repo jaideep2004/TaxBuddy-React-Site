@@ -24,7 +24,10 @@ const Header = () => {
 		<header className='tax-header'>
 			<div className='tax-header-wrap'>
 				<div className='tax-logo'>
-					<img src='./images/logo.webp' alt='' />
+					{/* <img src='./images/logo.webp' alt='' /> */}
+					<div>
+						Tax<span>Harbor</span>
+					</div>
 				</div>
 				<div className='tax-nav-wrap'>
 					<nav className='tax-top-nav'>

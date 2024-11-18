@@ -13,7 +13,7 @@ const Section1 = () => {
 			<div className='tax-section1'>
 				<div className='tax-section1-wrap'>
 					<div className='tax-section1-left'>
-						<h1>Assisted Tax filing platform for</h1>
+						<h1>Assisted Tax Filing Platform For</h1>
 						<TypeAnimation
 							sequence={[
 								"Salaried taxpayers",
@@ -42,7 +42,7 @@ const Section1 = () => {
 					</div>
 
 					<div className='tax-section1-right'>
-						<img src='./images/heroimg.png' alt='' />
+						<img src='./images/hero3.png' alt='' />
 					</div>
 				</div>
             </div>

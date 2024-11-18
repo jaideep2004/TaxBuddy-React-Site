@@ -39,6 +39,6 @@
 	font-size: 1rem;
     font-weight: 600;
 	&:hover {
-		color: #03a3bd !important;
+		color: var(--accent) !important;
 	}
 }

@@ -1,9 +1,16 @@
 /*colors
 
 #143f47     */
-:root {
+/* :root {
   --primary: #143f47;
   --accent: #ffc700;
+  --secondary: #ffffff;
+  --tertiary: #202020;
+} */
+
+:root {
+  --primary: #023047;
+  --accent: #fb8500;
   --secondary: #ffffff;
   --tertiary: #202020;
 }
