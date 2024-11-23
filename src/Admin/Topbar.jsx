@@ -1,12 +1,16 @@
-import React from 'react';
+import React from 'react'
 
-const TopBar = () => {
-  return (
-    <div className="topbar">
-      <h1>Admin Dashboard</h1>
-      {/* Add admin-specific links here, like logout */}
-    </div>
-  );
-};
+const Topbar = ({ handleLogout }) => {
+    return (
+      <div className="topbar">
+        <div>
+          
+        </div>
+        
+        <button onClick={handleLogout}>Logout</button>
+        
+      </div>
+    );
+  }; 
 
-export default TopBar;
+export default Topbar

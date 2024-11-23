@@ -34,7 +34,7 @@
   }
   
   .flip-box-front {
-    background-color: lightblue;
+    background-color: #5c7c8982;
     i{
         color: var(--primary);
     }
@@ -53,6 +53,7 @@
     p{
         font-size: 16px;
         padding: 10px;
+        color: white;
     }
     i{
         color: var(--accent);

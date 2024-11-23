@@ -1,80 +1,225 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "./utils/axiosConfig";
-import { Navigate } from "react-router-dom"; // We still use Navigate for protection
+import Sidebar from "./Sidebar";
+import Topbar from "./Topbar";
+import DashboardSection from "./DashboardSection";
+import ServicesSection from "./ServicesSection";
+import EmployeesSection from "./EmployeesSection";
+import UsersSection from "./UsersSection";
+import ManagersSection from "./ManagersSection";
+import "./admin.css";
+import { Navigate } from "react-router-dom";
+import { AdminDashboardContext } from "./AdminDashboardContext";
 
 const AdminDashboard = () => {
-  const [users, setUsers] = useState([]);
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  
-  // Fetch admin dashboard data
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      const token = localStorage.getItem("adminToken");
-      if (!token) {
-        setError("You must be logged in to view this page.");
-        setLoading(false);
-        return;
-      }
+	const {
+		servicesCount,
+		usersCount,
+		employeesCount,
+		customersCount,
+		loading,
+		error,
+		services,
+		users,
+		newService,
+		setNewService,
+		newEmployee,
+		setNewEmployee,
+		newManager,
+		setNewManager,
+		newUser,
+		setNewUser,
+		fetchDashboardData,
+		handleCreateService,
+		handleCreateManager,
+		handleActivateUser,
+		handleDeactivateUser,
+		handleCreateUser,
+		handleDeleteUser,
+		assignCustomer,
+		setAssignCustomer,
+		handleCreateEmployee,
+		handleAssignCustomer,
+		handleUpdateService,
+		handleDeleteService,
+	} = useContext(AdminDashboardContext);
+	const [activeSection, setActiveSection] = useState("Dashboard");
 
-      try {
-        const response = await axios.get("/dashboard", {
-          headers: { Authorization: `Bearer ${token}` }, // Include token in headers
-        });
-        setUsers(response.data.users); // Assuming the backend returns a list of users
-        setServices(response.data.services); // Assuming the backend returns a list of services
-        setLoading(false);
-      } catch (err) {
-        setError("Failed to load dashboard data.");
-        console.error(err);
-        setLoading(false);
-      }
-    };
+	const [showServiceForm, setShowServiceForm] = useState(false);
+	const [showEmployeeForm, setShowEmployeeForm] = useState(false);
+	const [showManagerForm, setShowManagerForm] = useState(false);
+	const [showUserForm, setShowUserForm] = useState(false);
+	const [showAssignCustomerForm, setShowAssignCustomerForm] = useState(false);
+	const [showAssignEmployeeForm, setShowAssignEmployeeForm] = useState(false);
+	const [isLoggedOut, setIsLoggedOut] = useState(false);
 
-    fetchDashboardData();
-  }, []);
+	const navigate = useNavigate();
 
-  // If no admin token exists, redirect to login page
-  if (!localStorage.getItem("adminToken")) {
-    return <Navigate to="/admin/login" replace />;
-  }
+	const handleLogout = () => {
+		localStorage.removeItem("adminToken");
+		setIsLoggedOut(true);
+	};
 
-  // If data is loading, show a loading message
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+	if (isLoggedOut || !localStorage.getItem("adminToken")) {
+		return <Navigate to='/admin/login' replace />;
+	}
 
-  // If there's an error, display an error message
-  if (error) {
-    return <p style={{ color: "red" }}>{error}</p>;
-  }
+	const handleBackToDashboard = () => {
+		navigate("/dashboard"); // Navigate back to the dashboard
+	};
 
-  return (
-    <div>
-      <h2>Admin Dashboard</h2>
-      <div>
-        <h3>Users</h3>
-        <ul>
-          {users.map((user) => (
-            <li key={user._id}>
-              {user.name} - {user.email} - {user.role}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h3>Services</h3>
-        <ul>
-          {services.map((service) => (
-            <li key={service._id}>
-              {service.name} - {service.status}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
+	if (error) {
+		// Only show 'Login Again' when the error is due to token expiration
+		if (error === "Failed to load dashboard data.") {
+			return (
+				<div>
+					<p style={{ color: "red" }}>{error}</p>
+					<button
+						style={{
+							padding: "10px 15px",
+							backgroundColor: "#007bff",
+							color: "#fff",
+							border: "none",
+							borderRadius: "5px",
+							cursor: "pointer",
+						}}
+						onClick={() => setIsLoggedOut(true)}>
+						Login Again
+					</button>
+				</div>
+			);
+		} else {
+			// For other errors, just show the error message without "Login Again"
+			return (
+				<div>
+					<p style={{ color: "red" }}>{error}</p>
+					<button
+						style={{
+							padding: "10px 15px",
+							backgroundColor: "#f0ad4e",
+							color: "#fff",
+							border: "none",
+							borderRadius: "5px",
+							cursor: "pointer",
+						}}
+						onClick={handleBackToDashboard}>
+						Back to Dashboard
+					</button>
+				</div>
+			);
+		}
+	}
+
+	if (loading) {
+		return <p>Loading...</p>;
+	}
+
+	return (
+		<div className='admin-dashboard'>
+			<Sidebar
+				activeSection={activeSection}
+				setActiveSection={setActiveSection}
+			/>
+			<div className='tax-main-content'>
+				<Topbar handleLogout={handleLogout} />
+				<div className='content'>
+					{activeSection === "Dashboard" && (
+						<DashboardSection
+							servicesCount={servicesCount}
+							usersCount={usersCount}
+							employeesCount={employeesCount}
+							customersCount={customersCount}
+							services={services}
+							newService={newService}
+							setNewService={setNewService}
+							showServiceForm={showServiceForm}
+							setShowServiceForm={setShowServiceForm}
+							handleCreateService={handleCreateService}
+							users={users}
+							newUser={newUser}
+							setNewUser={setNewUser}
+							showUserForm={showUserForm}
+							setShowUserForm={setShowUserForm}
+							handleCreateUser={handleCreateUser}
+							handleActivateUser={handleActivateUser}
+							handleDeactivateUser={handleDeactivateUser}
+							handleDeleteUser={handleDeleteUser}
+							newEmployee={newEmployee}
+							setNewEmployee={setNewEmployee}
+							showEmployeeForm={showEmployeeForm}
+							setShowEmployeeForm={setShowEmployeeForm}
+							showAssignCustomerForm={showAssignCustomerForm}
+							setShowAssignCustomerForm={setShowAssignCustomerForm}
+							handleCreateEmployee={handleCreateEmployee}
+						/>
+					)}
+					{activeSection === "Services" && (
+						<ServicesSection
+							services={services}
+							newService={newService}
+							setNewService={setNewService}
+							showServiceForm={showServiceForm}
+							setShowServiceForm={setShowServiceForm}
+							handleCreateService={handleCreateService}
+							handleUpdateService={handleUpdateService}
+							handleDeleteService={handleDeleteService}
+						/>
+					)}
+					{activeSection === "Managers" && (
+						<ManagersSection
+							newUser={newUser}
+							setNewUser={setNewUser}
+							users={users}
+							services={services}
+							newManager={newManager}
+							setNewManager={setNewManager}
+							showManagerForm={showManagerForm}
+							setShowManagerForm={setShowManagerForm}
+							showAssignEmployeeForm={showAssignEmployeeForm}
+							setShowAssignEmployeeForm={setShowAssignEmployeeForm}
+							handleCreateManager={handleCreateManager}
+							handleActivateUser={handleActivateUser}
+							handleDeactivateUser={handleDeactivateUser}
+							handleDeleteUser={handleDeleteUser}
+						/>
+					)}
+					{activeSection === "Employees" && (
+						<EmployeesSection
+							newUser={newUser}
+							setNewUser={setNewUser}
+							users={users}
+							services={services}
+							newEmployee={newEmployee}
+							setNewEmployee={setNewEmployee}
+							showEmployeeForm={showEmployeeForm}
+							setShowEmployeeForm={setShowEmployeeForm}
+							showAssignCustomerForm={showAssignCustomerForm}
+							setShowAssignCustomerForm={setShowAssignCustomerForm}
+							handleCreateEmployee={handleCreateEmployee}
+							handleActivateUser={handleActivateUser}
+							handleDeactivateUser={handleDeactivateUser}
+							handleDeleteUser={handleDeleteUser}
+						/>
+					)}
+					{activeSection === "Customers" && (
+						<UsersSection
+							users={users}
+							services={services}
+							newUser={newUser}
+							setNewUser={setNewUser}
+							showUserForm={showUserForm}
+							setShowUserForm={setShowUserForm}
+							handleCreateUser={handleCreateUser}
+							handleActivateUser={handleActivateUser}
+							handleDeactivateUser={handleDeactivateUser}
+							handleDeleteUser={handleDeleteUser}
+						/>
+					)}
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default AdminDashboard;

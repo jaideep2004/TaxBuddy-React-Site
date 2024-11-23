@@ -9,9 +9,19 @@
 } */
 
 :root {
-  --primary: #023047;
-  --accent: #fb8500;
+  --primary: #011425;
+  /* --accent: #fb8500; */
   --secondary: #ffffff;
   --tertiary: #202020;
+  --fourth: #1f4959;
+  --accent:#5c7c89;
+  --sixth:#242424;
 }
 
+p{
+  color: var(--sixth);
+}
+
+h1,h2,h3,h4,h5,h6{
+  color: var(--primary);
+}

@@ -1,0 +1,434 @@
+/* Basic layout for the sidebar and content */
+.admin-dashboard {
+	display: flex;
+	margin-bottom: 70px;
+	position: relative;
+}
+
+.sidebar {
+	width: 320px;
+	background-color: var(--primary);
+	color: white;
+	min-height: 600px;
+}
+
+.sidebar ul {
+	list-style-type: none;
+	padding: 10px;
+	margin-top: 55px;
+}
+
+.sidebar li {
+	padding: 20px;
+	border-radius: 10px;
+	cursor: pointer;
+	&:hover {
+		text-decoration: underline;
+		text-decoration-color: var(--accent);
+	}
+}
+.li-active {
+	background-color: var(--accent);
+}
+
+.topbar {
+	background-color: var(--primary);
+	display: flex;
+	justify-content: space-between;
+	padding: 8px;
+	/* margin: 0px 10px; */
+	/* border-radius: 10px; */
+	button {
+		padding: 10px 30px;
+		font-size: 17px;
+		background-color: red;
+		color: white;
+		border: none;
+		cursor: pointer;
+		border: none;
+		border-radius: 15px;
+	}
+	div {
+		h1 {
+			color: var(--secondary);
+			margin: 0;
+			margin-left: 470px;
+		}
+	}
+}
+
+.content {
+	margin-top: 20px;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	justify-content: center;
+	min-height: 300px;
+}
+
+h3 {
+	margin-bottom: 10px;
+}
+
+ul {
+	padding-left: 20px;
+}
+
+.modal {
+	transition: all 0.3s ease;
+	border: 1px solid black;
+	background-color: var(--primary);
+	position: absolute;
+	top: 50%;
+	left: 53%;
+	transform: translate(-50%, -50%);
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	align-items: center;
+	justify-content: center;
+	padding: 15px;
+	border-radius: 10px;
+	form {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 10px;
+	}
+	h3 {
+		font-size: 25px;
+		color: var(--secondary);
+	}
+	input {
+		min-width: 320px;
+		outline: none;
+		font-size: 17px;
+		border: none;
+		border-radius: 10px;
+		padding: 10px;
+	}
+	select {
+		min-width: 330px;
+		outline: none;
+		font-size: 17px;
+		border: none;
+		border-radius: 10px;
+		padding: 13px;
+	}
+	textarea {
+		min-width: 300px;
+		outline: none;
+		font-size: 17px;
+		border: none;
+		border-radius: 10px;
+		padding: 10px;
+	}
+}
+#modal-div {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 15px;
+	button {
+		padding: 15px 30px;
+		font-size: 17px;
+		border-radius: 15px;
+		outline: none;
+		border: none;
+		cursor: pointer;
+	}
+	button:nth-child(2) {
+		background-color: red;
+		color: white;
+	}
+}
+
+/* login page */
+
+.tax-admin-login {
+	/* border: 1px solid black; */
+	display: flex;
+
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 60px;
+	div {
+		/* border: 1px solid black; */
+		display: flex;
+
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 90%;
+		h1 {
+			font-size: 40px;
+			color: var(--primary);
+		}
+		form {
+			border: 1px solid black;
+			padding: 20px 40px 20px 10px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			background-color: var(--primary);
+			border-radius: 15px;
+
+			button {
+				border: 2px solid var(--accent);
+				width: 100%;
+				margin: 15px 0px 0px 31px;
+				padding: 12px 30px;
+				font-size: 17px;
+
+				border-radius: 10px;
+				background-color: var(--accent);
+				color: var(--secondary);
+				cursor: pointer;
+				&:hover {
+					transition: all 0.3s ease;
+					background-color: var(--secondary);
+					color: var(--accent);
+				}
+			}
+
+			div {
+				display: flex;
+				flex-direction: column;
+				align-items: start;
+
+				label {
+					color: var(--secondary);
+					margin: 10px;
+				}
+				input {
+					min-width: 300px;
+					padding: 13px;
+					outline: none;
+					font-size: 17px;
+					border-radius: 15px;
+					border: none;
+				}
+			}
+		}
+	}
+}
+
+/* admin dash sections */
+.tax-main-content {
+	/* border: 1px solid black; */
+	flex-grow: 1;
+}
+.tax-dashboard-section {
+	/* border: 1px solid black; */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+.dashboard-summary {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	margin-top: 25px;
+	flex-wrap: wrap;
+}
+.dashboard-card {
+	/* border: 1px solid black; */
+	background-color: var(--accent);
+	min-width: 200px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 15px;
+	border-radius: 15px;
+	box-shadow: 1px 1px 1px var(--primary);
+	h3 {
+		font-size: 19px;
+	}
+	p {
+		font-size: 19px;
+	}
+	&:hover {
+		transition: all 0.4s ease;
+		transform: translateY(-5px);
+	}
+}
+.tax-dashboard-services {
+	width: 100%;
+	/* border: 1px solid black; */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	table {
+		width: 100%;
+		/* border: 1px solid black; */
+		
+		border-radius: 10px;
+		th {
+			/* border: 1px solid black; */
+			background-color: var(--accent);
+			padding: 17px;
+			box-shadow: 1px 1px 1px var(--primary);
+		}
+		td {
+			/* border: 1px solid black; */
+			text-align: center;
+			padding: 15px;
+			box-shadow: 1px 1px 1px var(--primary);
+		}
+	}
+}
+
+.tax-service-btn {
+	padding: 13px 30px;
+	font-size: 17px;
+	border-radius: 15px;
+	outline: none;
+	border: none;
+	cursor: pointer;
+	background-color: green;
+	color: var(--secondary);
+
+	&:hover {
+		transition: all 0.3s ease;
+		background-color: var(--primary);
+		color: var(--accent);
+	}
+}
+
+.tax-dashboard-customers {
+	width: 100%;
+	/* border: 1px solid black; */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	table {
+		/* border: 1px solid black; */
+		width: 100%;
+		border-radius: 10px;
+		th {
+			/* border: 1px solid black; */
+			background-color: var(--accent);
+			padding: 17px;
+			box-shadow: 1px 1px 1px var(--primary);
+		}
+		td {
+			/* border: 1px solid black; */
+			text-align: center;
+			padding: 15px;
+			box-shadow: 1px 1px 1px var(--primary);
+		}
+	}
+}
+.userActivate{
+	padding: 13px 30px;
+	font-size: 17px;
+	border-radius: 15px;
+	outline: none;
+	border: none;
+	cursor: pointer;
+	background-color: green;
+	color: var(--secondary);
+
+	&:hover {
+		transition: all 0.3s ease;
+		background-color: #11ae11;
+		
+	}
+}
+.tax-btn-cont{
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+}
+.userDeactivate{
+	padding: 13px 30px;
+	font-size: 17px;
+	border-radius: 15px;
+	outline: none;
+	border: none;
+	cursor: pointer;
+	background-color: yellowgreen;
+	color: var(--secondary);
+
+	&:hover {
+		transition: all 0.3s ease;
+		background-color: yellow;
+		
+	}
+}
+.userDelete{
+	padding: 13px 30px;
+	font-size: 17px;
+	border-radius: 15px;
+	outline: none;
+	border: none;
+	cursor: pointer;
+	background-color: red;
+	color: var(--secondary);
+
+	&:hover {
+		transition: all 0.3s ease;
+		background-color: #11ae11;
+		
+	}
+}
+.serviceDelete{
+	padding: 13px 30px;
+	font-size: 17px;
+	border-radius: 15px;
+	outline: none;
+	border: none;
+	cursor: pointer;
+	background-color: red;
+	color: var(--secondary);
+
+	&:hover {
+		transition: all 0.3s ease;
+		background-color: #11ae11;
+		
+	}
+}
+
+.tax-dashboard-employee {
+	width: 100%;
+	/* border: 1px solid black; */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	table {
+		/* border: 1px solid black; */
+		width: 100%;
+		border-radius: 10px;
+		th {
+			/* border: 1px solid black; */
+			background-color: var(--accent);
+			padding: 17px;
+			box-shadow: 1px 1px 1px var(--primary);
+		}
+		td {
+			/* border: 1px solid black; */
+			text-align: center;
+			padding: 15px;
+			box-shadow: 1px 1px 1px var(--primary);
+		}
+	}
+}
+#employee-btn-cont{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+gap: 10px;
+}

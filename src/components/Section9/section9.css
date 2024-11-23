@@ -2,10 +2,11 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-    margin-top: 40px;
-    background-color: var(--primary);
-    height: auto;
-    gap: 40px;
+	margin-top: 40px;
+	/* background-color: var(--primary); */
+	background-image: linear-gradient(90deg, #1b1b1b 0%, #023047 100%);
+	height: auto;
+	gap: 40px;
 }
 
 .faq-section-left {
@@ -15,8 +16,7 @@
 .faq-section-left h1 {
 	text-align: center;
 	font-size: 40px;
-    color: var(--secondary);
-	
+	color: var(--secondary);
 }
 
 .faq-list {
@@ -52,22 +52,26 @@
 }
 
 .faq-answer {
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transition: max-height 0.5s ease, opacity 0.5s ease;
+	background-color: white;
+
+	border-radius: 10px;
+	color: var(--primary);
+
+	overflow: hidden;
+	max-height: 0;
+	opacity: 0;
+	transition: max-height 0.5s ease, opacity 0.5s ease;
 }
 
 .faq-answer.open {
-    max-height: 1000px; /* Arbitrary large height to allow full expansion */
-    opacity: 1;
-    padding-top: 10px;
-    padding-left: 5px;
+	max-height: 1000px; /* Arbitrary large height to allow full expansion */
+	opacity: 1;
+
+	margin-top: 10px;
+	padding: 10px;
 }
 .tax-section9-right {
-img{
-    width: 650px;
+	img {
+		width: 650px;
+	}
 }
-
-}
-

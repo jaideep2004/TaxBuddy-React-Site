@@ -1,18 +1,14 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ element, ...rest }) => {
-  const navigate = useNavigate();
-  const isAuthenticated = localStorage.getItem("adminToken");
+const ProtectedRoute = ({ element }) => {
+  const token = localStorage.getItem("adminToken");
 
-  useEffect(() => {
-    // Redirect to login page if not authenticated
-    if (!isAuthenticated) {
-      navigate("/admin/login", { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
+  if (!token) {
+    return <Navigate to='/admin/login' replace />;
+  }
 
-  return isAuthenticated ? element : null;  // Render protected content if authenticated
+  return element;
 };
 
 export default ProtectedRoute;
