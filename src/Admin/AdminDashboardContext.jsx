@@ -103,7 +103,7 @@ const AdminDashboardProvider = ({ children }) => {
 		try {
 			const token = localStorage.getItem("adminToken");
 			const response = await axios.post(
-				"http://localhost:5000/api/admin/services",
+				"http://localhost:5000/api/services",
 				{ name, description, price },
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);

@@ -30,6 +30,7 @@ router.get("/dashboard", authMiddleware, getDashboardData);
 // User and Service management routes
 router.get("/users", authMiddleware, getAllUsers);
 router.get("/services",authMiddleware, getAllServices);
+// router.get("/services", getAllServices);
 router.post("/services", authMiddleware, createService);
 router.put("/user/activate/:userId", authMiddleware, activateUser);
 router.put("/user/deactivate/:userId", authMiddleware, deactivateUser);
