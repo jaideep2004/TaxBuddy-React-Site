@@ -1,0 +1,43 @@
+.tax-section12 {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	/* overflow: hidden; */
+    margin-bottom: 140px;
+}
+.tax-section12-wrap {
+	/* background-image: url("./images/hero4.png"); */
+	padding: 20px;
+	margin-top: 70px;
+	width: 80%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 400px;
+	position: relative;
+	overflow: hidden;
+	box-shadow: 4px 4px 1px var(--primary);
+	gap: 20px;
+	h1 {
+		z-index: 2;
+		font-size: 39px;
+	}
+	p {
+		z-index: 2;
+	}
+    button{
+        width: 40%;
+		border: 2px solid var(--primary);
+    }
+}
+.tax-12overlay {
+	position: absolute;
+	width: 100%;
+	margin: 0 auto;
+	height: 100%;
+	background-color: var(--accent);
+	opacity: 0.8;
+}

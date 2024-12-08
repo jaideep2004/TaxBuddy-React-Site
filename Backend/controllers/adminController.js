@@ -2,7 +2,6 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const Service = require("../models/serviceModel");
-const Razorpay = require("razorpay");
 
 // Utility: Hash password using SHA-256
 const hashPassword = (password, salt) => {
@@ -64,7 +63,10 @@ const getAllServices = async (req, res) => {
 // Get dashboard data
 const getDashboardData = async (req, res) => {
 	try {
-		const users = await User.find({}, "name email role assignedEmployees assignedCustomers serviceId");
+		const users = await User.find(
+			{},
+			"name email role assignedEmployees assignedCustomers serviceId"
+		);
 		const services = await Service.find({}, "name status description price");
 		res.json({ users, services });
 	} catch (err) {
@@ -368,7 +370,9 @@ const createManager = async (req, res) => {
 		// Check if the email is already in use
 		const existingUser = await User.findOne({ email });
 		if (existingUser) {
-			return res.status(400).json({ message: "User already exists with this email" });
+			return res
+				.status(400)
+				.json({ message: "User already exists with this email" });
 		}
 
 		// Hash the password
@@ -419,79 +423,16 @@ const assignEmployeeToManager = async (req, res) => {
 			await manager.save();
 		}
 
-		res.json({ message: "Employee assigned to manager successfully", manager, employee });
+		res.json({
+			message: "Employee assigned to manager successfully",
+			manager,
+			employee,
+		});
 	} catch (err) {
 		console.error("Error assigning employee to manager:", err);
 		res.status(500).json({ message: "Error assigning employee to manager" });
 	}
 };
-
-//customer register
-const registerCustomer = async (req, res) => {
-    const { name, email, username, password } = req.body;
-
-    if (!name || !email || !username || !password) {
-        return res.status(400).json({ message: "All fields are required" });
-    }
-
-    try {
-        // Check for existing email or username
-        const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-        if (existingUser) {
-            return res.status(400).json({ message: "User already exists with this email or username" });
-        }
-
-        // Hash password
-        const salt = crypto.randomBytes(16).toString("hex");
-        const hashedPassword = hashPassword(password, salt);
-
-        // Create customer user
-        const newUser = new User({
-            name,
-            email,
-            username,
-            passwordHash: hashedPassword,
-            salt,
-            role: "customer",
-        });
-
-        await newUser.save();
-        res.status(201).json({ message: "Customer registered successfully!" });
-    } catch (error) {
-        console.error("Error registering customer:", error);
-        res.status(500).json({ message: "Error registering customer" });
-    }
-};
-
-//login customer
-const loginUser = async (req, res) => {
-    const { email, password } = req.body;
-
-    try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ message: "Invalid email or password" });
-        }
-
-        const hashedPassword = hashPassword(password, user.salt);
-        if (hashedPassword !== user.passwordHash) {
-            return res.status(400).json({ message: "Invalid email or password" });
-        }
-
-        // Generate JWT
-        const token = jwt.sign(
-            { userId: user._id, role: user.role },
-            process.env.JWT_SECRET,
-            { expiresIn: "1h" }
-        );
-
-        res.status(200).json({ token, user });
-    } catch (err) {
-        console.error("Error logging in user:", err);
-        res.status(500).json({ message: "Login failed" });
-    }
-};
-
 
 module.exports = {
 	adminLogin,
@@ -505,10 +446,8 @@ module.exports = {
 	createEmployee,
 	assignCustomerToEmployee,
 	createUser,
-	updateService, 
-	deleteService, 
+	updateService,
+	deleteService,
 	createManager,
 	assignEmployeeToManager,
-	registerCustomer,
-	loginUser,
 };

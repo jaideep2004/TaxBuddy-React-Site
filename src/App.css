@@ -1,3 +1,10 @@
+*{
+  margin: 0;
+  padding: 0;
+  
+}
+
+
 /*colors
 
 #143f47     */
@@ -8,16 +15,27 @@
   --tertiary: #202020;
 } */
 
+
 :root {
-  --primary: #011425;
-  /* --accent: #fb8500; */
+  --primary: #14305d;
+ 
   --secondary: #ffffff;
   --tertiary: #202020;
   --fourth: #1f4959;
-  --accent:#5c7c89;
+  --accent:#99a8af;
   --sixth:#242424;
+  --btncolor:lightblue;
 }
 
+/* :root {
+  --primary: #1b321d;
+ 
+  --secondary: #ffffff;
+  --tertiary: #202020;
+  --fourth: #1f4959;
+  --accent:#fa8977;
+  --sixth:#242424;
+} */
 p{
   color: var(--sixth);
 }
@@ -25,3 +43,4 @@ p{
 h1,h2,h3,h4,h5,h6{
   color: var(--primary);
 }
+

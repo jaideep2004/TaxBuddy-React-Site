@@ -1,38 +1,111 @@
 .tax-section3 {
+	/* border: 1px solid black; */
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	/* height: 50vh; */
+	/* min-height: 500px; */
+
+	background-color: var(--secondary);
+	color: var(--primary);
 }
-.tax-section3wrap {
-	min-height: 100px;
-	width: 70%;
+.tax-section3-wrap {
+	/* border: 1px solid black; */
 	display: flex;
-	padding: 50px 0px;
-	/* align-items: center; */
-	justify-content: space-between;
+	align-items: start;
+	justify-content: center;
+	margin-top: 50px;
+	padding: 30px 20px;
+	gap: 30px;
+	/* width: 100%; */
 }
-.tax-section3-col {
+.tax-section3-left {
+	/* border: 1px solid black; */
 	display: flex;
+	flex: 1;
+
+	align-items: center;
+	justify-content: center;
 	flex-direction: column;
-	border-right: 1px solid lightgray;
-	padding: 10px 30px;
-	p:nth-child(3) {
-		/* border: 1px solid black; */
-		max-width: 300px;
-		text-wrap: wrap;
-		font-size: 15px;
-	}
+}
+.tax3left-flipwrap {
+	display: flex;
+	gap: 30px;
+}
+.tax3-left-btn {
+	padding: 50px 60px;
+	text-align: center;
+	position: relative;
+	margin-top: 15px;
+	font-size: 16px;
+	border: 1px solid var(--accent);
+	background: white; /* Default background */
+	font-weight: bold;
+	border-radius: 5px;
+	cursor: pointer;
+	overflow: hidden;
+	z-index: 1;
+	transition: color 0.4s ease;
+	width: 80%;
+	color: var(--primary);
 }
 
-.tax-user {
-	margin: 0;
+.tax3-left-btn::before {
+	content: "";
+	position: absolute;
+	top: -128%; /* Starts outside the button, diagonally */
+	left: -155%;
+	width: 170%; /* Large size to cover at an angle */
+	height: 600%;
+	background: var(--btncolor);
+	transform: rotate(45deg);
+	transition: all 0.4s ease;
+	z-index: -1;
+}
+
+.tax3-left-btn:hover::before {
+	left: 0;
+}
+
+.tax3-left-btn:hover {
+	background: white;
+}
+.tax-section3-right {
+	/* border: 1px solid black; */
 	display: flex;
-	align-items: center;
-	gap: 5px;
+	flex-direction: column;
+	flex: 1;
 	h1 {
-		font-size: 30px;
-		font-weight: 500;
-		min-width: 100px;
+		font-size: 40px;
+		font-weight: 600;
+		line-height: 49px;
+		/* margin: 10px 0px; */
+		padding: 0;
+		margin: 5px 16px;
+		position: relative;
 	}
+	h1::before {
+		content: "";
+		position: absolute;
+		left: -16px;
+		top: -25px;
+		bottom: 0;
+		width: 6px; /* Thickness of the line */
+		background-color: var(--accent); /* Color of the line */
+		margin-top: 4px;
+	}
+	p {
+		margin: 3px 17px;
+		padding: 0;
+		max-width: 650px;
+		font-size: 14px;
+	}
+	p:nth-child(1) {
+		font-size: 14px;
+		letter-spacing: 3px !important;
+	}
+}
+.tax3right-flipwrap {
+	display: flex;
+	gap: 30px;
+	margin-top: 10px;
 }

@@ -9,10 +9,7 @@ const ManagersSection = () => {
 	const {
 		users,
 		services,
-		// showManagerForm,
-		// setShowManagerForm,
-		// showAssignEmployeeForm,
-		// setShowAssignEmployeeForm,
+
 		newManager,
 		setNewManager,
 		handleCreateManager,
@@ -22,7 +19,6 @@ const ManagersSection = () => {
 		newUser,
 		setNewUser,
 	} = useContext(AdminDashboardContext);
-	
 
 	const [error, setError] = useState("");
 

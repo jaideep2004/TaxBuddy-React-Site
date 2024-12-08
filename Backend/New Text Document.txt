@@ -1,14 +1,16 @@
 backend/
-├── models/
+├── models
 │   ├── userModel.js
 │   ├── serviceModel.js
-├── routes/
+├── routes
 │   ├── adminRoutes.js
-├── middlewares/
+├── middlewares
 │   ├── authMiddleware.js
-├── controllers/
+├── controllers
 │   ├── adminController.js
-├── config/
+├── config
 │   ├── db.js
+├── utils
+│   ├──idGenerator.js
 ├── .env
 ├── server.js

@@ -1,77 +1,106 @@
 import React from "react";
 import "./section8.css";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import TestCard from "./TestCard";
+import { useState } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 
-export const Section8 = () => {
-	const CustomPrevArrow = (props) => {
-		const { onClick } = props;
-		return (
-			<div className='customprevarrow' onClick={onClick}>
-				<i class='fa-solid fa-circle-arrow-left fa-xl'></i>
-			</div>
-		);
-	};
+const Section8 = () => {
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: "smooth" });
+		AOS.init();
+	}, []);
+	const [value, setValue] = useState(1000); // Default value for the range slider
 
-	const CustomNextArrow = (props) => {
-		const { onClick } = props;
-		return (
-			<div className='customnextarrow' onClick={onClick}>
-				<i class='fa-solid fa-circle-arrow-right fa-xl'></i>
-			</div>
-		);
+	const handleChange = (event) => {
+		setValue(event.target.value); // Update the state when slider changes
 	};
-	const settings = {
-		dots: false,
-        infinite: true,
-        autoplay: true,
-        fade: true, 
-		speed: 750,
-		slidesToShow: 1,
-        slidesToScroll: 1,
-        centerMode: true,
-		prevArrow: <CustomPrevArrow />,
-		nextArrow: <CustomNextArrow />,
-	};
-	const testimonials = [
-		{
-			id: 1,
-			img: "./images/s3.jpg",
-			name: "Jane",
-			desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Saepe ratione odio fuga nemo illo quasi temporibus, officia a voluptatem quia sed ab quibusdam, autem deleniti at perferendis alias harum ex  sed ab quibusdam, autem deleniti at perferendis alias harum ex",
-		},
-		{
-			id: 2,
-			img: "./images/s5.png",
-			name: "Tom",
-			desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Saepe ratione odio fuga nemo illo quasi temporibus, officia a voluptatem quia sed ab quibusdam, autem deleniti at perferendis alias harum ex  sed ab quibusdam, autem deleniti at perferendis alias harum ex  sed ab quibusdam, autem deleniti at perferendis alias harum ex",
-		},
-		{
-			id: 3,
-			img: "./images/s3.jpg",
-			name: "Jack",
-			desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Saepe ratione odio fuga nemo illo quasi temporibus, officia a voluptatem quia sed ab quibusdam, autem deleniti at perferendis alias harum ex",
-		},
-		{
-			id: 4,
-			img: "./images/s5.png",
-			name: "Jack",
-			desc: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Saepe ratione odio fuga nemo illo quasi temporibus, officia a voluptatem quia sed ab quibusdam, autem deleniti at perferendis alias harum ex hgjbhj",
-		},
-	];
 	return (
-		<div className='tax-section8-slider'>
-			<h1>Our Testimonials</h1>
-			<Slider {...settings} className='slider'>
-				{testimonials.map((testimonial) => (
-                    <TestCard img={testimonial.img}
-                        name={testimonial.name}
-                    desc={testimonial.desc}
-                    />
-				))}
-			</Slider>
+		<div className='tax-section8'>
+			<div className='tax8-video'>
+				<video
+					src='https://themes.envytheme.com/fint/wp-content/uploads/2024/01/lookbook.m4v'
+					autoPlay
+					muted
+					loop></video>
+			</div>
+			<div className='tax-section8-wrap'>
+				<div className='tax-section8-left' data-aos='fade-right'
+				data-aos-duration='800'>
+					<p className='p-tag2'>SCHEDULE AN INTRO CALL</p>
+					<h1>Your integrated finance team is just a call away</h1>
+					<p>
+						Taxation is the cornerstone of a functioning society, enabling
+						governments to fund essential services such as healthcare,
+						education, infrastructure, and public safety.
+					</p>
+					<h2>
+						During your 30-minute call, our financial expert will determine
+						whether we’re a great mutual fit by learning:
+					</h2>
+					<div className='tax-8list-con'>
+						<ul>
+							<li>
+								<i class='fa-regular fa-circle-check fa-lg'></i>On-demand tax
+								support
+							</li>
+							<li>
+								<i class='fa-regular fa-circle-check fa-lg'></i>Your personal
+								tax expert
+							</li>
+							<li>
+								<i class='fa-regular fa-circle-check fa-lg'></i>Guaranteed
+								accuracy
+							</li>
+							<li>
+								<i class='fa-regular fa-circle-check fa-lg'></i>Guaranteed
+								accuracy
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div className='tax-section8-right2'>
+					<h2>Let’s get started!</h2>
+					<p>
+						Please reach out using the form below and we'll get back to you
+						right away!
+					</p>
+					<form action=''>
+						<div className='fdiv'>
+							<input type='text' placeholder='Enter Your Name' />
+							<input type='email' placeholder='Enter Your Email' />
+						</div>
+
+						<label htmlFor=''>How Can We Help You?</label>
+						<select name='tax-8select' id=''>
+							<option value=''>Submit Tax File</option>
+							<option value=''>Submit Tax File</option>
+							<option value=''>Submit Tax File</option>
+						</select>
+						<label htmlFor=''>Is your business incorporated?</label>
+						<select name='tax-8select' id=''>
+							<option value=''>Yes</option>
+							<option value=''>No</option>
+						</select>
+						<label htmlFor=''>What's Your Annual Revenue?</label>
+						<input
+							id='rangeInput'
+							type='range'
+							min='1000'
+							max='100000'
+							step='1'
+							value={value}
+							onChange={handleChange}
+						/>
+						<p>${value}</p>
+						<button className='tax5-btn'>
+							Submit Now <i class='fa-solid fa-arrow-right'></i>{" "}
+						</button>
+					</form>
+				</div>
+			</div>
 		</div>
 	);
 };
+
+export default Section8;

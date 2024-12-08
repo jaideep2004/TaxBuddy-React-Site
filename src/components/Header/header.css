@@ -12,7 +12,6 @@ body {
 	align-items: center;
 	justify-content: center;
 	z-index: 999;
-	
 }
 .tax-header-wrap {
 	/* border: 1px solid white; */
@@ -20,68 +19,86 @@ body {
 	align-items: center;
 	justify-content: space-between;
 	padding: 30px 70px;
-	width: 70%;
+	width: 95%;
+	a {
+		text-decoration: none;
+	}
 }
 .tax-logo {
 	/* border: 1px solid white; */
-	img {
-		width: 165px;
-	}
-	div{
-		color:var(--fourth);
+
+	div {
+		color: var(--fourth);
 		font-size: 35px;
 		font-weight: 700;
+		display: flex;
+		align-items: center;
 
-		span{
+		span {
 			font-weight: 500;
 			color: var(--accent);
-			font-style: italic;
+			/* font-style: italic; */
+		}
+		i {
+			margin-right: 5px;
 		}
 	}
-		
-	
-	
 }
-
 
 .tax-top-nav {
 	/* border: 1px solid white; */
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 30px;
+	gap: 25px;
 	a {
-        position: relative;
-        font-size: 17px;
+		/* border: 1px solid black; */
+		position: relative;
+		font-size: 17px;
 		text-decoration: none;
 		color: var(--primary);
-        &:hover{
-            color: var(--accent);
-        }
-        i{
-            margin-left: 5px;
-        }
+		padding: 7px 12px;
+		border-radius: 7px;
+		transition: all 0.3s ease;
+		&:hover {
+			box-shadow: 1px 1px 1px var(--accent);
+		}
+		i {
+			margin-left: 5px;
+		}
 	}
 }
 
 .tax-top-nav .active {
 	color: var(--accent);
 }
-.tax-header-btn{
-    button{
-        border: 1px solid white;
-        border-radius: 5px;
-        color: var(--secondary);
-        font-size: 16px;
-        border: none;
-        outline: none;
-        padding: 15px 30px;
-        background-color: var(--primary);
-
-        &:hover{
+.tax-header-btn {
+	button {
+		border: 1px solid white;
+		border-radius: 5px;
+		color: var(--secondary);
+		font-size: 16px;
+		border: none;
+		outline: none;
+		padding: 15px 30px;
+		background-color: var(--primary);
+		width: 100%;
+		&:hover {
 			transition: all 0.3s ease;
-            cursor: pointer;
-            background-color: var(--accent);
-        }
-    }
+			cursor: pointer;
+			background-color: var(--accent);
+		}
+	}
+	button::before{
+		content: "";
+    position: absolute;
+    top: -163%;
+    left: -203%;
+    width: 170%;
+    height: 600%;
+    background: var(--accent);
+    transform: rotate(45deg);
+    transition: all 0.4s ease;
+    z-index: -1;
+	}
 }

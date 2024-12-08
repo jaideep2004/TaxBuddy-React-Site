@@ -6,13 +6,12 @@ import { AdminDashboardContext } from "./AdminDashboardContext";
 const EmployeesSection = () => {
 	const [showEmployeeForm, setShowEmployeeForm] = useState(false);
 	const [showAssignCustomerForm, setShowAssignCustomerForm] = useState(false);
+
 	const {
 		users,
+		setUsers,
 		services,
-		// showEmployeeForm,
-		// setShowEmployeeForm,
-		// showAssignCustomerForm,
-		// setShowAssignCustomerForm,
+		employees,
 		newEmployee,
 		setNewEmployee,
 		handleCreateEmployee,
@@ -24,7 +23,8 @@ const EmployeesSection = () => {
 	} = useContext(AdminDashboardContext);
 	// Filter users to get employees
 	const [error, setError] = useState("");
-	const employees = users.filter((user) => user.role === "employee");
+	// const employees = users.filter((user) => user.role === "employee");
+
 	const [assignCustomer, setAssignCustomer] = useState({
 		customerId: "",
 		employeeId: "",

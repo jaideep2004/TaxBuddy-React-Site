@@ -1,43 +1,77 @@
 import React from "react";
 import "./section7.css";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 const Section7 = () => {
-	const boxStyle = {
-		backgroundImage: `url(${'./images/s13.png'})`,
-	}
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: "smooth" });
+		AOS.init();
+	}, []);
 	return (
 		<div className='tax-section7'>
 			<div className='tax-section7-wrap'>
 				<div className='tax-section7-left'>
-					<div className='tax-section7-head'>
-						<h1>Register Today !</h1>
-						<p>
-							97.4% of our users do not receive a tax notice. But if you do, we
-							will take care of it without any additional cost.{" "}
-						</p>
-					</div>
-
-					<form action='' className='tax-section7-form'>
-						<label htmlFor='name'>Name</label>
-						<input type='text' id='name' name='name' />
-						<div className='mob-form-cont'>
-							<div>
-								<label htmlFor='mobile'>Mobile No</label>
-								<input type='text' id='mobile' name='mobile' />
+					<img src='./images/sec7img.png' alt='' data-aos='fade-right'
+				data-aos-duration='800' />
+					<div className="tax7-center">
+						<p className="p-tag2">WORKING AREAS</p>
+						<h1>Industries that we served nationwide</h1>
+						<div className='tax7-list'>
+							<p>
+								Taxation is the cornerstone of a functioning society, enabling
+								governments to fund essential services such as healthcare,
+								education, infrastructure, and public safety. Through various
+								forms of taxes—such as income tax, corporate tax, and sales tax.
+							</p>
+							<div className='tax-7list-con'>
+								<ul>
+									<li>
+										<i class='fa-regular fa-circle-check fa-lg'></i>On-demand
+										tax support
+									</li>
+									<li>
+										<i class='fa-regular fa-circle-check fa-lg'></i>Your
+										personal tax expert
+									</li>
+									<li>
+										<i class='fa-regular fa-circle-check fa-lg'></i>Guaranteed
+										accuracy
+									</li>
+									<li>
+										<i class='fa-regular fa-circle-check fa-lg'></i>Guaranteed
+										accuracy
+									</li>
+								</ul>
+								<ul>
+									<li>
+										<i class='fa-regular fa-circle-check fa-lg'></i>On-demand
+										tax support
+									</li>
+									<li>
+										<i class='fa-regular fa-circle-check fa-lg'></i>Your
+										personal tax expert
+									</li>
+									<li>
+										<i class='fa-regular fa-circle-check fa-lg'></i>Guaranteed
+										accuracy
+									</li>
+									<li>
+										<i class='fa-regular fa-circle-check fa-lg'></i>Guaranteed
+										accuracy
+									</li>
+								</ul>
 							</div>
-							<div>
-								<label htmlFor='emailid'>Email</label>
-								<input type='text' id='emailid' name='emailid' />
-							</div>
+							<button className='tax5-btn' data-aos='fade-up'
+				data-aos-duration='800'>
+								View All Industries <i class='fa-solid fa-arrow-right'></i>{" "}
+							</button>
 						</div>
-
-						<label htmlFor='message'>Message</label>
-						<input type='text' id='message' name='message' />
-
-						<button className='tax-form-btn'>Register</button>
-					</form>
+					</div>
 				</div>
-				<div className='tax-section7-right' style={boxStyle}>
-					<img src='./images/s8.png' alt='' />
+				<div className='tax-section7-right'>
+					<img src='./images/sec7img2.png' alt=''data-aos='fade-left'
+				data-aos-duration='800' />
 				</div>
 			</div>
 		</div>

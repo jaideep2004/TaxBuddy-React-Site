@@ -7,39 +7,16 @@ const Footer = () => {
 		<footer className='footer'>
 			{/* Footer Columns */}
 			<div className='footer-columns'>
-				<div className='footer-column'>
-					<h4>TaxBuddy</h4>
-					<ul>
-						<li>
-							<NavLink
-								to='/'
-								end
-								className={({ isActive }) => (isActive ? "active" : "")}>
-								Home
-							</NavLink>
-						</li>
-						<li>
-							<NavLink
-								to='/about'
-								className={({ isActive }) => (isActive ? "active" : "")}>
-								About Us
-							</NavLink>
-						</li>
-						<li>
-							<NavLink
-								to='/services'
-								className={({ isActive }) => (isActive ? "active" : "")}>
-								Services
-							</NavLink>
-						</li>
-						<li>
-							<NavLink
-								to='/contact'
-								className={({ isActive }) => (isActive ? "active" : "")}>
-								Contact Us
-							</NavLink>
-						</li>
-					</ul>
+				<div className='footer-column' id='first-f-col'>
+					<h3>TaxHarbor</h3>
+					<p>2905 Donington Dr, Alaska, United States </p>
+					<p>hello@fint.com</p>
+					<p>
+						<i class='fa-brands fa-instagram fa-xl'></i>
+						<i class='fa-brands fa-facebook fa-xl'></i>
+						<i class='fa-brands fa-whatsapp fa-xl'></i>
+						<i class='fa-brands fa-x-twitter fa-xl'></i>
+					</p>
 				</div>
 				<div className='footer-column'>
 					<h4>Support</h4>
@@ -96,7 +73,8 @@ const Footer = () => {
 
 			{/* Social Icons Row */}
 			<div className='footer-social-icons'>
-				<img src='./images/logo.webp' alt='' />
+				
+				<h3 style={{color:"white"}}>TaxHarbor</h3>
 				<a
 					href='https://facebook.com'
 					target='_blank'

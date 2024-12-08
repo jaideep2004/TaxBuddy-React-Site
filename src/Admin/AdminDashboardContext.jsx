@@ -1,20 +1,16 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect,useMemo } from "react";
 import axios from "./utils/axiosConfig";
 
-// Create a Context
 const AdminDashboardContext = createContext();
 
-// Create a provider component
 const AdminDashboardProvider = ({ children }) => {
 	const [servicesCount, setServicesCount] = useState(0);
 	const [usersCount, setUsersCount] = useState(0);
 	const [managersCount, setManagersCount] = useState(0);
-	
 	const [employeesCount, setEmployeesCount] = useState(0);
 	const [customersCount, setCustomersCount] = useState(0);
-
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState("");
+	const [error, setError] = useState(null);
 	const [services, setServices] = useState([]);
 	const [users, setUsers] = useState([]);
 	const [newService, setNewService] = useState({
@@ -50,40 +46,43 @@ const AdminDashboardProvider = ({ children }) => {
 		customerId: "",
 		employeeId: "",
 	});
-
+	const [showUserForm, setShowUserForm] = useState(false);
+	const [showAssignCustomerForm, setShowAssignCustomerForm] = useState(false);
+	// Fetch Dashboard Data
 	const fetchDashboardData = async () => {
 		const token = localStorage.getItem("adminToken");
 		if (!token) {
 			setError("Unauthorized access");
+			setLoading(false);
 			return;
 		}
-
 		const headers = { Authorization: `Bearer ${token}` };
+		setLoading(true);
+		setError(null);
 
 		try {
-			const dashboardResponse = await axios.get(
+			const { data } = await axios.get(
 				"http://localhost:5000/api/admin/dashboard",
 				{ headers }
 			);
+			const { services, users } = data;
 
-			const { services, users } = dashboardResponse.data;
 			setServices(services);
 			setUsers(users);
 			setServicesCount(services.length);
 			setUsersCount(users.length);
-
-			// Count employees from users
-			const employees = users.filter((user) => user.role === "employee");
-			setEmployeesCount(employees.length);
-			const customers = users.filter((user) => user.role === "customer");
-			setCustomersCount(customers.length);
-			const managers = users.filter((user) => user.role === "manager");
-			setManagersCount(managers.length);
-
-			setLoading(false);
+			setEmployeesCount(
+				users.filter((user) => user.role === "employee").length
+			);
+			setCustomersCount(
+				users.filter((user) => user.role === "customer").length
+			);
+			setManagersCount(users.filter((user) => user.role === "manager").length);
 		} catch (err) {
+			console.error("Dashboard fetch error:", err);
+			setError(err.response?.data?.message || "Failed to load dashboard data.");
+		} finally {
 			setLoading(false);
-			setError("Failed to load dashboard data.");
 		}
 	};
 
@@ -91,31 +90,42 @@ const AdminDashboardProvider = ({ children }) => {
 		fetchDashboardData();
 	}, []);
 
-	// Handler Functions
+	// Generic Error Reset Function
+	const resetError = () => setError(null);
+
+	// Create Service Handler
 	const handleCreateService = async () => {
+		resetError();
 		const { name, description, price } = newService;
 
 		if (!name || !description || !price) {
-			setError("Please provide all fields.");
+			setError("Please fill in all fields.");
 			return;
 		}
 
 		try {
 			const token = localStorage.getItem("adminToken");
-			const response = await axios.post(
-				"http://localhost:5000/api/services",
+			const { data } = await axios.post(
+				"http://localhost:5000/api/admin/services",
 				{ name, description, price },
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
-
-			setServices([...services, response.data.service]);
+			setServices([...services, data.service]);
 			alert("Service created successfully.");
+			setNewService({
+				name: "",
+				description: "",
+				price: "",
+			});
 		} catch (err) {
-			setError("Error creating service.");
+			console.error("Service creation error:", err);
+			setError(err.response?.data?.message || "Error creating service.");
 		}
 	};
 
+	// Other functions follow the same error handling pattern
 	const handleCreateManager = async () => {
+		resetError();
 		const { name, email, role, serviceId, username, password } = newManager;
 
 		if (!name || !email || !role || !serviceId || !username || !password) {
@@ -125,21 +135,31 @@ const AdminDashboardProvider = ({ children }) => {
 
 		try {
 			const token = localStorage.getItem("adminToken");
-			const response = await axios.post(
+			const data = await axios.post(
 				"http://localhost:5000/api/admin/manager",
 				{ name, email, role, serviceId, username, password },
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
+			setUsers((prevUsers) => [...prevUsers, data.user]);
 
 			alert("Manager created successfully.");
+			setNewManager({
+				name: "",
+				email: "",
+				role: "",
+				serviceId: "",
+				username: "",
+				password: "",
+			});
 		} catch (err) {
-			setError("Error creating manager.");
+			setError(err.response?.data?.message || "Error creating user.");
 		}
 	};
 
 	const handleCreateEmployee = async () => {
 		const { name, email, role, serviceId, username, password } = newEmployee;
 
+		// Validate required fields
 		if (!name || !email || !role || !serviceId || !username || !password) {
 			setError("Please provide all fields.");
 			return;
@@ -147,14 +167,20 @@ const AdminDashboardProvider = ({ children }) => {
 
 		try {
 			const token = localStorage.getItem("adminToken");
-			await axios.post(
+
+			// Send the request to the server to create a new employee
+			const { data } = await axios.post(
 				"http://localhost:5000/api/admin/employee",
 				{ name, email, role, serviceId, username, password },
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
 
+			// Add the newly created employee to the users state
+			setUsers((prevUsers) => [...prevUsers, data.user]);
+
 			alert("Employee created successfully.");
-			setShowEmployeeForm(false);
+
+			// Reset the employee form
 			setNewEmployee({
 				name: "",
 				email: "",
@@ -227,6 +253,7 @@ const AdminDashboardProvider = ({ children }) => {
 	};
 
 	const handleCreateUser = async () => {
+		// Validate required fields
 		if (!newUser.name || !newUser.email || !newUser.role) {
 			setError("Please provide all required fields.");
 			return;
@@ -234,14 +261,28 @@ const AdminDashboardProvider = ({ children }) => {
 
 		try {
 			const token = localStorage.getItem("adminToken");
-			const response = await axios.post(
+
+			// Send the request to create a new user
+			const { data } = await axios.post(
 				"http://localhost:5000/api/admin/createUser",
 				newUser,
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
 
+			// Dynamically add the newly created user to the `users` state
+			setUsers((prevUsers) => [...prevUsers, data.user]);
+
 			alert("User created successfully.");
-			setUsers([...users, response.data.employee]); // Update users with the new employee
+
+			// Reset the form state for new user creation
+			setNewUser({
+				role: "",
+				name: "",
+				email: "",
+				serviceId: "",
+				username: "",
+				password: "",
+			});
 		} catch (err) {
 			console.error("Error creating user:", err);
 			setError("Error creating user.");
@@ -331,6 +372,10 @@ const AdminDashboardProvider = ({ children }) => {
 			alert("Failed to delete service. Please try again.");
 		}
 	};
+	const employees = useMemo(() => {
+		return users.filter((user) => user && user.role === "employee");
+	}, [users]);
+	
 
 	return (
 		<AdminDashboardContext.Provider
@@ -343,7 +388,9 @@ const AdminDashboardProvider = ({ children }) => {
 				loading,
 				error,
 				services,
+				setServices,
 				users,
+				setUsers,
 				newService,
 				setNewService,
 				newEmployee,
@@ -354,6 +401,7 @@ const AdminDashboardProvider = ({ children }) => {
 				setNewUser,
 				fetchDashboardData,
 				handleCreateService,
+				resetError,
 				handleCreateManager,
 				handleActivateUser,
 				handleDeactivateUser,
@@ -365,11 +413,11 @@ const AdminDashboardProvider = ({ children }) => {
 				handleAssignCustomer,
 				handleUpdateService,
 				handleDeleteService,
+				employees,
 			}}>
 			{children}
 		</AdminDashboardContext.Provider>
 	);
 };
 
-// Export the context and provider
 export { AdminDashboardContext, AdminDashboardProvider };

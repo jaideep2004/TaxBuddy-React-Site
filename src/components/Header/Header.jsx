@@ -23,12 +23,14 @@ const Header = () => {
 	return (
 		<header className='tax-header'>
 			<div className='tax-header-wrap'>
-				<div className='tax-logo'>
-					{/* <img src='./images/logo.webp' alt='' /> */}
-					<div>
-						Tax<span>Harbor</span>
+				<NavLink to='/' >
+					<div className='tax-logo'>
+						<div>
+							<i class='fa-solid fa-money-bills'></i>
+							Tax<span>Harbor</span>
+						</div>
 					</div>
-				</div>
+				</NavLink>
 				<div className='tax-nav-wrap'>
 					<nav className='tax-top-nav'>
 						<NavLink
@@ -58,6 +60,18 @@ const Header = () => {
 							)}
 						</NavLink>
 						<NavLink
+							to='/services'
+							className={({ isActive }) => (isActive ? "active" : "")}>
+							Industries
+							<i class='fa-solid fa-caret-down'></i>
+						</NavLink>
+						<NavLink
+							to='/services'
+							className={({ isActive }) => (isActive ? "active" : "")}>
+							Case Studies
+							<i class='fa-solid fa-caret-down'></i>
+						</NavLink>
+						<NavLink
 							to='/contact'
 							className={({ isActive }) => (isActive ? "active" : "")}>
 							Contact Us
@@ -65,9 +79,9 @@ const Header = () => {
 					</nav>
 				</div>
 				<div className='tax-header-btn'>
-					<button>
-						Login <i class='fa-solid fa-angle-right'></i>
-					</button>
+				<button className='tax5-btn'>
+					Start Filing <i class='fa-solid fa-arrow-right'></i>{" "}
+				</button>
 				</div>
 			</div>
 		</header>

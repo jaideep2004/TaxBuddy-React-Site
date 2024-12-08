@@ -18,12 +18,23 @@ const TaxFlipbox = ({ title, content, icon }) => {
 			onMouseLeave={handleMouseLeave}>
 			<div className={`flip-box-inner ${isFlipped ? "flipped" : ""}`}>
 				<div className='flip-box-front'>
-					<i class={`icon ${icon}`} aria-hidden='true'></i>
-					<h2>{title}</h2>
+					<div>
+						<i class={`icon ${icon}`} aria-hidden='true'></i>
+					</div>
+					<div>
+						<h2>{title}</h2>
+						<a href=''>
+							Learn More <i class='fa-solid fa-arrow-right'></i>
+						</a>
+					</div>
 				</div>
 				<div className='flip-box-back'>
-					<i class={`icon ${icon}`} aria-hidden='true'></i>
-					<p>{content}</p>
+					<div>
+						<i class={`icon ${icon}`} aria-hidden='true'></i>
+					</div>
+					<div>
+						<p>{content}</p>
+					</div>
 				</div>
 			</div>
 		</div>

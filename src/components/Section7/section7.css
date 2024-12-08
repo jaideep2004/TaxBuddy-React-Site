@@ -2,20 +2,81 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background-image: linear-gradient(90deg, #1b1b1b 0%, #023047 100%);
+
 	padding: 20px 0px;
+}
+.tax-section7-wrap {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 85%;
 }
 .tax-section7-left {
 	display: flex;
-	flex-direction: column;
-    padding: 15px;
-
+	padding: 15px;
+	/* flex: 1.5; */
 	h1 {
 		font-size: 40px;
-		color: var(--secondary);
-		margin: 0;
+		font-weight: 500;
+		line-height: 49px;
+		min-width: 400px;
+		color: var(--primary);
+		position: relative;
+	}
+	h1::before {
+		content: "";
+		position: absolute;
+		left: -19px;
+		top: -25px;
+		bottom: 0;
+		width: 6px; /* Thickness of the line */
+		background-color: var(--accent); /* Color of the line */
+		margin-top: 4px;
+	}
+	img {
+		height: 540px;
+	}
+	
+}
+.tax7-center{
+	padding: 0px 15px;
+	margin-top: 10px;
+}
+.tax7-list {
+	/* border: 1px solid black; */
+	/* padding: 10px 30px; */
+	display: flex;
+	flex-direction: column;
+	p{
+		margin: 10px 0px;
 	}
 }
+.tax-7list-con {
+	display: flex;
+	margin-bottom: 20px;
+	gap: 23px;
+}
+.tax-7list-con ul {
+	/* border: 1px solid black; */
+	display: flex;
+	flex-direction: column;
+	/* align-items: center; */
+	justify-content: space-between;
+	padding: 2px;
+	margin-top: 20px;
+	gap: 15px;
+	flex-wrap: wrap;
+
+	li {
+		min-width: 250px;
+		list-style: none;
+	}
+	i {
+		margin-right: 5px;
+		color: var(--accent);
+	}
+}
+
 .tax-section7-head {
 	p {
 		max-width: 540px;
@@ -23,63 +84,17 @@
 		color: white;
 	}
 }
-.tax-section7-wrap {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-.tax-section7-form {
-	border-radius: 8px;
-	display: flex;
-	flex-direction: column;
-	background-color: var(--secondary);
-	/* border-top: 6px solid var(--accent); */
-	padding: 19px;
-	max-width: 480px;
-	box-shadow:  inset 1px 1px 5px var(--primary);
-	backdrop-filter: blur(20px);
-	gap: 15px;
-	/* box-shadow: 2px 2px 0px var(--accent); */
-	label {
-		color: var(--primary);
-	}
-	input {
-        margin: 0;
-		padding: 10px;
-		/* max-width: 350px; */
-		border-radius: 10px;
-		border: 1px solid gray;
-		outline: none;
-		font-size: 17px;
-        
-	}
-}
-.mob-form-cont {
-	display: flex;
-	align-items: center;
-    /* justify-content: space-between; */
-    gap: 10px;
-	div {
-		display: flex;
-		flex-direction: column;
-	}
-}
 
 .tax-section7-right {
-	
-	/* background-image: url("./images/s13.png"); */
-	background-repeat: no-repeat;
-	background-size: contain;
-	background-position: center;
-   padding-top: 10px;
-    
+	padding-top: 10px;
+	display: flex;
+	/* flex: 1; */
 }
-
 
 .tax-section7-right img {
 	opacity: 2;
-	width: 560px;
-    z-index: 3;
+	/* width: 560px; */
+	z-index: 3;
 }
 .tax-form-btn {
 	background-color: var(--primary);

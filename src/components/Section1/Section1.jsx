@@ -2,18 +2,39 @@ import React from "react";
 import "./section1.css";
 import { TypeAnimation } from "react-type-animation";
 import Section2 from "../Section2/Section2";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 
 const Section1 = () => {
-	function ColoredText({ color, children }) {
-		return <span style={{ color }}>{children}</span>;
-	}
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: "smooth" });
+		AOS.init();
+	}, []);
+
+	const boxStyle1 = {
+		backgroundImage: `url(${"./images/hero4.png"})`,
+	};
 
 	return (
 		<>
 			<div className='tax-section1'>
 				<div className='tax-section1-wrap'>
-					<div className='tax-section1-left'>
-						<h1>Assisted Tax Filing Platform For</h1>
+					<div className='tax-section1-left' style={boxStyle1} data-aos='fade-up'
+				data-aos-duration='800'>
+						{/* <img src="./images/sp1.png" alt="" />
+						<img src="./images/sp2.png" alt="" />
+						<img src="./images/sp3.png" alt="" />
+						<img src="./images/sp4.png" alt="" /> */}
+					</div>
+					<div className='tax-section1-right'>
+						<p id='gray-logo'>TaxHarbor</p>
+						<div className='head-wrap1' data-aos='fade-down'
+				data-aos-duration='1000'>
+							<h1>
+								Assisted Tax Filing Platform <br /> For
+							</h1>
+						</div>
 						<TypeAnimation
 							sequence={[
 								"Salaried taxpayers",
@@ -34,19 +55,20 @@ const Section1 = () => {
 							repeat={Infinity}
 							cursor={false}
 						/>
-						<p>4.9 ★ Google rating from 16,000+ reviews</p>
+						<p>
+							Taxation is the cornerstone of a functioning society, enabling
+							governments to fund essential services such as healthcare,
+							education, infrastructure, and public safety.
+						</p>
 						<div className='tax-section1-input'>
-							<input type='text' placeholder='Enter your Mobile Number' />
-							<button>Start Filing</button>
+							{/* <input type='text' placeholder='Enter your Mobile Number' /> */}
+							<button>
+								Schedule My Free Call <i class='fa-solid fa-chevron-right'></i>
+							</button>
 						</div>
 					</div>
-
-					<div className='tax-section1-right'>
-						<img src='./images/hero3.png' alt='' />
-					</div>
 				</div>
-            </div>
-            
+			</div>
 		</>
 	);
 };
