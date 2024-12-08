@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import "./header.css";
 import { NavLink } from "react-router-dom";
 import DropDownMenu from "./DropDownMenu";
+import HomeDropdown from "./HomeDropdown";
 
-const Header = () => {
+const Header = ({ changeTheme }) => {
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 	let dropdownTimeout;
 
@@ -20,10 +21,16 @@ const Header = () => {
 			setIsDropdownVisible(false);
 		}, 200); // Delay before hiding the dropdown (200ms)
 	};
+	const [theme, setTheme] = useState("theme1");
+
+	const handleChangeTheme = (themeName) => {
+	  setTheme(themeName);
+	  applyTheme(colorThemes[themeName]);
+	};
 	return (
 		<header className='tax-header'>
 			<div className='tax-header-wrap'>
-				<NavLink to='/' >
+				<NavLink to='/'>
 					<div className='tax-logo'>
 						<div>
 							<i class='fa-solid fa-money-bills'></i>
@@ -36,15 +43,24 @@ const Header = () => {
 						<NavLink
 							to='/'
 							end
-							className={({ isActive }) => (isActive ? "active" : "")}>
+							className={({ isActive }) => (isActive ? "active" : "")}
+							onMouseEnter={handleMouseEnter}
+							onMouseLeave={handleMouseLeave}>
 							Home
+							{isDropdownVisible && (
+								<div
+									onMouseEnter={() => clearTimeout(dropdownTimeout)}
+									onMouseLeave={handleMouseLeave}>
+									<HomeDropdown changeTheme={changeTheme} />
+								</div>
+							)}
 						</NavLink>
 						<NavLink
 							to='/about'
 							className={({ isActive }) => (isActive ? "active" : "")}>
 							About Us
 						</NavLink>
-						<NavLink
+						{/* <NavLink
 							to='/services'
 							className={({ isActive }) => (isActive ? "active" : "")}
 							onMouseEnter={handleMouseEnter}
@@ -58,6 +74,14 @@ const Header = () => {
 									<DropDownMenu />
 								</div>
 							)}
+						</NavLink> */}
+						<NavLink
+							to='/services'
+							className={({ isActive }) => (isActive ? "active" : "")}
+							>
+							Services
+							<i class='fa-solid fa-caret-down'></i>
+							
 						</NavLink>
 						<NavLink
 							to='/services'
@@ -79,9 +103,9 @@ const Header = () => {
 					</nav>
 				</div>
 				<div className='tax-header-btn'>
-				<button className='tax5-btn'>
-					Start Filing <i class='fa-solid fa-arrow-right'></i>{" "}
-				</button>
+					<button className='tax5-btn'>
+						Start Filing <i class='fa-solid fa-arrow-right'></i>{" "}
+					</button>
 				</div>
 			</div>
 		</header>

@@ -63,12 +63,19 @@ import AdminDashboard from "./Admin/AdminDashboard";
 import ProtectedRoute from "./Admin/utils/ProtectedRoute";
 import { AdminDashboardProvider } from "./Admin/AdminDashboardContext";
 import ServicePage from "./components/Services/ServicePage";
-
+import { colorThemes,applyTheme } from "./components/Header/themes";
+import { useState } from "react";
 function App() {
+  const [currentTheme, setCurrentTheme] = useState("theme1");
+
+  const handleThemeChange = (themeName) => {
+    setCurrentTheme(themeName);
+    applyTheme(colorThemes[themeName]);
+  };
   return (
     <AdminDashboardProvider>
       <Router>
-        <Header />
+        <Header changeTheme={handleThemeChange} />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/section1' element={<Section1 />} />
