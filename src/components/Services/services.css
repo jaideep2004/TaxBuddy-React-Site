@@ -1,0 +1,27 @@
+.tax-service-page {
+	border: 1px solid black;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.service-page-wrap {
+	border: 1px solid black;
+	display: flex;
+	flex-direction: column;
+	width: 90%;
+	align-items: center;
+	justify-content: center;
+    
+}
+.service-banner{
+    background-image: url('./images/e1.jpg');
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}

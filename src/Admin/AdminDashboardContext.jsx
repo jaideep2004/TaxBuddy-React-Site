@@ -1,6 +1,6 @@
-import React, { createContext, useState, useEffect,useMemo } from "react";
+import React, { createContext, useState, useEffect, useMemo } from "react";
 import axios from "./utils/axiosConfig";
-
+import { useNavigate } from "react-router-dom";
 const AdminDashboardContext = createContext();
 
 const AdminDashboardProvider = ({ children }) => {
@@ -13,6 +13,11 @@ const AdminDashboardProvider = ({ children }) => {
 	const [error, setError] = useState(null);
 	const [services, setServices] = useState([]);
 	const [users, setUsers] = useState([]);
+	//login
+	const [isAuthenticated, setIsAuthenticated] = useState(
+		!!localStorage.getItem("adminToken")
+	);
+
 	const [newService, setNewService] = useState({
 		name: "",
 		description: "",
@@ -87,11 +92,48 @@ const AdminDashboardProvider = ({ children }) => {
 	};
 
 	useEffect(() => {
-		fetchDashboardData();
+		const token = localStorage.getItem("adminToken");
+		if (token) {
+			fetchDashboardData();
+		}
 	}, []);
 
 	// Generic Error Reset Function
 	const resetError = () => setError(null);
+	//login
+	const login = async (email, password) => {
+		setLoading(true);
+		setError(null);
+	  
+		try {
+		  const response = await axios.post("http://localhost:5000/api/admin/login", {
+			email,
+			password,
+		  });
+		  const token = response.data.token;
+	  
+		  if (token) {
+			localStorage.setItem("adminToken", token); // Save token
+			setIsAuthenticated(true); // Update context state
+			return true; // Successful login
+		  } else {
+			throw new Error("Token not received from server");
+		  }
+		} catch (err) {
+		  console.error("Login error:", err.response?.data?.message || err.message);
+		  setError(err.response?.data?.message || "An error occurred during login."); // Set error state
+		  return false; // Login failed
+		} finally {
+		  setLoading(false);
+		}
+	  };
+	  
+	  
+
+	  const logout = () => {
+		localStorage.removeItem("adminToken"); // Clear the token
+		setIsAuthenticated(false); // Update authentication state
+	  };
 
 	// Create Service Handler
 	const handleCreateService = async () => {
@@ -339,7 +381,6 @@ const AdminDashboardProvider = ({ children }) => {
 				}
 			);
 
-			// Update the services in t he frontend after successful response
 			setServices((prevServices) =>
 				prevServices.map((service) =>
 					service._id === updatedService._id ? response.data.service : service
@@ -375,7 +416,6 @@ const AdminDashboardProvider = ({ children }) => {
 	const employees = useMemo(() => {
 		return users.filter((user) => user && user.role === "employee");
 	}, [users]);
-	
 
 	return (
 		<AdminDashboardContext.Provider
@@ -413,6 +453,10 @@ const AdminDashboardProvider = ({ children }) => {
 				handleAssignCustomer,
 				handleUpdateService,
 				handleDeleteService,
+				//login
+				isAuthenticated,
+				login,
+				logout,
 				employees,
 			}}>
 			{children}

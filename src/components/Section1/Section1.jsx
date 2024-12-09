@@ -13,63 +13,57 @@ const Section1 = () => {
 	}, []);
 
 	const boxStyle1 = {
-		backgroundImage: `url(${"./images/hero4.png"})`,
+		backgroundImage: `url(${"./images/hero6.jpg"})`,
+		backgroundPosition:` 94% 70%`,
 	};
 
 	return (
-		<>
-			<div className='tax-section1'>
-				<div className='tax-section1-wrap'>
-					<div className='tax-section1-left' style={boxStyle1} data-aos='fade-up'
-				data-aos-duration='800'>
-						{/* <img src="./images/sp1.png" alt="" />
-						<img src="./images/sp2.png" alt="" />
-						<img src="./images/sp3.png" alt="" />
-						<img src="./images/sp4.png" alt="" /> */}
+		<div id='tax-section1'>
+			<div className='tax-section1-wrap' style={boxStyle1}>
+				<div className='tax-section1-right'>
+					<p className='p-tag2'>WE'RE TAX CONSULTANT</p>
+					<div
+						className='head-wrap1'
+						data-aos='fade-down'
+						data-aos-duration='1000'>
+						
+						<h1>
+							Assisted Tax Filing Platform <br /> For
+						</h1>
 					</div>
-					<div className='tax-section1-right'>
-						<p id='gray-logo'>TaxHarbor</p>
-						<div className='head-wrap1' data-aos='fade-down'
-				data-aos-duration='1000'>
-							<h1>
-								Assisted Tax Filing Platform <br /> For
-							</h1>
-						</div>
-						<TypeAnimation
-							sequence={[
-								"Salaried taxpayers",
-								1000,
-								"Capital Gains taxation",
-								1000,
-								"Share Traders",
-								1000,
-								"Futures & options traders",
-								1000,
-								"Businessmen",
-								1000,
-							]}
-							className='tax-type-animate'
-							wrapper='span'
-							speed={50}
-							style={{ fontSize: "2em", display: "inline-block" }}
-							repeat={Infinity}
-							cursor={false}
-						/>
-						<p>
-							Taxation is the cornerstone of a functioning society, enabling
-							governments to fund essential services such as healthcare,
-							education, infrastructure, and public safety.
-						</p>
-						<div className='tax-section1-input'>
-							{/* <input type='text' placeholder='Enter your Mobile Number' /> */}
-							<button>
-								Schedule My Free Call <i class='fa-solid fa-chevron-right'></i>
-							</button>
-						</div>
+					<TypeAnimation
+						sequence={[
+							"Salaried taxpayers",
+							1000,
+							"Capital Gains taxation",
+							1000,
+							"Share Traders",
+							1000,
+							"Futures & options traders",
+							1000,
+							"Businessmen",
+							1000,
+						]}
+						className='tax-type-animate'
+						wrapper='span'
+						speed={50}
+						style={{ fontSize: "2em", display: "inline-block" }}
+						repeat={Infinity}
+						cursor={false}
+					/>
+					<p>
+						Taxation is the cornerstone of a functioning society, enabling
+						governments to fund essential services such as healthcare,
+						education, infrastructure, and public safety.
+					</p>
+					<div className='tax-section1-input'>
+						<button className='tax5-btn'>
+							Schedule Free Call <i class='fa-solid fa-arrow-right'></i>{" "}
+						</button>
 					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

@@ -18,15 +18,14 @@ const Section8 = () => {
 	return (
 		<div className='tax-section8'>
 			<div className='tax8-video'>
-				<video
+				{/* <video
 					src='https://themes.envytheme.com/fint/wp-content/uploads/2024/01/lookbook.m4v'
 					autoPlay
 					muted
-					loop></video>
+					loop></video> */}
 			</div>
 			<div className='tax-section8-wrap'>
-				<div className='tax-section8-left' data-aos='fade-right'
-				data-aos-duration='800'>
+				<div className='tax-section8-left' >
 					<p className='p-tag2'>SCHEDULE AN INTRO CALL</p>
 					<h1>Your integrated finance team is just a call away</h1>
 					<p>
@@ -59,7 +58,8 @@ const Section8 = () => {
 						</ul>
 					</div>
 				</div>
-				<div className='tax-section8-right2'>
+				<div className='tax-section8-right2' data-aos='fade-up'
+				data-aos-duration='800'>
 					<h2>Let’s get started!</h2>
 					<p>
 						Please reach out using the form below and we'll get back to you

@@ -10,7 +10,7 @@ const Section5 = () => {
 		AOS.init();
 	}, []);
 	return (
-		<div className='tax-section5'>
+		<div id='tax-section5'>
 			<div className='tax-section5-wrap'>
 				<div className='tax-section5-left' data-aos='fade-left'
 				data-aos-duration='800'>

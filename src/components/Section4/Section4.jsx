@@ -69,23 +69,26 @@ const Section4 = () => {
 		},
 	];
 	return (
-		<div className='tax-section4-wrap'>
-			<div data-aos='fade-down'
-				data-aos-duration='800'>
-				<p className="p-tag2">WHY US</p>
-				<h1>Why Should You Choose <br /> TaxHarbor</h1>
-			</div>
+		
+			<div className='tax-section4-wrap'>
+				<div data-aos='fade-down' data-aos-duration='800'>
+					<p className='p-tag2'>WHY US</p>
+					<h1>
+						Why Should You Choose <br /> TaxHarbor
+					</h1>
+				</div>
 
-			<Slider {...settings} className='slider'>
-				{testimonials.map((testimonial) => (
-					<TestCard
-						img={testimonial.img}
-						heading={testimonial.heading}
-						desc={testimonial.desc}
-					/>
-				))}
-			</Slider>
-		</div>
+				<Slider {...settings}>
+					{testimonials.map((testimonial) => (
+						<TestCard
+							img={testimonial.img}
+							heading={testimonial.heading}
+							desc={testimonial.desc}
+						/>
+					))}
+				</Slider>
+			</div>
+		
 	);
 };
 

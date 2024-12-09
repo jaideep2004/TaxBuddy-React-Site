@@ -15,52 +15,61 @@ const Section6 = () => {
 		triggerOnce: true, // Trigger only once
 		threshold: 0.1, // Trigger when 50% of the element is in the view
 	});
+	const boxStyle3 = {
+		backgroundImage: `url(${"./images/sec6bg.jpg"})`,
+		backgroundPosition:`bottom`
+	};
+
 	return (
-		<div className='tax-section6'>
-			<div className='tax-section6wrap'>
+		<div className='tax-section6'  style={boxStyle3}>
+			<div className='tax-section6wrap' >
 				<div className='tax-section6-col'>
-					<p>Users</p>
+					
 					<div className='tax-user' ref={ref}>
-						<i class='fa-solid fa-user-group fa-lg'></i>
+						<i class='fa-solid fa-user-group fa-2xl'></i>
 						{inView && (
 							<h1>
-								<CountUp start={0} end={1000000} duration={2} />+
+								<CountUp start={0} end={1453} duration={7} />+
 							</h1>
 						)}
 					</div>
-					<p>Users from 2600 towns trust TaxBuddy</p>
+					<p>Happy Clients</p>
 				</div>
 				<div className='tax-section6-col'>
-					<p>Impact</p>
+					
 					<div className='tax-user' ref={ref}>
-						<i class='fa-solid fa-lightbulb fa-lg'></i>
+						<i class='fa-solid fa-lightbulb fa-2xl'></i>
 						{inView && (
 							<h1>
-								<CountUp start={0} end={10000} duration={4} />
+								<CountUp start={0} end={200} duration={9} />+
 							</h1>
 						)}
 					</div>
-					<p>That’s how many 1st time users save tax with TaxBuddy</p>
+					<p>Projects Completed</p>
 				</div>
 				<div className='tax-section6-col'>
-					<p>Impact</p>
+					
 					<div className='tax-user' ref={ref}>
-						<i class='fa-solid fa-rocket fa-lg'></i>
+						<i class='fa-solid fa-rocket fa-2xl'></i>
 						{inView && (
 							<h1>
-								<CountUp start={0} end={1000} duration={4} />
+								<CountUp start={0} end={10} duration={10} />+
 							</h1>
 						)}
 					</div>
-					<p>That’s how many 1st time users save tax with TaxBuddy</p>
+					<p>Years Experience</p>
 				</div>
 				<div className='tax-section6-col'>
-					<p>Founded</p>
+					
 					<div className='tax-user' ref={ref}>
-						<i class='fa-solid fa-bolt fa-lg'></i>
-						<h1>2017</h1>
+						<i class='fa-solid fa-bolt fa-2xl'></i>
+						{inView && (
+							<h1>
+								<CountUp start={0} end={50} duration={9} />+
+							</h1>
+						)}
 					</div>
-					<p>Led by a team of ex-IRS joint commissioners</p>
+					<p>Team Members</p>
 				</div>
 			</div>
 		</div>

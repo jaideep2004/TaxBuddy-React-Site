@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "./header.css";
 import { NavLink } from "react-router-dom";
 import DropDownMenu from "./DropDownMenu";
@@ -7,6 +7,7 @@ import HomeDropdown from "./HomeDropdown";
 const Header = ({ changeTheme }) => {
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 	let dropdownTimeout;
+	const [isScrolled, setIsScrolled] = useState(false);
 
 	const handleMouseEnter = () => {
 		clearTimeout(dropdownTimeout);
@@ -24,11 +25,24 @@ const Header = ({ changeTheme }) => {
 	const [theme, setTheme] = useState("theme1");
 
 	const handleChangeTheme = (themeName) => {
-	  setTheme(themeName);
-	  applyTheme(colorThemes[themeName]);
+		setTheme(themeName);
+		applyTheme(colorThemes[themeName]);
 	};
+	useEffect(() => {
+		const handleScroll = () => {
+			if (window.scrollY > 50) {
+				setIsScrolled(true);
+			} else {
+				setIsScrolled(false);
+			}
+		};
+		window.addEventListener("scroll", handleScroll);
+		return () => {
+			window.removeEventListener("scroll", handleScroll);
+		};
+	}, []);
 	return (
-		<header className='tax-header'>
+		<header className={`tax-header ${isScrolled ? "scrolled" : ""}`}>
 			<div className='tax-header-wrap'>
 				<NavLink to='/'>
 					<div className='tax-logo'>
@@ -47,20 +61,14 @@ const Header = ({ changeTheme }) => {
 							onMouseEnter={handleMouseEnter}
 							onMouseLeave={handleMouseLeave}>
 							Home
-							{isDropdownVisible && (
-								<div
-									onMouseEnter={() => clearTimeout(dropdownTimeout)}
-									onMouseLeave={handleMouseLeave}>
-									<HomeDropdown changeTheme={changeTheme} />
-								</div>
-							)}
+							
 						</NavLink>
 						<NavLink
 							to='/about'
 							className={({ isActive }) => (isActive ? "active" : "")}>
 							About Us
 						</NavLink>
-						{/* <NavLink
+						<NavLink
 							to='/services'
 							className={({ isActive }) => (isActive ? "active" : "")}
 							onMouseEnter={handleMouseEnter}
@@ -74,15 +82,13 @@ const Header = ({ changeTheme }) => {
 									<DropDownMenu />
 								</div>
 							)}
-						</NavLink> */}
-						<NavLink
+						</NavLink>
+						{/* <NavLink
 							to='/services'
-							className={({ isActive }) => (isActive ? "active" : "")}
-							>
+							className={({ isActive }) => (isActive ? "active" : "")}>
 							Services
 							<i class='fa-solid fa-caret-down'></i>
-							
-						</NavLink>
+						</NavLink> */}
 						<NavLink
 							to='/services'
 							className={({ isActive }) => (isActive ? "active" : "")}>

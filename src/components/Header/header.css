@@ -4,10 +4,31 @@ body {
 	margin: 0;
 	overflow-x: hidden;
 }
+.tax-header.scrolled {
+	background-color: white;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	a {
+		color: var(--primary);
+	}
+	div {
+		color: var(--primary);
+	}
+}
 .tax-header {
-	position: sticky;
+	position: fixed;
 	top: 0px;
-	background-color: var(--secondary);
+	/* backdrop-filter: blur(20px); */
+	/* background-color: var(--secondary); */
+	width: 100%;
+	top: 0;
+	left: 0;
+
+	transition: background-color 0.3s ease, box-shadow 0.3s ease;
+	z-index: 1000;
+	/* background-image: url("./images/hero4.png"); */
+	background-position: top center;
+	background-repeat: no-repeat;
+	background-size: cover;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -26,13 +47,17 @@ body {
 }
 .tax-logo {
 	/* border: 1px solid white; */
+	border-radius: 20px;
+	overflow: hidden;
 
 	div {
-		color: var(--fourth);
+		color: var(--secondary);
 		font-size: 35px;
 		font-weight: 700;
 		display: flex;
 		align-items: center;
+		/* backdrop-filter: blur(30px); */
+		padding: 7px 12px;
 
 		span {
 			font-weight: 500;
@@ -56,8 +81,10 @@ body {
 		position: relative;
 		font-size: 17px;
 		text-decoration: none;
-		color: var(--primary);
+		/* color: var(--primary); */
+		color: var(--secondary);
 		padding: 7px 12px;
+		/* background-color: white; */
 		border-radius: 7px;
 		transition: all 0.3s ease;
 		&:hover {
@@ -73,8 +100,11 @@ body {
 	color: var(--accent);
 }
 .tax-header-btn {
+	display: flex;
+	align-items: start;
+	justify-content: center;
 	button {
-		border: 1px solid white;
+		/* border: 1px solid white; */
 		border-radius: 5px;
 		color: var(--secondary);
 		font-size: 16px;
@@ -82,23 +112,25 @@ body {
 		outline: none;
 		padding: 15px 30px;
 		background-color: var(--primary);
+		border: 1px solid var(--accent);
 		width: 100%;
+		margin-top: -5px;
 		&:hover {
 			transition: all 0.3s ease;
 			cursor: pointer;
 			background-color: var(--accent);
 		}
 	}
-	button::before{
+	button::before {
 		content: "";
-    position: absolute;
-    top: -163%;
-    left: -203%;
-    width: 170%;
-    height: 600%;
-    background: var(--accent);
-    transform: rotate(45deg);
-    transition: all 0.4s ease;
-    z-index: -1;
+		position: absolute;
+		top: -163%;
+		left: -203%;
+		width: 170%;
+		height: 600%;
+		background: var(--accent);
+		transform: rotate(45deg);
+		transition: all 0.4s ease;
+		z-index: -1;
 	}
 }

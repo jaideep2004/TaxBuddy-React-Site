@@ -11,6 +11,36 @@ const hashPassword = (password, salt) => {
 	return hash.digest("hex");
 };
 
+const getCustomerDashboard = async (req, res) => {
+	try {
+		const { userId } = req.user; // Extract the logged-in user's ID using middleware
+
+		// Fetch user's own data
+		const user = await User.findById(userId);
+
+		// Fetch all available services
+		const services = await Service.find({});
+
+		if (!user) {
+			return res.status(404).json({ message: "User not found" });
+		}
+
+		res.status(200).json({
+			message: "Customer dashboard data fetched successfully",
+			user,
+			services,
+		});
+	} catch (err) {
+		console.error("Error fetching customer dashboard:", err);
+		res.status(500).json({ message: "Error loading customer dashboard" });
+	}
+};
+
+module.exports = {
+	getCustomerDashboard,
+};
+
+
 const getUserServices = async (req, res) => {
 	try {
 		const services = await Service.find({});
@@ -138,5 +168,6 @@ module.exports = {
     initiatePayment,
     getServiceById,
     getUserServices,
+    getCustomerDashboard
 };
 

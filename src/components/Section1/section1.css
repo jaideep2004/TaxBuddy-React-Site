@@ -1,52 +1,31 @@
-.tax-section1 {
+#tax-section1 {
 	/* border: 1px solid black; */
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	min-height: 500px;
+	
 
-	background-color: var(--secondary);
 	color: var(--primary);
+	
 }
 .tax-section1-wrap {
 	/* border: 1px solid black; */
+	
+	background-repeat: no-repeat;
+	background-size: cover;
+	min-height: 720px;
 	display: flex;
-	align-items: end;
-	/* justify-content: center; */
+	align-items: center;
+	justify-content: end;
 	padding: 0px 10px 0px 50px;
-	gap: 30px;
+	background: rgba(0, 0, 0, 0.5);
+	background-blend-mode: overlay;
+	/* gap: 30px; */
 	width: 100%;
 }
 .tax-section1-left {
-	/* border: 1px solid black; */
-	display: flex;
-
-	align-items: center;
-	justify-content: center;
-	width: 790px;
-	height: 600px;
-	background-repeat: no-repeat;
-	background-position: left;
-	padding: 0;
-	img {
-		/* width: 800px; */
-		height: 40px;
-		margin: 0;
-		position: absolute;
-		bottom: -40px;
-		left: 60px;
-	}
-	img:nth-child(2){
-		left: 210px;
-	}
-	img:nth-child(3){
-		left: 400px;
-	}
-	img:nth-child(4){
-		left: 550px;
-	}
 }
-#gray-logo{
+#gray-logo {
 	position: absolute;
 	top: -170px;
 	right: 110px;
@@ -56,26 +35,25 @@
 }
 .tax-section1-right {
 	/* border: 1px solid black; */
-	gap: 20px;
-	position: absolute;
-	right: 10px;
-	bottom: -20px;
+	gap: 15px;
 	padding: 45px;
 	display: flex;
 	flex-direction: column;
-
-	background-color: var(--primary);
+	/* backdrop-filter: blur(100px); */
+	/* background-color: var(--primary); */
 	h1 {
 		padding: 0;
 		margin: 0;
 		font-size: 45px;
 		font-weight: 600;
 		line-height: 50px;
+		/* color: var(--primary); */
 		color: var(--secondary);
 	}
 	p {
+		/* color: var(--primary); */
 		color: var(--secondary);
-		margin: 10px 0px;
+		margin: 0;
 		max-width: 520px;
 	}
 }
@@ -92,6 +70,7 @@
 }
 .tax-type-animate {
 	color: var(--accent);
+	font-weight: 600;
 	height: 40px;
 }
 .tax-section1-input {
@@ -110,15 +89,15 @@
 	button {
 		border: none;
 		outline: none;
-		padding: 13px 30px;
+		padding: 15px 35px;
 		/* background-color: var(--accent); */
 		/* background-color: #9de4a1; */
 		font-size: 16px;
 		font-weight: 600;
-		color: var(--primary);
+		color: var(--secondary);
 		border-radius: 6px;
 		/* border: 2px solid var(--accent); */
-		border: 2px solid var(--secondary);
+
 		&:hover {
 			color: var(--secondary);
 			transition: all 0.3s ease;
@@ -126,4 +105,11 @@
 			background-color: var(--primary);
 		}
 	}
+}
+
+#test-section1 {
+	background-image: url("./images/hero4.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
 }

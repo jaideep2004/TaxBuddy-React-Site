@@ -10,11 +10,13 @@ const Section2 = () => {
 		AOS.init();
 	}, []);
 	return (
-		<div className='tax-section2'>
+		<div id='tax-section2'>
 			<div className='tax-section2-wrap'>
-                <div className='tax-section2-left' data-aos='fade-right'
-				data-aos-duration='800'>
-                    <p>ABOUT TAXHARBOR</p>
+				<div
+					className='tax-section2-left'
+					data-aos='fade-right'
+					data-aos-duration='800'>
+					<p className='p-tag2'>ABOUT TAXHARBOR</p>
 					<h1>
 						We’re not your typical CPA firm, we’re an outsourced accounting
 						service
@@ -41,9 +43,9 @@ const Section2 = () => {
 						</ul>
 					</div>
 					<div className='tax-section2-input'>
-					<button className='tax5-btn'>
-								More About Us <i class='fa-solid fa-arrow-right'></i>{" "}
-							</button>
+						<button className='tax5-btn'>
+							More About Us <i class='fa-solid fa-arrow-right'></i>{" "}
+						</button>
 					</div>
 				</div>
 				<div className='tax-section2-right'>
@@ -53,12 +55,9 @@ const Section2 = () => {
 					</div>
 					<video
 						src='https://themes.envytheme.com/fint/wp-content/uploads/2024/01/about-video.m4v'
-						
 						autoPlay
 						muted
-						loop
-						
-						></video>
+						loop></video>
 				</div>
 			</div>
 		</div>

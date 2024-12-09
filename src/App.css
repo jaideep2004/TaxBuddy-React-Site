@@ -3,7 +3,7 @@
 	padding: 0;
 }
 
-:root {
+/* :root {
   --primary: #14305d;
  
   --secondary: #ffffff;
@@ -12,9 +12,9 @@
   --accent:#99a8af;
   --sixth:#242424;
  
-}
+} */
 
-/* :root {
+:root {
   --primary: #1b321d;
  
   --secondary: #ffffff;
@@ -22,7 +22,7 @@
   --fourth: #1f4959;
   --accent:#fa8977;
   --sixth:#242424;
-} */
+}
 p {
 	color: var(--sixth);
 }

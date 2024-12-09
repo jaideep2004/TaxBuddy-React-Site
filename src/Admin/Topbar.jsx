@@ -1,16 +1,24 @@
-import React from 'react'
+import React from "react";
+import { AdminDashboardContext } from "./AdminDashboardContext";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+const Topbar = () => {
+	const { logout, isAuthenticated } = useContext(AdminDashboardContext);
+	const navigate = useNavigate();
+	const handleLogout = () => {
+		logout(); // Clear authentication state
+		navigate("/admin/login"); // Redirect to login page
+	};
 
-const Topbar = ({ handleLogout }) => {
-    return (
-      <div className="topbar">
-        <div>
-          
-        </div>
-        
-        <button onClick={handleLogout}>Logout</button>
-        
-      </div>
-    );
-  }; 
+	return (
+		<div className='topbar'>
+			{isAuthenticated && (
+				<button onClick={handleLogout} className='logout-button'>
+					Logout
+				</button>
+			)}
+		</div>
+	);
+};
 
-export default Topbar
+export default Topbar;

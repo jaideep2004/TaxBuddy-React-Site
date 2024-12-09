@@ -1,4 +1,4 @@
-.tax-section5 {
+#tax-section5 {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -6,6 +6,7 @@
 	/* background-color: var(--accent); */
 	padding: 15px 0px;
 	background: linear-gradient(122deg, #ebf997 44.9%, #e3f289 80.59%);
+	margin: 30px 0px;
 }
 
 .tax-section5-left {
