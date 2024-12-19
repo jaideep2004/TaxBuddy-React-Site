@@ -8,7 +8,7 @@ const Footer = () => {
 			{/* Footer Columns */}
 			<div className='footer-columns'>
 				<div className='footer-column' id='first-f-col'>
-					<h3>TaxHarbor</h3>
+					<h3>TAXHARBOR</h3>
 					<p>
 						Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos
 						optio officia accusantium officiis facere
@@ -149,7 +149,7 @@ const Footer = () => {
 
 			{/* Social Icons Row */}
 			<div className='footer-social-icons'>
-				<h3 style={{ color: "white" }}>TaxHarbor</h3>
+				<h3 style={{ color: "white" }}>TAXHARBOR</h3>
 				<a
 					href='https://facebook.com'
 					target='_blank'
@@ -175,7 +175,7 @@ const Footer = () => {
 
 			{/* Copyright Row */}
 			<div className='footer-copyright'>
-				&copy; {new Date().getFullYear()} TaxHarbor. All rights reserved.
+				&copy; {new Date().getFullYear()} TAXHARBOR. All rights reserved.
 			</div>
 		</footer>
 	);

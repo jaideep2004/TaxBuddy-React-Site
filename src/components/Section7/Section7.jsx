@@ -79,7 +79,7 @@ const Section7 = () => {
 				</div>
 				<div className='tax7-right'>
 					{/* <p className='p-tag2'>WORKING AREAS</p> */}
-					<h1 data-aos='fade-right' data-aos-duration='800'>Why TaxHarbor ?</h1>
+					<h1 data-aos='fade-right' data-aos-duration='800'>Why TAXHARBOR ?</h1>
 					<div className='tax7-list'>
 						<p>
 							Taxation is the cornerstone of a functioning society, enabling
