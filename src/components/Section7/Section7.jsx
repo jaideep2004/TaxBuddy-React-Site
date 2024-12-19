@@ -7,6 +7,10 @@ import { useInView } from "react-intersection-observer";
 import "./section7.css";
 import CountUp from "react-countup";
 const Section7 = () => {
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: "smooth" });
+		AOS.init();
+	}, []);
 	const [value1, setValue1] = useState(0); // Slider 1 value
 	const [value2, setValue2] = useState(0); // Slider 2 value
 
@@ -21,7 +25,7 @@ const Section7 = () => {
 		if (slider1InView) {
 			let current1 = 0;
 			const interval1 = setInterval(() => {
-				if (current1 < 80) {
+				if (current1 < 95) {
 					current1 += 1;
 					setValue1(current1);
 				} else {
@@ -37,7 +41,7 @@ const Section7 = () => {
 		if (slider2InView) {
 			let current2 = 0;
 			const interval2 = setInterval(() => {
-				if (current2 < 50) {
+				if (current2 < 98) {
 					current2 += 1;
 					setValue2(current2);
 				} else {
@@ -57,7 +61,7 @@ const Section7 = () => {
 			<div className='tax-section7-wrap'>
 				<div className='tax7-left'>
 					<img src='./images/sec7banner.jpg' alt='' />
-					<div>
+					<div id='tax7-small-count'>
 						<div className='tax-section6-col'>
 							<div className='tax-user' ref={ref}>
 								<i class='fa-solid fa-rocket fa-2xl'></i>
@@ -74,8 +78,8 @@ const Section7 = () => {
 					</div>
 				</div>
 				<div className='tax7-right'>
-					<p className='p-tag2'>WORKING AREAS</p>
-					<h1>Industries that we served nationwide</h1>
+					{/* <p className='p-tag2'>WORKING AREAS</p> */}
+					<h1 data-aos='fade-right' data-aos-duration='800'>Why TaxHarbor ?</h1>
 					<div className='tax7-list'>
 						<p>
 							Taxation is the cornerstone of a functioning society, enabling

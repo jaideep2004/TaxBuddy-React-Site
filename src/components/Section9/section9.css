@@ -5,17 +5,14 @@
 
 	align-items: center;
 	padding: 50px 0px;
-	margin: 10px 0px;
-	background-image: linear-gradient(45deg, var(--accent), var(--secondary));
-	p {
-		text-align: center;
-		margin: 0;
-		padding: 0;
-	}
+	margin: 20px 0px;
+	/* background-image: linear-gradient(45deg, var(--primary) 60%, var(--accent)); */
+background-color: var(--background);
 	h1 {
+		color: var(--primary);
 		text-align: center;
-		font-size: 40px;
-		font-weight: 500;
+		font-size: 43px;
+		font-weight: 700;
 		margin: 0;
 		padding: 0;
 	}
@@ -41,11 +38,12 @@
 	top: 50%;
 	right: 0%;
 	transform: translateX(-50%);
+	transition: all 0.3s ease;
 	i {
-		color: var(--accent);
+		color: var(--primary);
 		&:hover {
 			cursor: pointer;
-			color: var(--primary);
+			color: var(--accent);
 		}
 	}
 }
@@ -142,7 +140,7 @@
 
 .orbit {
 	position: absolute;
-	border: 1px solid white;
+	border: 1px solid var(--primary);
 	border-radius: 50%;
 	animation: orbit-rotate infinite linear;
 }
@@ -150,25 +148,25 @@
 .orbit-1 {
 	width: 500px;
 	height: 500px;
-	animation-duration: 12s;
+	animation-duration: 16s;
 }
 
 .orbit-2 {
 	width: 400px;
 	height: 400px;
-	animation-duration: 10s;
+	animation-duration: 14s;
 }
 
 .orbit-3 {
 	width: 300px;
 	height: 300px;
-	animation-duration: 8s;
+	animation-duration: 12s;
 }
 
 .orbit-4 {
 	width: 200px;
 	height: 200px;
-	animation-duration: 6s;
+	animation-duration: 10s;
 }
 
 .planet {
@@ -210,4 +208,3 @@
 		transform: rotate(-360deg);
 	}
 }
-

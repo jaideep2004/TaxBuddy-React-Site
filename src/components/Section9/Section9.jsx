@@ -78,10 +78,9 @@ const Section9 = () => {
 	return (
 		<div className='tax-section9-wrap'>
 			<div data-aos='fade-down' data-aos-duration='800'>
-				<p className='p-tag2'>TESTIMONIALS</p>
+				{/* <p className='p-tag2'>TESTIMONIALS</p> */}
 				<h1>
-					Our client’s reviews inspired us the most to <br />
-					improve our services
+					Our Testimonials
 				</h1>
 			</div>
 			<div className='tax9sliderwrap'>

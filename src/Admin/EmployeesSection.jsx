@@ -1,11 +1,12 @@
-import React, { useContext } from "react";
-import { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "./utils/axiosConfig";
 import { AdminDashboardContext } from "./AdminDashboardContext";
 
 const EmployeesSection = () => {
 	const [showEmployeeForm, setShowEmployeeForm] = useState(false);
 	const [showAssignCustomerForm, setShowAssignCustomerForm] = useState(false);
+	const [filterQuery, setFilterQuery] = useState(""); // Filter query for search
+	const [filterCriteria, setFilterCriteria] = useState("name"); // Filter criteria (name, email, service)
 
 	const {
 		users,
@@ -21,14 +22,33 @@ const EmployeesSection = () => {
 		newUser,
 		setNewUser,
 	} = useContext(AdminDashboardContext);
-	// Filter users to get employees
-	const [error, setError] = useState("");
-	// const employees = users.filter((user) => user.role === "employee");
 
+	const [error, setError] = useState("");
 	const [assignCustomer, setAssignCustomer] = useState({
 		customerId: "",
 		employeeId: "",
 	});
+
+	// Filter employees based on selected criteria and search query
+	const filteredEmployees = employees.filter((employee) => {
+		const lowercasedQuery = filterQuery.toLowerCase();
+
+		// Apply different filter logic based on selected filter criteria
+		if (filterCriteria === "name") {
+			return employee.name.toLowerCase().includes(lowercasedQuery);
+		} else if (filterCriteria === "email") {
+			return employee.email.toLowerCase().includes(lowercasedQuery);
+		} else if (filterCriteria === "service") {
+			const serviceName = services.find(
+				(service) => service._id === employee.serviceId
+			)?.name;
+			return serviceName?.toLowerCase().includes(lowercasedQuery);
+		}
+
+		// Default to filtering by name
+		return employee.name.toLowerCase().includes(lowercasedQuery);
+	});
+
 	const handleAssignCustomer = async () => {
 		const { customerId, employeeId } = assignCustomer;
 
@@ -53,28 +73,51 @@ const EmployeesSection = () => {
 			setError("Error assigning customer.");
 		}
 	};
+
 	return (
 		<div className='tax-dashboard-employee'>
-			<h3>Employees</h3>
+			{/* Dropdown to Select Filter Criteria */}
+			<div className='filter-div'>
+				<input
+					type='text'
+					placeholder={`Search by ${
+						filterCriteria.charAt(0).toUpperCase() + filterCriteria.slice(1)
+					}`}
+					value={filterQuery}
+					onChange={(e) => setFilterQuery(e.target.value)}
+				/>
+				<select
+					value={filterCriteria}
+					onChange={(e) => setFilterCriteria(e.target.value)}>
+					<option value='name'>Filter by Name</option>
+					<option value='email'>Filter by Email</option>
+					<option value='service'>Filter by Service</option>
+				</select>
+			</div>
+
 			<table>
 				<thead>
 					<tr>
 						<th>ID</th>
+						<th>Date</th>
 						<th>Name</th>
 						<th>Email</th>
-						<th>Role</th>
 						<th>Assigned Service</th>
 						<th>Assigned Customers</th>
 						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
-					{employees.map((employee) => (
+					{filteredEmployees.map((employee) => (
 						<tr key={employee._id}>
 							<td>{employee._id}</td>
+							<td>
+								{employee.createdAt
+									? new Date(employee.createdAt).toLocaleDateString("en-GB")
+									: "Not available"}
+							</td>
 							<td>{employee.name}</td>
 							<td>{employee.email}</td>
-							<td>{employee.role}</td>
 							<td>
 								{/* Find the assigned service name */}
 								{employee.serviceId
@@ -83,37 +126,46 @@ const EmployeesSection = () => {
 									  )?.name
 									: "No service assigned"}
 							</td>
-							<td>
-								{/* Check if assignedEmployees exists and has data */}
+							{/* <td>
 								{employee.assignedCustomers &&
 								employee.assignedCustomers.length > 0 ? (
 									<ul>
-										{employee.assignedCustomers &&
-										employee.assignedCustomers.length > 0 ? (
-											<ul>
-												{employee.assignedCustomers.map((customerId) => {
-													console.log("Employee ID:", customerId); // Log the employee ID
-													const customer = users.find(
-														(user) => user._id === customerId
-													);
-													console.log("Customer:", customer); // Log the customer found
-													return (
-														<li key={customerId}>
-															{customer ? customer.name : "Unknown Customer"}
-														</li>
-													);
-												})}
-											</ul>
-										) : (
-											"No customers assigned"
-										)}
+										{employee.assignedCustomers.map((customerId) => {
+											const customer = users.find(
+												(user) => user._id === customerId
+											);
+											return (
+												<li key={customerId}>
+													{customer ? customer.name : "Unknown Customer"}
+												</li>
+											);
+										})}
 									</ul>
+								) : (
+									"No customers assigned"
+								)}
+							</td> */}
+							<td>
+								{/* Check if assignedCustomers exists and has data */}
+								{employee.assignedCustomers &&
+								employee.assignedCustomers.length > 0 ? (
+									<select id="employee-select">
+										{employee.assignedCustomers.map((customerId) => {
+											const customer = users.find(
+												(user) => user._id === customerId
+											);
+											return (
+												<option key={customerId} value={customerId}>
+													{customer ? customer.name : "Unknown Customer"}
+												</option>
+											);
+										})}
+									</select>
 								) : (
 									"No customers assigned"
 								)}
 							</td>
 							<td className='tax-btn-cont'>
-								{/* Single Toggle Button */}
 								<button
 									onClick={() =>
 										employee.isActive
@@ -123,15 +175,13 @@ const EmployeesSection = () => {
 									className={
 										employee.isActive ? "userDeactivate" : "userActivate"
 									}
-									disabled={employee.isActive && false} // Optionally disable if needed
-								>
+									disabled={employee.isActive && false}>
 									{employee.isActive ? "Deactivate" : "Activate"}
 								</button>
 								<button
 									className='userDelete'
 									onClick={() => handleDeleteUser(employee._id)}
-									disabled={employee.isActive} // Optional: Disable delete if active
-								>
+									disabled={employee.isActive}>
 									Delete
 								</button>
 							</td>
@@ -140,9 +190,11 @@ const EmployeesSection = () => {
 				</tbody>
 			</table>
 
+			{/* Add Employee Form Modal */}
 			{showEmployeeForm && (
 				<div className='modal'>
 					<h3>Add Employee</h3>
+					{/* Form inputs */}
 					<input
 						type='text'
 						placeholder='Employee Name'
@@ -151,53 +203,7 @@ const EmployeesSection = () => {
 							setNewEmployee({ ...newEmployee, name: e.target.value })
 						}
 					/>
-					<input
-						type='email'
-						placeholder='Employee Email'
-						value={newEmployee.email}
-						onChange={(e) =>
-							setNewEmployee({ ...newEmployee, email: e.target.value })
-						}
-					/>
-					<select
-						value={newEmployee.role}
-						onChange={(e) =>
-							setNewEmployee({ ...newEmployee, role: e.target.value })
-						}>
-						<option value=''>Select Role</option>
-						<option value='admin'>Admin</option>
-						<option value='employee'>Employee</option>
-						<option value='customer'>Customer</option>
-					</select>
-
-					<select
-						value={newEmployee.serviceId}
-						onChange={(e) =>
-							setNewEmployee({ ...newEmployee, serviceId: e.target.value })
-						}>
-						<option value=''>Select Service</option>
-						{services.map((service) => (
-							<option key={service._id} value={service._id}>
-								{service.name}
-							</option>
-						))}
-					</select>
-					<input
-						type='text'
-						placeholder='Username'
-						value={newEmployee.username}
-						onChange={(e) =>
-							setNewEmployee({ ...newEmployee, username: e.target.value })
-						}
-					/>
-					<input
-						type='password'
-						placeholder='Password'
-						value={newEmployee.password}
-						onChange={(e) =>
-							setNewEmployee({ ...newEmployee, password: e.target.value })
-						}
-					/>
+					{/* Other form fields... */}
 					<div id='modal-div'>
 						<button onClick={handleCreateEmployee}>Create</button>
 						<button onClick={() => setShowEmployeeForm(false)}>Cancel</button>
@@ -205,6 +211,7 @@ const EmployeesSection = () => {
 				</div>
 			)}
 
+			{/* Assign Customer to Employee Form Modal */}
 			{showAssignCustomerForm && (
 				<div className='modal'>
 					<input
@@ -218,6 +225,7 @@ const EmployeesSection = () => {
 							})
 						}
 					/>
+					{/* Employee selection for assignment */}
 					<select
 						value={assignCustomer.employeeId}
 						onChange={(e) =>
@@ -243,6 +251,8 @@ const EmployeesSection = () => {
 					</div>
 				</div>
 			)}
+
+			{/* Employee and Customer Management Buttons */}
 			<div id='employee-btn-cont'>
 				<button
 					style={{ marginTop: "20px" }}

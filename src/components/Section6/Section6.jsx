@@ -15,42 +15,28 @@ const Section6 = () => {
 		triggerOnce: true, // Trigger only once
 		threshold: 0.1, // Trigger when 50% of the element is in the view
 	});
-	const boxStyle3 = {
+	const boxStyle2 = {
 		backgroundImage: `url(${"./images/sec6bg.jpg"})`,
-		backgroundPosition:`bottom`
+		backgroundPosition: `bottom`,
 	};
 
 	return (
-		<div className='tax-section6'  style={boxStyle3}>
-			<div className='tax-section6wrap' >
+		<div className='tax-section6' style={boxStyle2}>
+			<div className='tax-section6wrap'>
 				<div className='tax-section6-col'>
-					
 					<div className='tax-user' ref={ref}>
 						<i class='fa-solid fa-user-group fa-2xl'></i>
 						{inView && (
 							<h1>
-								<CountUp start={0} end={1453} duration={7} />+
+								<CountUp start={0} end={1523} duration={7} />+
 							</h1>
 						)}
 					</div>
 					<p>Happy Clients</p>
 				</div>
 				<div className='tax-section6-col'>
-					
 					<div className='tax-user' ref={ref}>
-						<i class='fa-solid fa-lightbulb fa-2xl'></i>
-						{inView && (
-							<h1>
-								<CountUp start={0} end={200} duration={9} />+
-							</h1>
-						)}
-					</div>
-					<p>Projects Completed</p>
-				</div>
-				<div className='tax-section6-col'>
-					
-					<div className='tax-user' ref={ref}>
-						<i class='fa-solid fa-rocket fa-2xl'></i>
+						<i class='fa-solid fa-calendar fa-2xl'></i>
 						{inView && (
 							<h1>
 								<CountUp start={0} end={10} duration={10} />+
@@ -60,16 +46,27 @@ const Section6 = () => {
 					<p>Years Experience</p>
 				</div>
 				<div className='tax-section6-col'>
-					
+					<div className='tax-user' ref={ref}>
+						<i class='fa-solid fa-lightbulb fa-2xl'></i>
+						{inView && (
+							<h1>
+								<CountUp start={0} end={22} duration={10} />+
+							</h1>
+						)}
+					</div>
+					<p>Expert Team</p>
+				</div>
+
+				<div className='tax-section6-col'>
 					<div className='tax-user' ref={ref}>
 						<i class='fa-solid fa-bolt fa-2xl'></i>
 						{inView && (
 							<h1>
-								<CountUp start={0} end={50} duration={9} />+
+								<CountUp start={0} end={100} duration={9} />%
 							</h1>
 						)}
 					</div>
-					<p>Team Members</p>
+					<p>On-time Service</p>
 				</div>
 			</div>
 		</div>

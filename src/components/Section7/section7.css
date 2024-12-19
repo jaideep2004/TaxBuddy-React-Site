@@ -3,6 +3,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	padding: 50px 0px;
+	margin-top: 20px;
 }
 .tax-section7-wrap {
 	/* border: 1px solid black; */
@@ -27,16 +29,45 @@
 		}
 		div {
 			width: 230px;
-			h1,p {
-				color: var(--primary) !important;
-			}
 		}
 	}
 }
 
+#tax7-small-count div {
+	/* background-image: linear-gradient(45deg, var(--primary) 60%, var(--accent)); */
+	margin: 0;
+	background-color: var(--background);
+
+	div {
+		background-image: none;
+		i {
+			color: var(--primary);
+		}
+		h1 {
+			color: var(--primary);
+		}
+	}
+	p {
+		color: var(--primary);
+	}
+}
 .tax7-right {
 	/* border: 1px solid black; */
-	padding: 0px 40px;
+	padding: 10px 40px;
+	h1 {
+		position: relative;
+		font-size: 40px;
+	}
+	h1::before {
+		content: "";
+		position: absolute;
+		left: -19px;
+		top: -25px;
+		bottom: 0;
+		width: 6px; /* Thickness of the line */
+		background-color: var(--accent); /* Color of the line */
+		margin-top: 28px;
+	}
 }
 
 .tax7-center {

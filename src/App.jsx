@@ -22,7 +22,9 @@ import { useState } from "react";
 import CustomerDashboard from "./Customer/CustomerDashboard";
 import CustomerLoginPage from "./Customer/CustomerLoginPage";
 import { CustomerAuthProvider } from "./Customer/CustomerAuthContext";
+import { useNavigate } from "react-router-dom";
 import CustomerProtectedRoute from "./Customer/CustomerProtectedRoute";
+import CDashSection from "./Customer/CDashSection";
 function App() {
 	const [currentTheme, setCurrentTheme] = useState("theme1");
 
@@ -30,19 +32,67 @@ function App() {
 	// 	setCurrentTheme(themeName);
 	// 	applyTheme(colorThemes[themeName]);
 	// };
+	
 	return (
 		<AdminDashboardProvider>
-			<CustomerAuthProvider>
+				<CustomerAuthProvider >
 				<Router>
-					<Header />
+					{/* <Header /> */}
 					<Routes>
-						<Route path='/' element={<Home />} />
-						<Route path='/section1' element={<Section1 />} />
+						<Route
+							path='/'
+							element={
+								<>
+									<Header />
+									<Home />
+								</>
+							}
+						/>
+						<Route
+							path='/section1'
+							element={
+								<>
+									<Section1 />
+								</>
+							}
+						/>
 						<Route path='/section2' element={<Section2 />} />
-						<Route path='/about' element={<About />} />
-						<Route path='/services/:serviceId' element={<ServicePage />} />
-						<Route path='/contact' element={<ContactUs />} />
-						<Route path='/admin/login' element={<LoginPage />} />
+						<Route
+							path='/about'
+							element={
+								<>
+									<Header />
+									<About />
+								</>
+							}
+						/>
+						<Route
+							path='/services/:serviceId'
+							element={
+								<>
+									<Header />
+									<ServicePage />
+								</>
+							}
+						/>
+						<Route
+							path='/contact'
+							element={
+								<>
+									<Header />
+									<ContactUs />
+								</>
+							}
+						/>
+						<Route
+							path='/admin/login'
+							element={
+								<>
+									<Header />
+									<LoginPage />
+								</>
+							}
+						/>
 						<Route
 							path='/admin/dashboard'
 							element={<ProtectedRoute element={<AdminDashboard />} />}
@@ -53,13 +103,22 @@ function App() {
 						/>
 						<Route path='*' element={<Navigate to='/' replace />} />
 						{/* Customer Routes */}
-						<Route path='/customers/login' element={<CustomerLoginPage />} />
 						<Route
-							path='/customers/dashboard'
+							path='/customers/login'
+							element={
+								<>
+									<Header />
+									<CustomerLoginPage />
+								</>
+							}
+						/>
+						<Route
+							path='/customers/dashboard/:email'
 							element={
 								<CustomerProtectedRoute element={<CustomerDashboard />} />
 							}
 						/>
+
 						<Route
 							path='/customer/*'
 							element={<Navigate to='/customers/login' replace />}
@@ -67,8 +126,8 @@ function App() {
 					</Routes>
 					<Footer />
 				</Router>
-			</CustomerAuthProvider>
-		</AdminDashboardProvider>
+		</CustomerAuthProvider>
+			</AdminDashboardProvider>
 	);
 }
 

@@ -4,15 +4,17 @@
 	align-items: center;
 	justify-content: center;
 
-	height: auto;
+	
 	gap: 40px;
+	margin-top: 20px;
+	padding: 60px 0px;
 }
 .tax-section11-wrap {
-	margin-top: 80px;
 	display: flex;
 	width: 90%;
 	align-items: end;
 	justify-content: center;
+	overflow: hidden;
 }
 .faq-section-left {
 	/* border: 1px solid black; */
@@ -28,6 +30,7 @@
 	/* text-align: center; */
 	font-size: 40px;
 	margin: 0;
+	padding-left: 10px;
 }
 
 .faq-list {
@@ -44,6 +47,8 @@
 	background-color: #f2f5f3;
 	transition: background-color 0.3s;
 	/* box-shadow: 1px 1px 1px var(--accent); */
+	position: relative;
+	overflow: hidden;
 }
 
 .faq-item:last-child {
@@ -89,5 +94,6 @@ background-color: white;
 	max-width: 600px;
 	button {
 		width: 60%;
+		margin-right: 10px;
 	}
 }

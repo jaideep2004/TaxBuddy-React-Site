@@ -21,16 +21,7 @@
 		padding: 0;
 		position: relative;
 	}
-	h1::before {
-		content: "";
-		position: absolute;
-		left: -16px;
-		top: -25px;
-		bottom: 0;
-		width: 6px; /* Thickness of the line */
-		background-color: #9de4a1; /* Color of the line */
-		margin-top: 4px;
-	}
+	
 }
 
 .tax-section8-wrap {
@@ -72,10 +63,16 @@
 		margin-top: 20px;
 		color: var(--secondary);
 		background-color: var(--primary);
-		padding: 10px 15px;
+		padding: 8px 15px;
 		width: 30%;
 		border-radius: 5px;
 		text-decoration: none;
+		border: 2px solid var(--primary);
+		transition: all 0.3s ease;
+		&:hover{
+			background-color: var(--secondary);
+			color: var(--primary);
+		}
 	}
 }
 .slider {

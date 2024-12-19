@@ -17,86 +17,74 @@ const Section8 = () => {
 	};
 	return (
 		<div className='tax-section8'>
-			<div className='tax8-video'>
-				{/* <video
-					src='https://themes.envytheme.com/fint/wp-content/uploads/2024/01/lookbook.m4v'
-					autoPlay
-					muted
-					loop></video> */}
-			</div>
 			<div className='tax-section8-wrap'>
-				<div className='tax-section8-left' >
-					<p className='p-tag2'>SCHEDULE AN INTRO CALL</p>
-					<h1>Your integrated finance team is just a call away</h1>
+				<div
+					className='tax-section8-right2'
+					data-aos='fade-up'
+					data-aos-duration='800'>
+					{/* <h2>Let’s get started!</h2> */}
+
+					<form action=''>
+						<input type='text' placeholder='Name' />
+						<div className='fdiv'>
+							<input type='email' placeholder='Email' />
+							<input type='text' placeholder='Phone No' />
+						</div>
+
+						<input type='text' placeholder='Subject' />
+
+						<textarea name='' id='' placeholder='Message'></textarea>
+						<button className='tax5-btn'>
+							Submit Now <i class='fa-solid fa-arrow-right'></i>{" "}
+						</button>
+					</form>
+				</div>
+				<div className='tax-section8-left'>
+					{/* <p className='p-tag2'>SCHEDULE AN INTRO CALL</p> */}
+					<h1 data-aos='fade-right'
+					data-aos-duration='800'>
+						Schedule <span>Consultation</span> With Our Team
+					</h1>
 					<p>
 						Taxation is the cornerstone of a functioning society, enabling
 						governments to fund essential services such as healthcare,
 						education, infrastructure, and public safety.
 					</p>
-					<h2>
-						During your 30-minute call, our financial expert will determine
-						whether we’re a great mutual fit by learning:
-					</h2>
+
 					<div className='tax-8list-con'>
 						<ul>
 							<li>
-								<i class='fa-regular fa-circle-check fa-lg'></i>On-demand tax
-								support
+								<i class='fa-solid fa-phone fa-xl'></i>
+								<div className='tax-8-icontext'>
+									<h3>Phone</h3>
+									<p>+123456789</p>
+								</div>
 							</li>
 							<li>
-								<i class='fa-regular fa-circle-check fa-lg'></i>Your personal
-								tax expert
+								<i class='fa-solid fa-envelope fa-xl'></i>
+								<div className='tax-8-icontext'>
+									<h3>Email</h3>
+									<p>abc@gmail.com</p>
+								</div>
+							</li>
+						</ul>
+						<ul>
+							<li>
+								<i class='fa-solid fa-location-dot fa-xl'></i>
+								<div className='tax-8-icontext'>
+									<h3>Location</h3>
+									<p>ABC Street, XYZ</p>
+								</div>
 							</li>
 							<li>
-								<i class='fa-regular fa-circle-check fa-lg'></i>Guaranteed
-								accuracy
-							</li>
-							<li>
-								<i class='fa-regular fa-circle-check fa-lg'></i>Guaranteed
-								accuracy
+								<i class='fa-solid fa-globe fa-xl'></i>
+								<div className='tax-8-icontext'>
+									<h3>Website</h3>
+									<p>example.com</p>
+								</div>
 							</li>
 						</ul>
 					</div>
-				</div>
-				<div className='tax-section8-right2' data-aos='fade-up'
-				data-aos-duration='800'>
-					<h2>Let’s get started!</h2>
-					<p>
-						Please reach out using the form below and we'll get back to you
-						right away!
-					</p>
-					<form action=''>
-						<div className='fdiv'>
-							<input type='text' placeholder='Enter Your Name' />
-							<input type='email' placeholder='Enter Your Email' />
-						</div>
-
-						<label htmlFor=''>How Can We Help You?</label>
-						<select name='tax-8select' id=''>
-							<option value=''>Submit Tax File</option>
-							<option value=''>Submit Tax File</option>
-							<option value=''>Submit Tax File</option>
-						</select>
-						<label htmlFor=''>Is your business incorporated?</label>
-						<select name='tax-8select' id=''>
-							<option value=''>Yes</option>
-							<option value=''>No</option>
-						</select>
-						<label htmlFor=''>What's Your Annual Revenue?</label>
-						<input
-							id='rangeInput'
-							type='range'
-							min='1000'
-							max='100000'
-							step='1'
-							value={value}
-							onChange={handleChange}
-						/>
-						<p>${value}</p>
-						<button className='tax5-btn'>
-							Submit Now <i class='fa-solid fa-arrow-right'></i>{" "}
-						</button>
-					</form>
 				</div>
 			</div>
 		</div>

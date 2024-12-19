@@ -7,6 +7,7 @@ import ServicesSection from "./ServicesSection";
 import EmployeesSection from "./EmployeesSection";
 import UsersSection from "./UsersSection";
 import ManagersSection from "./ManagersSection";
+import AdminMessageCenter from "./AdminMessageCenter";
 import "./admin.css";
 import { AdminDashboardContext } from "./AdminDashboardContext";
 
@@ -42,6 +43,7 @@ const AdminDashboard = () => {
 		handleAssignCustomer,
 		handleUpdateService,
 		handleDeleteService,
+		logout,
 	} = useContext(AdminDashboardContext);
 
 	const [activeSection, setActiveSection] = useState("Dashboard");
@@ -50,26 +52,6 @@ const AdminDashboard = () => {
 	const [showManagerForm, setShowManagerForm] = useState(false);
 	const [showUserForm, setShowUserForm] = useState(false);
 	const [showAssignCustomerForm, setShowAssignCustomerForm] = useState(false);
-
-	if (error) {
-		return (
-			<div>
-				<p style={{ color: "red" }}>{error}</p>
-				<button
-					style={{
-						padding: "10px 15px",
-						backgroundColor: "#007bff",
-						color: "#fff",
-						border: "none",
-						borderRadius: "5px",
-						cursor: "pointer",
-					}}
-					onClick={handleLogout}>
-					Login Again
-				</button>
-			</div>
-		);
-	}
 
 	if (loading) {
 		return <p>Loading...</p>;
@@ -84,7 +66,7 @@ const AdminDashboard = () => {
 				setActiveSection={setActiveSection}
 			/>
 			<div className='tax-main-content'>
-				<Topbar  />
+				<Topbar activeSection={activeSection} />
 				<div className='content'>
 					{activeSection === "Dashboard" && (
 						<DashboardSection
@@ -166,6 +148,7 @@ const AdminDashboard = () => {
 							handleDeleteUser={handleDeleteUser}
 						/>
 					)}
+					{activeSection === "Message Center" && <AdminMessageCenter />}
 				</div>
 			</div>
 		</div>

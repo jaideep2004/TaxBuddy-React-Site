@@ -1,6 +1,5 @@
 import React from "react";
 import Section1 from "../Section1/Section1";
-import Section1copy from "../Section1/Section1 copy";
 import Section2 from "../Section2/Section2";
 import Section3 from "../Section3/Section3";
 import Section4 from "../Section4/Section4";
@@ -17,18 +16,15 @@ const Home = () => {
 	return (
 		<>
 			<Section1 />
-			{/* <Section1copy/> */}
-			<Section2 />
-			<Section3 />
-			<Section4 />
-			<Section5 />
-			<Section6 />
 			<Section7 />
-			<Section8 />
+			<Section3 />
+			<Section6 />
+			<Section5 />
 			<Section9 />
-			<Section10 />
+			<Section8 />
+			{/* <Section10 /> */}
 			<Section11 />
-			<Section12/>
+			{/* <Section12 /> */}
 		</>
 	);
 };

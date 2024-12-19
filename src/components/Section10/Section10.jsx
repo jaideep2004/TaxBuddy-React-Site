@@ -13,11 +13,11 @@ const Section10 = () => {
 		<div className='tax-section10'>
 			<div className='tax-section10-wrap'>
 				<div className='tax-section10-left'>
-					<p className='p-tag2' data-aos='fade-down'
-				data-aos-duration='800'>OUR TEAM</p>
+					{/* <p className='p-tag2' data-aos='fade-down'
+				data-aos-duration='800'>OUR TEAM</p> */}
 					<h1 data-aos='fade-down'
 				data-aos-duration='800'>
-						Experienced team of <br /> accountants
+						Our Team
 					</h1>
 					<div className='tax10-img-left'>
 						<figure>

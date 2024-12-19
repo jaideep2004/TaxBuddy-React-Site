@@ -54,11 +54,13 @@ const AdminDashboardProvider = ({ children }) => {
 	const [showUserForm, setShowUserForm] = useState(false);
 	const [showAssignCustomerForm, setShowAssignCustomerForm] = useState(false);
 	// Fetch Dashboard Data
+
 	const fetchDashboardData = async () => {
 		const token = localStorage.getItem("adminToken");
 		if (!token) {
-			setError("Unauthorized access");
+			setError("Session expired. Please log in again");
 			setLoading(false);
+			setIsAuthenticated(false);
 			return;
 		}
 		const headers = { Authorization: `Bearer ${token}` };
@@ -70,6 +72,10 @@ const AdminDashboardProvider = ({ children }) => {
 				"http://localhost:5000/api/admin/dashboard",
 				{ headers }
 			);
+
+			// Log the data for debugging
+			console.log(data);
+
 			const { services, users } = data;
 
 			setServices(services);
@@ -84,8 +90,17 @@ const AdminDashboardProvider = ({ children }) => {
 			);
 			setManagersCount(users.filter((user) => user.role === "manager").length);
 		} catch (err) {
-			console.error("Dashboard fetch error:", err);
-			setError(err.response?.data?.message || "Failed to load dashboard data.");
+			if (err.response && err.response.status === 401) {
+				// Handle unauthorized or token expired errors
+				setIsAuthenticated(false);
+				localStorage.removeItem("adminToken");
+				navigate("/admin/login");
+			} else {
+				console.error("Dashboard fetch error:", err);
+				setError(
+					err.response?.data?.message || "Failed to load dashboard data."
+				);
+			}
 		} finally {
 			setLoading(false);
 		}
@@ -101,39 +116,41 @@ const AdminDashboardProvider = ({ children }) => {
 	// Generic Error Reset Function
 	const resetError = () => setError(null);
 	//login
+
 	const login = async (email, password) => {
 		setLoading(true);
 		setError(null);
-	  
-		try {
-		  const response = await axios.post("http://localhost:5000/api/admin/login", {
-			email,
-			password,
-		  });
-		  const token = response.data.token;
-	  
-		  if (token) {
-			localStorage.setItem("adminToken", token); // Save token
-			setIsAuthenticated(true); // Update context state
-			return true; // Successful login
-		  } else {
-			throw new Error("Token not received from server");
-		  }
-		} catch (err) {
-		  console.error("Login error:", err.response?.data?.message || err.message);
-		  setError(err.response?.data?.message || "An error occurred during login."); // Set error state
-		  return false; // Login failed
-		} finally {
-		  setLoading(false);
-		}
-	  };
-	  
-	  
 
-	  const logout = () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:5000/api/admin/login",
+				{ email, password }
+			);
+			const token = response.data.token;
+
+			if (token) {
+				localStorage.setItem("adminToken", token); // Save token
+				setIsAuthenticated(true); // Update context state
+				await fetchDashboardData(); // Fetch dashboard data immediately after login
+				return true; // Successful login
+			} else {
+				throw new Error("Token not received from server");
+			}
+		} catch (err) {
+			console.error("Login error:", err.response?.data?.message || err.message);
+			setError(
+				err.response?.data?.message || "An error occurred during login."
+			);
+			return false; // Login failed
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const logout = () => {
 		localStorage.removeItem("adminToken"); // Clear the token
 		setIsAuthenticated(false); // Update authentication state
-	  };
+	};
 
 	// Create Service Handler
 	const handleCreateService = async () => {
@@ -416,6 +433,9 @@ const AdminDashboardProvider = ({ children }) => {
 	const employees = useMemo(() => {
 		return users.filter((user) => user && user.role === "employee");
 	}, [users]);
+	const managers = useMemo(() => {
+		return users.filter((user) => user && user.role === "manager");
+	}, [users]);
 
 	return (
 		<AdminDashboardContext.Provider
@@ -458,6 +478,7 @@ const AdminDashboardProvider = ({ children }) => {
 				login,
 				logout,
 				employees,
+				managers,
 			}}>
 			{children}
 		</AdminDashboardContext.Provider>

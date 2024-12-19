@@ -1,7 +1,10 @@
 import React, { useContext, useState } from "react";
 import { AdminDashboardContext } from "./AdminDashboardContext";
+import { useNavigate } from "react-router-dom";
 
 const DashboardSection = () => {
+	const navigate = useNavigate();
+
 	const [showServiceForm, setShowServiceForm] = useState(false);
 	const [showEmployeeForm, setShowEmployeeForm] = useState(false);
 	const [showManagerForm, setShowManagerForm] = useState(false);
@@ -15,22 +18,14 @@ const DashboardSection = () => {
 		services,
 		newService,
 		setNewService,
-		// showServiceForm,
-		// setShowServiceForm,
 		handleCreateService,
 		users,
-
-		// showUserForm,
-		// setShowUserForm,
 		newUser,
 		setNewUser,
 		handleCreateUser,
 		handleActivateUser,
 		handleDeactivateUser,
 		handleDeleteUser,
-
-		// showEmployeeForm,
-		// setShowEmployeeForm,
 		showAssignCustomerForm,
 		setShowAssignCustomerForm,
 		newManager,
@@ -39,10 +34,26 @@ const DashboardSection = () => {
 		setNewEmployee,
 		handleCreateEmployee,
 		handleCreateManager,
+		isAuthenticated,
+		error,
 	} = useContext(AdminDashboardContext);
+
+	const handleLoginAgain = () => {
+		// Redirect to login page
+		navigate("/admin/login");
+	};
+	
+	if (error) {
+		return (
+		  <div className="error-message">
+			<p>{error}</p>
+			<button onClick={handleLoginAgain}>Login Again</button>
+		  </div>
+		);
+	  }
+	
 	return (
 		<div className='tax-dashboard-section'>
-			<h1>Welcome to the Admin Dashboard</h1>
 			<div className='dashboard-summary'>
 				<div className='dashboard-card'>
 					<h3>Number of Services</h3>

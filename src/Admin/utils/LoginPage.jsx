@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import { AdminDashboardContext } from "../AdminDashboardContext";
 
 const LoginPage = () => {

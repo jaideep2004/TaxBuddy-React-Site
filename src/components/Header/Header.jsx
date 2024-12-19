@@ -1,10 +1,12 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./header.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, matchRoutes } from "react-router-dom";
 import DropDownMenu from "./DropDownMenu";
 import HomeDropdown from "./HomeDropdown";
 
+const routes = [{ path: "/" }, { path: "/services/:serviceId" }];
 const Header = ({ changeTheme }) => {
+	const isWhiteLinks = matchRoutes(routes, window.location.pathname) !== null;
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 	let dropdownTimeout;
 	const [isScrolled, setIsScrolled] = useState(false);
@@ -22,12 +24,7 @@ const Header = ({ changeTheme }) => {
 			setIsDropdownVisible(false);
 		}, 200); // Delay before hiding the dropdown (200ms)
 	};
-	const [theme, setTheme] = useState("theme1");
 
-	const handleChangeTheme = (themeName) => {
-		setTheme(themeName);
-		applyTheme(colorThemes[themeName]);
-	};
 	useEffect(() => {
 		const handleScroll = () => {
 			if (window.scrollY > 50) {
@@ -45,10 +42,13 @@ const Header = ({ changeTheme }) => {
 		<header className={`tax-header ${isScrolled ? "scrolled" : ""}`}>
 			<div className='tax-header-wrap'>
 				<NavLink to='/'>
-					<div className='tax-logo'>
+					<div
+						className={`tax-logo ${
+							isWhiteLinks ? "white-logo" : "primary-logo"
+						}`}>
 						<div>
 							<i class='fa-solid fa-money-bills'></i>
-							Tax<span>Harbor</span>
+							TAX<span>HARBOR</span>
 						</div>
 					</div>
 				</NavLink>
@@ -57,20 +57,31 @@ const Header = ({ changeTheme }) => {
 						<NavLink
 							to='/'
 							end
-							className={({ isActive }) => (isActive ? "active" : "")}
+							className={({ isActive }) =>
+								`nav-link ${isWhiteLinks ? "white-link" : "primary-link"} ${
+									isActive ? "active" : ""
+								}`
+							}
 							onMouseEnter={handleMouseEnter}
 							onMouseLeave={handleMouseLeave}>
 							Home
-							
 						</NavLink>
-						<NavLink
+						{/* <NavLink
 							to='/about'
-							className={({ isActive }) => (isActive ? "active" : "")}>
+							className={({ isActive }) =>
+								`nav-link ${isWhiteLinks ? "white-link" : "primary-link"} ${
+									isActive ? "active" : ""
+								}`
+							}>
 							About Us
-						</NavLink>
+						</NavLink> */}
 						<NavLink
 							to='/services'
-							className={({ isActive }) => (isActive ? "active" : "")}
+							className={({ isActive }) =>
+								`nav-link ${isWhiteLinks ? "white-link" : "primary-link"} ${
+									isActive ? "active" : ""
+								}`
+							}
 							onMouseEnter={handleMouseEnter}
 							onMouseLeave={handleMouseLeave}>
 							Services
@@ -90,27 +101,30 @@ const Header = ({ changeTheme }) => {
 							<i class='fa-solid fa-caret-down'></i>
 						</NavLink> */}
 						<NavLink
-							to='/services'
-							className={({ isActive }) => (isActive ? "active" : "")}>
-							Industries
+							to='/services2'
+							className={({ isActive }) =>
+								`nav-link ${isWhiteLinks ? "white-link" : "primary-link"} ${
+									isActive ? "active" : ""
+								}`
+							}>
+							Resources
 							<i class='fa-solid fa-caret-down'></i>
 						</NavLink>
-						<NavLink
-							to='/services'
-							className={({ isActive }) => (isActive ? "active" : "")}>
-							Case Studies
-							<i class='fa-solid fa-caret-down'></i>
-						</NavLink>
+						
 						<NavLink
 							to='/contact'
-							className={({ isActive }) => (isActive ? "active" : "")}>
-							Contact Us
+							className={({ isActive }) =>
+								`nav-link ${isWhiteLinks ? "white-link" : "primary-link"} ${
+									isActive ? "active" : ""
+								}`
+							}>
+							Our Story
 						</NavLink>
 					</nav>
 				</div>
 				<div className='tax-header-btn'>
 					<button className='tax5-btn'>
-						Start Filing <i class='fa-solid fa-arrow-right'></i>{" "}
+						Register Today <i class='fa-solid fa-arrow-right'></i>{" "}
 					</button>
 				</div>
 			</div>

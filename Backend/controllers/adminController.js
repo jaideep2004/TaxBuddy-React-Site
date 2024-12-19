@@ -50,10 +50,13 @@ const getAllUsers = async (req, res) => {
 	}
 };
 
-// Get all services
 const getAllServices = async (req, res) => {
 	try {
-		const services = await Service.find({});
+		// Fetch all fields, including createdAt
+		const services = await Service.find(
+			{},
+			"serviceId name description price status createdAt"
+		);
 		res.json({ services });
 	} catch (err) {
 		res.status(500).json({ message: "Error fetching services" });
@@ -65,9 +68,12 @@ const getDashboardData = async (req, res) => {
 	try {
 		const users = await User.find(
 			{},
-			"name email role assignedEmployees assignedCustomers serviceId"
+			"name email role assignedEmployees assignedCustomers serviceId createdAt"
 		);
-		const services = await Service.find({}, "name status description price");
+		const services = await Service.find(
+			{},
+			"name status description price createdAt"
+		);
 		res.json({ users, services });
 	} catch (err) {
 		res.status(500).json({ message: "Error fetching dashboard data" });
@@ -224,6 +230,15 @@ const assignCustomerToEmployee = async (req, res) => {
 
 		// Assign the customer to the employee
 		customer.assignedEmployeeId = employeeId;
+
+		// Update the services array to include the employeeId for all active services
+		customer.services = customer.services.map((service) => {
+			if (service.activated) {
+				service.employeeId = employeeId; // Assign the employee
+			}
+			return service;
+		});
+
 		await customer.save();
 
 		// Add the customer to the employee's assignedCustomers array

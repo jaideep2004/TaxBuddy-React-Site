@@ -1,37 +1,67 @@
 import React from "react";
+import HexagonItem from "./HexagonItem";
 import "./section5.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Section5 = () => {
 	useEffect(() => {
 		window.scrollTo({ top: 0, behavior: "smooth" });
 		AOS.init();
 	}, []);
+	// Sample data for the hexagonal items
+	const gridItems = [
+		{
+			icon: "user-pen",
+			title: "Signup For The Service",
+			color: "text-blue-500",
+		},
+		{
+			icon: "folder-open",
+			title: "Document Upload",
+			color: "text-green-500",
+		},
+		{
+			icon: "user-group",
+			title: "Assigned To An Expert",
+			color: "text-purple-500",
+		},
+		{
+			icon: "file-signature",
+			title: "Service Execution",
+			color: "text-red-500",
+		},
+		{
+			icon: "clipboard-question",
+			title: "Resolving Queries",
+			color: "text-yellow-500",
+		},
+		{
+			icon: "rocket",
+			title: (
+				<>
+					Deliverables<br />Finalized
+				</>
+			),
+			color: "text-indigo-500",
+		},
+	];
+
 	return (
 		<div id='tax-section5'>
-			<div className='tax-section5-wrap'>
-				<div className='tax-section5-left' data-aos='fade-left'
-				data-aos-duration='800'>
-					<div className='tax-section5-head'>
-						<p className='p-tag2'>AWARDS</p>
-						<h1>Unlock Financial Excellence With TaxHarbor Services!</h1>
-						<div>
-							<button className='tax5-btn'>
-								Book A Free Consultation <i class='fa-solid fa-arrow-right'></i>{" "}
-							</button>
-							<button className='tax5-btn2'>
-								<i class='fa-solid fa-phone fa-xl'></i> Free Call now
-								<span>+1234567890</span>
-							</button>
-						</div>
-					</div>
-				</div>
-				<div className='tax-section5-right'>
-					<img src='./images/sec5.jpg' alt='' />
-					{/* <img src='./images/sec7.jpg' alt='' /> */}
-				</div>
+			{/* <p className='p-tag2'>OUR WORKFLOW</p> */}
+			<h1 data-aos='fade-down' data-aos-duration='800'>Our Workflow</h1>
+			<div className='hexagonal-grid' data-aos='fade-up' data-aos-duration='800'>
+				{gridItems.map((item, index) => (
+					<HexagonItem
+						key={index}
+						icon={item.icon}
+						title={item.title}
+						color={item.color}
+						className={index % 2 === 0 ? "translate-y-0" : "translate-y-16"}
+					/>
+				))}
 			</div>
 		</div>
 	);

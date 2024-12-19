@@ -9,14 +9,18 @@ const Footer = () => {
 			<div className='footer-columns'>
 				<div className='footer-column' id='first-f-col'>
 					<h3>TaxHarbor</h3>
-					<p>2905 Donington Dr, Alaska, United States </p>
-					<p>hello@fint.com</p>
 					<p>
-						<i class='fa-brands fa-instagram fa-xl'></i>
-						<i class='fa-brands fa-facebook fa-xl'></i>
-						<i class='fa-brands fa-whatsapp fa-xl'></i>
-						<i class='fa-brands fa-x-twitter fa-xl'></i>
+						Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos
+						optio officia accusantium officiis facere
 					</p>
+					<p>123, ABC street</p>
+					<p>admin@taxharbor.in</p>
+					<div className="footer-social">
+						<i class='fa-brands fa-instagram fa-2xl'></i>
+						<i class='fa-brands fa-facebook fa-2xl'></i>
+						<i class='fa-brands fa-whatsapp fa-2xl'></i>
+						<i class='fa-brands fa-x-twitter fa-2xl'></i>
+					</div>
 				</div>
 				<div className='footer-column'>
 					<h4>Support</h4>
@@ -32,6 +36,78 @@ const Footer = () => {
 						</li>
 						<li>
 							<a href='#feedback'>Feedback</a>
+						</li>
+					</ul>
+				</div>
+				<div className='footer-column'>
+					<h4>Services</h4>
+					<ul>
+						<li>
+							<a href='#consulting'>Consulting</a>
+						</li>
+						<li>
+							<a href='#development'>Development</a>
+						</li>
+						<li>
+							<a href='#design'>Design</a>
+						</li>
+						<li>
+							<a href='#marketing'>Marketing</a>
+						</li>
+					</ul>
+				</div>
+				
+				<div className='footer-column'>
+					<h4>Resources</h4>
+					<ul>
+						<li>
+							<a href='#docs'>Documentation</a>
+						</li>
+						<li>
+							<a href='#guides'>Guides</a>
+						</li>
+						<li>
+							<a href='#partners'>Partners</a>
+						</li>
+						<li>
+							<a href='#community'>Community</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div className='footer-columns'>
+				
+				<div className='footer-column'>
+					<h4>Support</h4>
+					<ul>
+						<li>
+							<a href='#contact'>Contact Us</a>
+						</li>
+						<li>
+							<a href='#faq'>FAQ</a>
+						</li>
+						<li>
+							<a href='#support'>Support Center</a>
+						</li>
+						<li>
+							<a href='#feedback'>Feedback</a>
+						</li>
+					</ul>
+				</div>
+				<div className='footer-column'>
+					<h4>Services</h4>
+					<ul>
+						<li>
+							<a href='#consulting'>Consulting</a>
+						</li>
+						<li>
+							<a href='#development'>Development</a>
+						</li>
+						<li>
+							<a href='#design'>Design</a>
+						</li>
+						<li>
+							<a href='#marketing'>Marketing</a>
 						</li>
 					</ul>
 				</div>
@@ -73,8 +149,7 @@ const Footer = () => {
 
 			{/* Social Icons Row */}
 			<div className='footer-social-icons'>
-				
-				<h3 style={{color:"white"}}>TaxHarbor</h3>
+				<h3 style={{ color: "white" }}>TaxHarbor</h3>
 				<a
 					href='https://facebook.com'
 					target='_blank'
@@ -100,7 +175,7 @@ const Footer = () => {
 
 			{/* Copyright Row */}
 			<div className='footer-copyright'>
-				&copy; {new Date().getFullYear()} TaxBuddy. All rights reserved.
+				&copy; {new Date().getFullYear()} TaxHarbor. All rights reserved.
 			</div>
 		</footer>
 	);

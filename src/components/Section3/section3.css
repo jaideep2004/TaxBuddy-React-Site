@@ -4,19 +4,15 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	/* min-height: 500px; */
-	margin: 50px 0px;
-	/* background-color: var(--primary); */
 	color: var(--primary);
 	h1 {
-		font-size: 40px;
-		color: var(--secondary);
+		font-size: 43px;
+		color: var(--primary);
 	}
-	p {
-		color: var(--accent);
-	}
-	background-image: linear-gradient(45deg, var(--accent), var(--primary));
-	padding: 50px 0px;
+	
+	/* background-image: linear-gradient(45deg, var(--primary) 60%, var(--accent)); */
+	background-color: var(--background);
+	padding: 70px 0px;
 }
 .tax-section3-wrap {
 	/* border: 1px solid black; */
@@ -24,8 +20,8 @@
 	align-items: start;
 	justify-content: center;
 
-	padding: 30px 20px;
-	gap: 30px;
+	padding: 50px 20px;
+	gap: 35px;
 	flex-wrap: wrap;
 
 	/* width: 100%; */
@@ -129,33 +125,73 @@
 	align-items: center;
 	justify-content: center;
 	max-width: 600px;
+
 	img {
 		width: 300px;
 		height: 300px;
+		border-top-left-radius: 30px;
+		border-bottom-left-radius: 30px;
 	}
-	background-color: var(--secondary);
 }
 .tax3-card-desc {
 	/* border: 1px solid black; */
-	padding: 20px;
+	padding: 40px 20px;
 	gap: 15px;
 	display: flex;
 	flex-direction: column;
 	align-items: start;
 	justify-content: center;
+	background-color: var(--secondary);
 	a {
 		text-decoration: none;
-		color: var(--accent);
+		color: var(--secondary);
+		background-color: var(--primary);
+		padding: 13px 30px;
+		border-radius: 10px;
+		border: 2px solid var(--primary);
+		transition: all 0.3s ease;
 		i {
+			color: var(--secondary);
 			margin-left: 5px;
 		}
 		&:hover {
+			color: var(--primary);
+			background-color: var(--secondary);
 			i {
+				transition: all 0.3s ease;
 				color: var(--primary);
+				transform: translateX(10px);
 			}
 		}
 	}
 	p {
 		color: var(--primary) !important;
 	}
+}
+
+/* Custom CSS for rotating an element upwards */
+.rotate-up {
+	opacity: 0;
+	transform: rotate(90deg); /* Start rotated at 90 degrees */
+	transition: opacity 1s ease, transform 2s ease; /* Smooth animation for rotation and opacity */
+}
+
+.rotate-up.aos-animate {
+	opacity: 1;
+	transform: rotate(
+		0deg
+	); /* Rotate to 0 degrees when the animation is triggered */
+}
+
+.rotate-up2 {
+	opacity: 0;
+	transform: rotate(-90deg); /* Start rotated at 90 degrees */
+	transition: opacity 1s ease, transform 2s ease; /* Smooth animation for rotation and opacity */
+}
+
+.rotate-up2.aos-animate {
+	opacity: 1;
+	transform: rotate(
+		-180deg
+	); /* Rotate to 0 degrees when the animation is triggered */
 }
