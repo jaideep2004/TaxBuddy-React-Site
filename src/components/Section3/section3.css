@@ -1,0 +1,197 @@
+#tax-section3 {
+	/* border: 1px solid black; */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: var(--primary);
+	h1 {
+		font-size: 43px;
+		color: var(--primary);
+	}
+	
+	/* background-image: linear-gradient(45deg, var(--primary) 60%, var(--accent)); */
+	background-color: var(--background);
+	padding: 70px 0px;
+}
+.tax-section3-wrap {
+	/* border: 1px solid black; */
+	display: flex;
+	align-items: start;
+	justify-content: center;
+
+	padding: 50px 20px;
+	gap: 35px;
+	flex-wrap: wrap;
+
+	/* width: 100%; */
+}
+
+.tax-section3-left {
+	/* border: 1px solid black; */
+	display: flex;
+	flex: 1;
+
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+.tax3left-flipwrap {
+	display: flex;
+	gap: 30px;
+}
+.tax3-left-btn {
+	padding: 50px 60px;
+	text-align: center;
+	position: relative;
+	margin-top: 15px;
+	font-size: 16px;
+	border: 1px solid var(--accent);
+	background: white; /* Default background */
+	font-weight: bold;
+	border-radius: 5px;
+	cursor: pointer;
+	overflow: hidden;
+	z-index: 1;
+	transition: color 0.4s ease;
+	width: 80%;
+	color: var(--primary);
+}
+
+.tax3-left-btn::before {
+	content: "";
+	position: absolute;
+	top: -128%; /* Starts outside the button, diagonally */
+	left: -155%;
+	width: 170%; /* Large size to cover at an angle */
+	height: 600%;
+	background: var(--btncolor);
+	transform: rotate(45deg);
+	transition: all 0.4s ease;
+	z-index: -1;
+}
+
+.tax3-left-btn:hover::before {
+	left: 0;
+}
+
+.tax3-left-btn:hover {
+	background: white;
+}
+.tax-section3-right {
+	/* border: 1px solid black; */
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	h1 {
+		font-size: 40px;
+		font-weight: 600;
+		line-height: 49px;
+		/* margin: 10px 0px; */
+		padding: 0;
+		margin: 5px 16px;
+		position: relative;
+	}
+	h1::before {
+		content: "";
+		position: absolute;
+		left: -16px;
+		top: -25px;
+		bottom: 0;
+		width: 6px; /* Thickness of the line */
+		background-color: var(--accent); /* Color of the line */
+		margin-top: 4px;
+	}
+	p {
+		margin: 3px 17px;
+		padding: 0;
+		max-width: 650px;
+		font-size: 14px;
+	}
+	p:nth-child(1) {
+		font-size: 14px;
+		letter-spacing: 3px !important;
+	}
+}
+.tax3right-flipwrap {
+	display: flex;
+	gap: 30px;
+	margin-top: 10px;
+}
+
+.tax-section3-card {
+	/* border: 1px solid black; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 600px;
+
+	img {
+		width: 300px;
+		height: 300px;
+		border-top-left-radius: 30px;
+		border-bottom-left-radius: 30px;
+	}
+}
+.tax3-card-desc {
+	/* border: 1px solid black; */
+	padding: 40px 20px;
+	gap: 15px;
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	justify-content: center;
+	background-color: var(--secondary);
+	a {
+		text-decoration: none;
+		color: var(--secondary);
+		background-color: var(--primary);
+		padding: 13px 30px;
+		border-radius: 10px;
+		border: 2px solid var(--primary);
+		transition: all 0.3s ease;
+		i {
+			color: var(--secondary);
+			margin-left: 5px;
+		}
+		&:hover {
+			color: var(--primary);
+			background-color: var(--secondary);
+			i {
+				transition: all 0.3s ease;
+				color: var(--primary);
+				transform: translateX(10px);
+			}
+		}
+	}
+	p {
+		color: var(--primary) !important;
+	}
+}
+
+/* Custom CSS for rotating an element upwards */
+.rotate-up {
+	opacity: 0;
+	transform: rotate(90deg); /* Start rotated at 90 degrees */
+	transition: opacity 1s ease, transform 2s ease; /* Smooth animation for rotation and opacity */
+}
+
+.rotate-up.aos-animate {
+	opacity: 1;
+	transform: rotate(
+		0deg
+	); /* Rotate to 0 degrees when the animation is triggered */
+}
+
+.rotate-up2 {
+	opacity: 0;
+	transform: rotate(-90deg); /* Start rotated at 90 degrees */
+	transition: opacity 1s ease, transform 2s ease; /* Smooth animation for rotation and opacity */
+}
+
+.rotate-up2.aos-animate {
+	opacity: 1;
+	transform: rotate(
+		-180deg
+	); /* Rotate to 0 degrees when the animation is triggered */
+}

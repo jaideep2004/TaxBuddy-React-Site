@@ -1,0 +1,134 @@
+#tax-section2 {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* margin-top: 60px; */
+}
+.tax-section2-wrap {
+	/* border: 1px solid black; */
+	display: flex;
+	padding-top: 40px;
+	justify-content: center;
+	width: 90%;
+	gap: 40px;
+}
+.tax-section2-right {
+	padding: 20px;
+	position: relative;
+	/* border: 1px solid black; */
+	display: flex;
+	align-items: center;
+
+	video {
+		height: 540px;
+		width: 394px;
+		object-fit: cover;
+	}
+}
+.tax-section2-left {
+	/* border: 1px solid black; */
+	padding: 20px 40px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	/* gap: 20px; */
+	h1 {
+		position: relative;
+		padding: 5px 0px;
+		margin: 0;
+		font-size: 40px;
+		font-weight: 600;
+		line-height: 49px;
+	}
+	h1::before {
+		content: "";
+		position: absolute;
+		left: -16px;
+		top: -23px;
+		bottom: 0;
+		width: 6px; /* Thickness of the line */
+		background-color: var(--accent); /* Color of the line */
+		margin-top: 4px;
+	}
+	p {
+		margin: 20px 0px 0px 0px;
+		padding: 0;
+		max-width: 650px;
+		line-height: 28px;
+	}
+	p:nth-child(1) {
+		font-size: 14px;
+		letter-spacing: 3px;
+	}
+}
+.tax2-list ul {
+	/* border: 1px solid black; */
+	display: flex;
+	flex-direction: column;
+	/* align-items: center; */
+	justify-content: space-between;
+	padding: 2px;
+	margin-top: 20px;
+	gap: 15px;
+
+	li {
+		list-style: none;
+	}
+	i {
+		margin-right: 5px;
+		color: var(--primary);
+	}
+}
+
+.tax-section2-input {
+	display: flex;
+	align-items: center;
+	margin-top: 15px;
+	gap: 10px;
+
+	button {
+		border: none;
+		outline: none;
+		padding: 15px 30px;
+		background-color: var(--accent);
+		border: 2px solid var(--accent);
+		font-size: 16px;
+		color: var(--primary);
+		border-radius: 6px;
+		transition: all 0.3s ease;
+		width: 30%;
+		&:hover {
+			cursor: pointer;
+			background-color: var(--primary);
+			color: var(--secondary);
+		}
+	}
+}
+
+.section-2-rotate {
+	padding: 20px;
+	border-radius: 7px;
+	position: absolute;
+	bottom: 230px;
+	left: -150px;
+	color: var(--primary);
+	transition: all 0.3s ease;
+
+	background-color: var(--accent);
+	box-shadow: 1px 3px 5px var(--primary);
+	h2 {
+		font-size: 27px;
+		margin: 0;
+		padding: 0;
+		color: var(--secondary);
+	}
+	p {
+		font-size: 17px;
+		color: var(--secondary);
+	}
+
+	&:hover {
+		transform: translateY(-10px);
+	}
+}

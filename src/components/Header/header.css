@@ -1,0 +1,176 @@
+body {
+	font-family: "Poppins", sans-serif;
+	padding: 0;
+	margin: 0;
+	overflow-x: hidden;
+}
+.tax-header.scrolled {
+	background-color: white;
+
+	a {
+		color: var(--primary);
+	}
+	div {
+		color: var(--primary) !important;
+		span{
+			color: var(--primary) !important;
+		}
+	}
+}
+.tax-header {
+	position: fixed;
+	top: 0px;
+	/* backdrop-filter: blur(20px); */
+	/* background-color: var(--secondary); */
+	width: 100%;
+	top: 0;
+	left: 0;
+
+	transition: background-color 0.3s ease, box-shadow 0.3s ease;
+	z-index: 1000;
+	/* background-image: url("./images/hero4.png"); */
+	background-position: top center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 999;
+}
+.tax-header-wrap {
+	/* border: 1px solid white; */
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 30px 70px;
+	width: 95%;
+	a {
+		text-decoration: none;
+	}
+}
+/* .tax-logo {
+	border-radius: 20px;
+	overflow: hidden;
+
+	div {
+		color: var(--secondary);
+		font-size: 35px;
+		font-weight: 700;
+		display: flex;
+		align-items: center;
+		padding: 7px 12px;
+		text-shadow: 1px 1px 2px var(--secondary);
+
+		span {
+			font-weight: 500;
+			color: var(--accent);
+		}
+		i {
+			margin-right: 5px;
+		}
+	}
+} */
+
+.tax-logo {
+	border-radius: 20px;
+	overflow: hidden;
+
+	div {
+		font-size: 35px;
+		font-weight: 700;
+		display: flex;
+		align-items: center;
+		padding: 7px 12px;
+		transition: all 0.3s ease;
+
+		span {
+			
+			color: var(--secondary);
+		}
+		i {
+			margin-right: 5px;
+		}
+	}
+
+	/* For white logo on specific pages */
+	&.white-logo div {
+		color: var(--secondary); /* White */
+	}
+
+	/* For primary logo on other pages */
+	&.primary-logo div {
+		color: var(--primary); /* Primary */
+	}
+}
+
+.tax-top-nav {
+	/* border: 1px solid white; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 30px;
+	a {
+		/* border: 1px solid black; */
+		position: relative;
+		font-size: 17px;
+		text-decoration: none;
+		/* color: var(--primary); */
+		color: var(--secondary);
+		padding: 7px 12px;
+		/* background-color: white; */
+		border-radius: 7px;
+		transition: all 0.3s ease;
+		&:hover {
+			box-shadow: 1px 1px 1px var(--accent);
+		}
+		i {
+			margin-left: 5px;
+		}
+	}
+	.white-link {
+		color: var(--secondary);
+	}
+
+	.primary-link {
+		color: var(--primary);
+	}
+}
+
+.tax-top-nav .active {
+	color: var(--accent);
+}
+.tax-header-btn {
+	display: flex;
+	align-items: start;
+	justify-content: center;
+	button {
+		/* border: 1px solid white; */
+		border-radius: 5px;
+		color: var(--secondary);
+		font-size: 16px;
+		border: none;
+		outline: none;
+		padding: 15px 30px;
+		background-color: var(--primary);
+		border: 1px solid var(--accent);
+		width: 100%;
+		margin-top: -5px;
+		&:hover {
+			transition: all 0.3s ease;
+			cursor: pointer;
+			background-color: var(--accent);
+		}
+	}
+	button::before {
+		content: "";
+		position: absolute;
+		top: -163%;
+		left: -203%;
+		width: 170%;
+		height: 600%;
+		background: var(--accent);
+		transform: rotate(45deg);
+		transition: all 0.4s ease;
+		z-index: -1;
+	}
+}
