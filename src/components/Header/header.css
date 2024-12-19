@@ -121,7 +121,9 @@ body {
 		border-radius: 7px;
 		transition: all 0.3s ease;
 		&:hover {
-			box-shadow: 1px 1px 1px var(--accent);
+			/* box-shadow: 1px 1px 1px var(--accent); */
+			background-color: var(--background);
+			color: var(--primary);
 		}
 		i {
 			margin-left: 5px;
@@ -137,7 +139,8 @@ body {
 }
 
 .tax-top-nav .active {
-	color: var(--accent);
+	background-color: var(--background);
+			color: var(--primary);
 }
 .tax-header-btn {
 	display: flex;

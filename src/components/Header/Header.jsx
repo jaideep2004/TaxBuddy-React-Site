@@ -62,19 +62,10 @@ const Header = ({ changeTheme }) => {
 									isActive ? "active" : ""
 								}`
 							}
-							onMouseEnter={handleMouseEnter}
-							onMouseLeave={handleMouseLeave}>
+							>
 							Home
 						</NavLink>
-						{/* <NavLink
-							to='/about'
-							className={({ isActive }) =>
-								`nav-link ${isWhiteLinks ? "white-link" : "primary-link"} ${
-									isActive ? "active" : ""
-								}`
-							}>
-							About Us
-						</NavLink> */}
+						
 						<NavLink
 							to='/services'
 							className={({ isActive }) =>

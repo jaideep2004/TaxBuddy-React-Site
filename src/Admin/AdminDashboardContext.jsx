@@ -13,6 +13,7 @@ const AdminDashboardProvider = ({ children }) => {
 	const [error, setError] = useState(null);
 	const [services, setServices] = useState([]);
 	const [users, setUsers] = useState([]);
+	const [messages, setMessages] = useState([]);
 	//login
 	const [isAuthenticated, setIsAuthenticated] = useState(
 		!!localStorage.getItem("adminToken")
@@ -436,6 +437,43 @@ const AdminDashboardProvider = ({ children }) => {
 	const managers = useMemo(() => {
 		return users.filter((user) => user && user.role === "manager");
 	}, [users]);
+	// // Fetch messages (admin can see all messages)
+	// const fetchMessages = async () => {
+	// 	const token = localStorage.getItem("adminToken");
+	// 	if (!token) {
+	// 		setError("Session expired. Please log in again.");
+	// 		setIsAuthenticated(false);
+	// 		return;
+	// 	}
+	// 	const headers = { Authorization: `Bearer ${token}` };
+
+	// 	setError(null);
+	// 	setLoading(true); // Set loading to true when starting the fetch request
+
+	// 	try {
+	// 		const { data } = await axios.get("http://localhost:5000/api/messages", {
+	// 			headers,
+	// 		});
+	// 		setMessages(data.messages); // Store the fetched messages in the state
+	// 		setIsAuthenticated(true);
+	// 	} catch (err) {
+	// 		if (err.response && err.response.status === 401) {
+	// 			setIsAuthenticated(false);
+	// 			localStorage.removeItem("adminToken");
+	// 			// Optionally, navigate to login page
+	// 		} else {
+	// 			setError(err.response?.data?.message || "Failed to load messages.");
+	// 		}
+	// 	} finally {
+	// 		setLoading(false); // Set loading to false once the fetch completes
+	// 	}
+	// };
+	// useEffect(() => {
+	// 	const token = localStorage.getItem("adminToken");
+	// 	if (token) {
+	// 		fetchMessages();
+	// 	}
+	// }, []);
 
 	return (
 		<AdminDashboardContext.Provider
@@ -479,6 +517,9 @@ const AdminDashboardProvider = ({ children }) => {
 				logout,
 				employees,
 				managers,
+				// messages, 
+				// setMessages,
+				// fetchMessages,
 			}}>
 			{children}
 		</AdminDashboardContext.Provider>

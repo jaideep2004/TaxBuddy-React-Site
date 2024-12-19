@@ -2,27 +2,6 @@ const User = require("../models/userModel");
 const Message = require("../models/messageModel");
 
 // Send a new message
-// const sendMessage = async (req, res) => {
-// 	const { recipientId, content, service } = req.body;
-// 	const senderId = req.user.userId;
-
-// 	try {
-// 		const newMessage = new Message({
-// 			sender: senderId,
-// 			recipient: recipientId, // Admin/Employee
-// 			content,
-// 			service,
-// 		});
-
-// 		await newMessage.save();
-// 		res.status(201).json({ message: "Query sent successfully", newMessage });
-// 	} catch (err) {
-// 		console.error("Error sending query:", err);
-// 		res.status(500).json({ message: "Error sending query" });
-// 	}
-// };
-
-// Send a new message
 const sendMessage = async (req, res) => {
 	const { recipientId, content, service } = req.body;
 	const senderId = req.user.userId;
@@ -31,7 +10,8 @@ const sendMessage = async (req, res) => {
 	try {
 		// Prepare file data
 		const fileData = files.map((file) => ({
-			fileUrl: `/uploads/${file.filename}`, // File path
+			// fileUrl: `/uploads/${file.filename}`, 
+			fileUrl: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`,
 			fileName: file.originalname, // Original file name
 			fileType: file.mimetype, // MIME type (e.g., image/png, application/pdf)
 		}));
@@ -56,32 +36,6 @@ const sendMessage = async (req, res) => {
 		res.status(500).json({ message: "Error sending message" });
 	}
 };
-
-//reply
-// const replyToMessage = async (req, res) => {
-// 	const { messageId } = req.params;
-// 	const { replyContent } = req.body;
-// 	const repliedBy = req.user.userId; // Admin/Employee ID
-
-// 	try {
-// 		const updatedMessage = await Message.findByIdAndUpdate(
-// 			messageId,
-// 			{ replyContent, repliedBy, isReplied: true, isRead: true },
-// 			{ new: true }
-// 		);
-
-// 		if (!updatedMessage) {
-// 			return res.status(404).json({ message: "Message not found" });
-// 		}
-
-// 		res
-// 			.status(200)
-// 			.json({ message: "Reply sent successfully", updatedMessage });
-// 	} catch (err) {
-// 		console.error("Error replying to message:", err);
-// 		res.status(500).json({ message: "Error replying to query" });
-// 	}
-// };
 
 // Reply to a message
 const replyToMessage = async (req, res) => {
