@@ -6,10 +6,10 @@
 	align-items: center;
 	padding: 50px 0px;
 	margin: 20px 0px;
-	/* background-image: linear-gradient(45deg, var(--primary) 60%, var(--accent)); */
-background-color: var(--background);
+	background-image: linear-gradient(45deg, var(--primary) 60%, var(--accent));
+/* background-color: var(--background); */
 	h1 {
-		color: var(--primary);
+		color: var(--accent);
 		text-align: center;
 		font-size: 43px;
 		font-weight: 700;
@@ -140,7 +140,7 @@ background-color: var(--background);
 
 .orbit {
 	position: absolute;
-	border: 1px solid var(--primary);
+	border: 1px solid var(--secondary);
 	border-radius: 50%;
 	animation: orbit-rotate infinite linear;
 }

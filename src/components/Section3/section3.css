@@ -7,11 +7,11 @@
 	color: var(--primary);
 	h1 {
 		font-size: 43px;
-		color: var(--primary);
+		color: var(--accent);
 	}
 	
-	/* background-image: linear-gradient(45deg, var(--primary) 60%, var(--accent)); */
-	background-color: var(--background);
+	background-image: linear-gradient(45deg, var(--primary) 60%, var(--accent));
+	/* background-color: var(--background); */
 	padding: 70px 0px;
 }
 .tax-section3-wrap {
