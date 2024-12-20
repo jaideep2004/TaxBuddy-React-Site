@@ -12,7 +12,7 @@ const CProfileSection = () => {
 		}
 	}, [user]);
 
-	if (loading) return <div>Loading...</div>;
+	// if (loading) return <div>Loading...</div>;
 	if (!profile) return <div>No profile data available.</div>;
 
 	return (

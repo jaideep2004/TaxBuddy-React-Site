@@ -1,6 +1,8 @@
 import React, { createContext, useState, useEffect, useMemo } from "react";
 import axios from "./utils/axiosConfig";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
 const AdminDashboardContext = createContext();
 
 const AdminDashboardProvider = ({ children }) => {
@@ -116,6 +118,7 @@ const AdminDashboardProvider = ({ children }) => {
 
 	// Generic Error Reset Function
 	const resetError = () => setError(null);
+
 	//login
 
 	const login = async (email, password) => {
@@ -123,19 +126,36 @@ const AdminDashboardProvider = ({ children }) => {
 		setError(null);
 
 		try {
+			// Send login request
 			const response = await axios.post(
 				"http://localhost:5000/api/admin/login",
-				{ email, password }
+				{
+					email,
+					password,
+				}
 			);
 			const token = response.data.token;
 
 			if (token) {
-				localStorage.setItem("adminToken", token); // Save token
-				setIsAuthenticated(true); // Update context state
-				await fetchDashboardData(); // Fetch dashboard data immediately after login
-				return true; // Successful login
+				// Debugging: Log received token
+				console.log("Received Token:", token);
+
+				// Validate and decode token
+				try {
+					const decodedToken = jwtDecode(token);
+					console.log("Decoded Token:", decodedToken); // Check token structure
+
+					// Save token and update state
+					localStorage.setItem("adminToken", token);
+					setIsAuthenticated(true);
+					await fetchDashboardData();
+					return true; // Successful login
+				} catch (decodeError) {
+					console.error("Error decoding token:", decodeError);
+					throw new Error("Invalid token structure received.");
+				}
 			} else {
-				throw new Error("Token not received from server");
+				throw new Error("Token not received from server.");
 			}
 		} catch (err) {
 			console.error("Login error:", err.response?.data?.message || err.message);
@@ -437,43 +457,6 @@ const AdminDashboardProvider = ({ children }) => {
 	const managers = useMemo(() => {
 		return users.filter((user) => user && user.role === "manager");
 	}, [users]);
-	// // Fetch messages (admin can see all messages)
-	// const fetchMessages = async () => {
-	// 	const token = localStorage.getItem("adminToken");
-	// 	if (!token) {
-	// 		setError("Session expired. Please log in again.");
-	// 		setIsAuthenticated(false);
-	// 		return;
-	// 	}
-	// 	const headers = { Authorization: `Bearer ${token}` };
-
-	// 	setError(null);
-	// 	setLoading(true); // Set loading to true when starting the fetch request
-
-	// 	try {
-	// 		const { data } = await axios.get("http://localhost:5000/api/messages", {
-	// 			headers,
-	// 		});
-	// 		setMessages(data.messages); // Store the fetched messages in the state
-	// 		setIsAuthenticated(true);
-	// 	} catch (err) {
-	// 		if (err.response && err.response.status === 401) {
-	// 			setIsAuthenticated(false);
-	// 			localStorage.removeItem("adminToken");
-	// 			// Optionally, navigate to login page
-	// 		} else {
-	// 			setError(err.response?.data?.message || "Failed to load messages.");
-	// 		}
-	// 	} finally {
-	// 		setLoading(false); // Set loading to false once the fetch completes
-	// 	}
-	// };
-	// useEffect(() => {
-	// 	const token = localStorage.getItem("adminToken");
-	// 	if (token) {
-	// 		fetchMessages();
-	// 	}
-	// }, []);
 
 	return (
 		<AdminDashboardContext.Provider
@@ -517,9 +500,6 @@ const AdminDashboardProvider = ({ children }) => {
 				logout,
 				employees,
 				managers,
-				// messages, 
-				// setMessages,
-				// fetchMessages,
 			}}>
 			{children}
 		</AdminDashboardContext.Provider>

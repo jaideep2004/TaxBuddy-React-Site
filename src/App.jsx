@@ -24,6 +24,7 @@ import CustomerLoginPage from "./Customer/CustomerLoginPage";
 import { CustomerAuthProvider } from "./Customer/CustomerAuthContext";
 import { useNavigate } from "react-router-dom";
 import CustomerProtectedRoute from "./Customer/CustomerProtectedRoute";
+import { NavigationProvider } from "./components/NavigationContext";
 import CDashSection from "./Customer/CDashSection";
 function App() {
 	const [currentTheme, setCurrentTheme] = useState("theme1");
@@ -32,10 +33,10 @@ function App() {
 	// 	setCurrentTheme(themeName);
 	// 	applyTheme(colorThemes[themeName]);
 	// };
-	
+
 	return (
 		<AdminDashboardProvider>
-				<CustomerAuthProvider >
+			<CustomerAuthProvider>
 				<Router>
 					{/* <Header /> */}
 					<Routes>
@@ -103,6 +104,7 @@ function App() {
 						/>
 						<Route path='*' element={<Navigate to='/' replace />} />
 						{/* Customer Routes */}
+
 						<Route
 							path='/customers/login'
 							element={
@@ -120,14 +122,14 @@ function App() {
 						/>
 
 						<Route
-							path='/customer/*'
+							path='/customers/*'
 							element={<Navigate to='/customers/login' replace />}
 						/>
 					</Routes>
 					<Footer />
 				</Router>
-		</CustomerAuthProvider>
-			</AdminDashboardProvider>
+			</CustomerAuthProvider>
+		</AdminDashboardProvider>
 	);
 }
 

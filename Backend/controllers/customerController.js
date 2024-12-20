@@ -143,27 +143,36 @@ const registerCustomer = async (req, res) => {
 };
 
 //login customer
+
 const loginUser = async (req, res) => {
 	const { email, password } = req.body;
 
-	try {
+	try {  
+		// Find the user by email
 		const user = await User.findOne({ email });
 		if (!user) {
 			return res.status(400).json({ message: "Invalid email or password" });
 		}
 
+		// Hash the entered password and compare with stored hash
 		const hashedPassword = hashPassword(password, user.salt);
 		if (hashedPassword !== user.passwordHash) {
 			return res.status(400).json({ message: "Invalid email or password" });
 		}
 
-		// Generate JWT
+		// Include additional fields in the token payload (similar to admin)
 		const token = jwt.sign(
-			{ userId: user._id, role: user.role },
+			{
+				_id: user._id, // Use _id for consistency with middleware expectations
+				role: user.role, // Role of the user (could be 'customer', 'admin', etc.)
+				name: user.name, // Include the name for additional context if needed
+				email: user.email, // Email for additional context if needed
+			},
 			process.env.JWT_SECRET,
 			{ expiresIn: "1h" }
 		);
 
+		// Return the token and user details
 		res.status(200).json({ token, user });
 	} catch (err) {
 		console.error("Error logging in user:", err);
@@ -241,58 +250,59 @@ const initiatePayment = async (req, res) => {
 // 	}
 // };
 
-
 const handlePaymentSuccess = async (req, res) => {
-    try {
-        const { razorpay_payment_id, amount, userId, serviceId, employeeId } = req.body;
+	try {
+		const { razorpay_payment_id, amount, userId, serviceId, employeeId } =
+			req.body;
 
-        const razorpayInstance = new Razorpay({
-            key_id: process.env.RAZORPAY_KEY_ID,
-            key_secret: process.env.RAZORPAY_KEY_SECRET,
-        });
+		const razorpayInstance = new Razorpay({
+			key_id: process.env.RAZORPAY_KEY_ID,
+			key_secret: process.env.RAZORPAY_KEY_SECRET,
+		});
 
-        // Fetch payment details from Razorpay
-        const paymentDetails = await razorpayInstance.payments.fetch(razorpay_payment_id);
+		// Fetch payment details from Razorpay
+		const paymentDetails = await razorpayInstance.payments.fetch(
+			razorpay_payment_id
+		);
 
-        if (!paymentDetails) {
-            return res.status(404).json({ message: "Payment details not found" });
-        }
+		if (!paymentDetails) {
+			return res.status(404).json({ message: "Payment details not found" });
+		}
 
-        const paymentMethod = paymentDetails.method; // Extract the payment method
+		const paymentMethod = paymentDetails.method; // Extract the payment method
 
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
+		const user = await User.findById(userId);
+		if (!user) {
+			return res.status(404).json({ message: "User not found" });
+		}
 
-        const amountInRupees = amount / 100;
+		const amountInRupees = amount / 100;
 
-        // Add payment history
-        user.paymentHistory.push({
-            paymentId: razorpay_payment_id,
-            amount: amountInRupees,
-            date: new Date(),
-            status: "success",
-            paymentMethod, // Store the payment method retrieved from Razorpay
-        });
+		// Add payment history
+		user.paymentHistory.push({
+			paymentId: razorpay_payment_id,
+			amount: amountInRupees,
+			date: new Date(),
+			status: "success",
+			paymentMethod, // Store the payment method retrieved from Razorpay
+		});
 
-        // Add service details, including employeeId
-        user.services.push({
-            serviceId,
-            employeeId,
-            activated: true,
-            purchasedAt: new Date(),
-        });
+		// Add service details, including employeeId
+		user.services.push({
+			serviceId,
+			employeeId,
+			activated: true,
+			purchasedAt: new Date(),
+		});
 
-        await user.save();
+		await user.save();
 
-        res.status(200).json({ message: "Payment and service added successfully" });
-    } catch (error) {
-        console.error("Error handling payment success:", error);
-        res.status(500).json({ message: "Error processing payment" });
-    }
+		res.status(200).json({ message: "Payment and service added successfully" });
+	} catch (error) {
+		console.error("Error handling payment success:", error);
+		res.status(500).json({ message: "Error processing payment" });
+	}
 };
-
 
 const getServiceById = async (req, res) => {
 	try {

@@ -11,7 +11,7 @@ const {
 } = require("../controllers/customerController");
 const router = express.Router();
 
-router.get("/dashboard",authMiddleware, getCustomerDashboard);
+router.get("/cdashboard",authMiddleware, getCustomerDashboard);
 // Service details
 router.get("/user-services/:serviceId", getServiceById);
 

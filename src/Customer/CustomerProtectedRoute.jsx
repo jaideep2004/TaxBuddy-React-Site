@@ -1,12 +1,15 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-// import { useCustomerAuth } from "../CustomerAuthContext";
-import { useCustomerAuth } from "./CustomerAuthContext";
+import { useCustomerAuth } from "./CustomerAuthContext"; // Import the custom hook to access login state
 
 const CustomerProtectedRoute = ({ element }) => {
-	const { isLoggedIn } = useCustomerAuth(); // Implement a custom hook for auth state
+	const token = localStorage.getItem("customerToken");
 
-	return isLoggedIn ? element : <Navigate to='/customers/login' replace />;
+	if (!token) {
+		return <Navigate to='/customers/login' replace />;
+	}
+
+	return element; // If logged in, render the protected element
 };
 
 export default CustomerProtectedRoute;

@@ -1,57 +1,75 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const CustomerAuthContext = createContext();
 
 export const CustomerAuthProvider = ({ children }) => {
+	// const [isLoggedIn, setIsLoggedIn] = useState(
+	// 	!!localStorage.getItem("customerToken")
+	// );
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [services, setServices] = useState([]); // Unified state for user-specific and all services
 	const [serviceMap, setServiceMap] = useState({});
 	const [employeeMap, setEmployeeMap] = useState({});
+	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		const token = localStorage.getItem("token");
+		const token = localStorage.getItem("customerToken");
+
 		if (token) {
-			(async () => {
-				try {
-					await fetchCustomerDashboard(token); // Fetch dashboard data if token is present
-				} catch (error) {
-					console.error("Token validation failed", error);
-					localStorage.removeItem("token");
-					setIsLoggedIn(false);
-					setUser(null);
+			try {
+				const decodedToken = jwtDecode(token);
+				// Check if the token has expired
+				if (decodedToken.exp < Date.now() / 1000) {
+					logout(); // Token expired, log out
+					setError("Session expired. Please log in again.");
+					console.error("Session expired. Please log in again.");
+				} else {
+					setIsLoggedIn(true);
+					fetchCustomerDashboard(); // Fetch data if the token is valid
 				}
-			})();
+			} catch (error) {
+				console.error("Error decoding token:", error); // Log any decoding errors
+				// logout();
+				setError("Invalid token structure. Please log in again.");
+			}
 		} else {
-			setIsLoggedIn(false); // Ensure logged-out state without redirecting
+			setIsLoggedIn(false); // No token, set as logged out
+			console.log("No token found, user is logged out.");
 		}
-		setLoading(false); // Stop loading whether token exists or not
 	}, []);
 
-	const fetchCustomerDashboard = async (token) => {
-		try {
-			setLoading(true); // Start loading
-			const response = await axios.get(
-				"http://localhost:5000/api/customers/dashboard",
-				{
-					headers: { Authorization: `Bearer ${token}` },
-				}
-			);
+	const fetchCustomerDashboard = async () => {
+		const token = localStorage.getItem("customerToken");
 
-			const userData = response.data.user;
-			setUser(userData);
-			setServices(userData.services || []);
-			await fetchServiceAndEmployeeMaps(token); // Fetch additional mappings
+		if (!token) {
+			setError("Session expired. Please log in again.");
+			console.error("No token found. Session expired.");
+			logout();
+			setLoading(false);
+			return;
+		}
+
+		try {
+			setLoading(true);
+			const { data } = await axios.get(
+				"http://localhost:5000/api/customers/cdashboard",
+				{ headers: { Authorization: `Bearer ${token}` } }
+			);
+			setUser(data.user);
+			setServices(data.user.services || []);
+			await fetchServiceAndEmployeeMaps(token);
 		} catch (error) {
-			console.error("Error fetching dashboard data:", error);
-			localStorage.removeItem("token"); // Clear invalid token
-			setIsLoggedIn(false);
-			setUser(null);
-			// Optional: You can redirect here if necessary.
+			console.error("Error fetching customer dashboard:", error); // Log API call errors
+			setError(
+				error.response?.data?.message || "Failed to load dashboard data."
+			);
+			if (error.response?.status === 401) logout(); // Handle unauthorized errors
 		} finally {
-			setLoading(false); // Stop loading
+			setLoading(false);
 		}
 	};
 
@@ -60,21 +78,18 @@ export const CustomerAuthProvider = ({ children }) => {
 			const response = await axios.get(
 				"http://localhost:5000/api/customers/user-services",
 				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
+					headers: { Authorization: `Bearer ${token}` },
 				}
 			);
 			return response.data.services || [];
 		} catch (error) {
-			console.error("Error fetching all services:", error);
+			console.error("Error fetching all services:", error); // Log errors during service fetching
 			return [];
 		}
 	};
 
 	const fetchServiceAndEmployeeMaps = async (token) => {
 		try {
-			// Fetch all services for service map
 			const serviceResponse = await axios.get(
 				"http://localhost:5000/api/customers/user-services"
 			);
@@ -87,72 +102,91 @@ export const CustomerAuthProvider = ({ children }) => {
 			);
 			setServiceMap(serviceData);
 
-			// Fetch all users (Protected endpoint, requires token)
 			const employeeResponse = await axios.get(
 				"http://localhost:5000/api/admin/users",
-				{
-					headers: { Authorization: `Bearer ${token}` },
-				}
+				{ headers: { Authorization: `Bearer ${token}` } }
 			);
 
-			// Filter for users with the role of "employee"
-			const employeeData = employeeResponse.data
-				.filter((user) => user.role === "employee")
-				.reduce((map, employee) => {
-					map[user._id] = { name: employee.name, email: employee.email };
-					return map;
-				}, {});
+			const employeeData = Array.isArray(employeeResponse.data.users)
+				? employeeResponse.data.users
+						.filter((user) => user.role === "employee")
+						.reduce((map, employee) => {
+							map[employee._id] = {
+								name: employee.name,
+								email: employee.email,
+							};
+							return map;
+						}, {})
+				: {}; // Empty map if not an array
 
 			setEmployeeMap(employeeData);
 		} catch (error) {
-			console.error("Error fetching service or employee data:", error);
+			console.error("Error fetching service or employee data:", error); // Log errors during service or employee fetching
 		}
-	};
-
-	const getAllServicesForCDash = async () => {
-		const token = localStorage.getItem("token");
-		if (token) {
-			return await fetchAllServices(token); // Returns all available services
-		}
-		return [];
 	};
 
 	const login = async (email, password) => {
+		setLoading(true);
+		setError(null);
+
 		try {
 			const response = await axios.post(
 				"http://localhost:5000/api/customers/user-login",
-				{
-					email,
-					password,
-				}
+				{ email, password }
 			);
 
-			if (response.status === 200) {
-				const { token, user } = response.data;
-				localStorage.setItem("token", token);
-				setIsLoggedIn(true);
-				setUser(user);
-				setServices(user.services || []); // Set services during login
-				await fetchServiceAndEmployeeMaps(token); // Ensure mappings are populated
-				return { success: true };
+			const token = response.data.token;
+			const user = response.data.user;
+
+			if (token) {
+				console.log("Received Token:", token); // Log token on successful login
+
+				try {
+					const decodedToken = jwtDecode(token);
+					console.log("Decoded Token:", decodedToken);
+					if (decodedToken.exp < Date.now() / 1000) {
+						logout();
+						setError("Session expired. Please log in again.");
+						console.error("Token expired.");
+					}
+
+					localStorage.setItem("customerToken", token); // Save token
+					setIsLoggedIn(true);
+					setUser(user);
+					setServices(user?.services || []); // Handle services
+
+					await fetchServiceAndEmployeeMaps(token);
+
+					return { success: true }; // Successful login
+				} catch (decodeError) {
+					console.error("Error decoding token:", decodeError); // Log token decoding errors
+					throw new Error("Invalid token structure received.");
+				}
 			} else {
-				console.error("Unexpected response status: ", response.status);
-				return { success: false, message: "Unexpected error" };
+				throw new Error("Token not received from server.");
 			}
-		} catch (error) {
-			console.error("Error during login", error);
+		} catch (err) {
+			console.error("Login error:", err.response?.data?.message || err.message); // Log login errors
+			setError(
+				err.response?.data?.message || "An error occurred during login."
+			);
 			return {
 				success: false,
-				message: error.response?.data?.message || "Login failed",
+				message: err.response?.data?.message || "Login failed",
 			};
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const logout = () => {
-		localStorage.removeItem("token");
+		localStorage.removeItem("customerToken");
 		setIsLoggedIn(false);
 		setUser(null);
 		setServices([]);
+		setServiceMap({});
+		setEmployeeMap({});
+		console.log("Logged out.");
 	};
 
 	return (
@@ -166,7 +200,7 @@ export const CustomerAuthProvider = ({ children }) => {
 				loading,
 				login,
 				logout,
-				getAllServicesForCDash, // Expose this function for CDash
+				getAllServicesForCDash: fetchAllServices, // Expose fetchAllServices function
 			}}>
 			{children}
 		</CustomerAuthContext.Provider>

@@ -46,8 +46,7 @@ const ManagersSection = () => {
 				(columnFilter.email === "" ||
 					manager.email
 						.toLowerCase()
-						.includes(columnFilter.email.toLowerCase())) 
-				
+						.includes(columnFilter.email.toLowerCase()))
 			);
 		})
 		.sort((a, b) => {
@@ -93,54 +92,27 @@ const ManagersSection = () => {
 
 	return (
 		<div className='tax-dashboard-employee'>
-			  <div className="filter-div">
-        {/* Dropdown to Select Filter Criteria */}
-        <select
-          value={filterCriteria}
-          onChange={(e) => setFilterCriteria(e.target.value)}
-        >
-          <option value="name">Filter by Name</option>
-          <option value="email">Filter by Email</option>
-        </select>
+			<div className='filter-div'>
+				{/* Dropdown to Select Filter Criteria */}
+				<select
+					value={filterCriteria}
+					onChange={(e) => setFilterCriteria(e.target.value)}>
+					<option value='name'>Filter by Name</option>
+					<option value='email'>Filter by Email</option>
+				</select>
 
-        {/* Search Input for the Filter Criteria */}
-        <input
-          type="text"
-          placeholder={`Search by ${filterCriteria.charAt(0).toUpperCase() + filterCriteria.slice(1)}`}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-
-        {/* Sorting Dropdown */}
-        
-      </div>
-
-			{/* <div style={{ marginBottom: "20px" }}>
-				<label>Filter by Name: </label>
+				{/* Search Input for the Filter Criteria */}
 				<input
 					type='text'
-					value={columnFilter.name}
-					onChange={(e) =>
-						setColumnFilter({ ...columnFilter, name: e.target.value })
-					}
+					placeholder={`Search by ${
+						filterCriteria.charAt(0).toUpperCase() + filterCriteria.slice(1)
+					}`}
+					value={searchTerm}
+					onChange={(e) => setSearchTerm(e.target.value)}
 				/>
-				<label>Filter by Email: </label>
-				<input
-					type='text'
-					value={columnFilter.email}
-					onChange={(e) =>
-						setColumnFilter({ ...columnFilter, email: e.target.value })
-					}
-				/>
-				<label>Filter by Service: </label>
-				<input
-					type='text'
-					value={columnFilter.service}
-					onChange={(e) =>
-						setColumnFilter({ ...columnFilter, service: e.target.value })
-					}
-				/>
-			</div> */}
+
+				{/* Sorting Dropdown */}
+			</div>
 
 			<table>
 				<thead>

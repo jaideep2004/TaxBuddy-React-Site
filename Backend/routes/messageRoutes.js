@@ -4,7 +4,6 @@ const {
 	getMessages,
 	markMessageAsRead,
 	replyToMessage,
-	
 } = require("../controllers/messageController");
 const authMiddleware = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/upload"); // Multer middleware
@@ -15,12 +14,11 @@ router.post("/send", authMiddleware, upload, sendMessage);
 
 // Get all messages
 router.get("/", authMiddleware, getMessages);
-// router.get("/adminMessage", authMiddleware, getMessagesForAdmin);
 
 // Mark a message as read
 router.patch("/:messageId/read", authMiddleware, markMessageAsRead);
 
 // Reply to a message
-router.patch("/:messageId/reply",upload, authMiddleware, replyToMessage);
+router.patch("/:messageId/reply", upload, authMiddleware, replyToMessage);
 
 module.exports = router;

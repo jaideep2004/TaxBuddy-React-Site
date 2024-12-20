@@ -519,7 +519,7 @@ ul {
 	width: 100%;
 	/* height: calc(100vh - 60px); */
 	height: 100vh;
-	padding: 0;
+	padding: 20px;
 	background-color: #e5ddd5;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
 		Arial, sans-serif;

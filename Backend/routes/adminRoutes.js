@@ -38,7 +38,7 @@ router.post("/employee", authMiddleware, createEmployee);
 
 // Customer assignment
 router.post("/assign-customer", authMiddleware, assignCustomerToEmployee);
-router.post("/createUser",authMiddleware, createUser);
+router.post("/createUser", authMiddleware, createUser);
 // New Update Service route
 router.put("/services/:serviceId", authMiddleware, updateService);
 

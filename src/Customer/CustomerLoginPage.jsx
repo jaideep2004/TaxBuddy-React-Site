@@ -1,25 +1,24 @@
-import React from "react";
-// import { useCustomerAuth } from "../CustomerAuthContext";
-import { useCustomerAuth } from "./CustomerAuthContext";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import "./customer.css";
+import { useCustomerAuth } from "./CustomerAuthContext";
 
 const CustomerLoginPage = () => {
 	const [showPassword, setShowPassword] = useState(false);
-	const { login } = useCustomerAuth();
-	const navigate = useNavigate();
+	const { login, loading, error } = useCustomerAuth();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [error, setError] = useState("");
+	const [localError, setLocalError] = useState("");
+	const navigate = useNavigate(); // Hook for navigation
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const response = await login(email, password);
+
 		if (response.success) {
-			navigate("/customers/dashboard/:email");
+			navigate(`/customers/dashboard/${email}`); // Redirect to dashboard with email
 		} else {
-			setError(response.message);
+			setLocalError(response.message || "Login failed. Please try again.");
 		}
 	};
 
@@ -27,7 +26,6 @@ const CustomerLoginPage = () => {
 		<div className='tax-customer-login'>
 			<div>
 				<h1>Customer Login</h1>
-				{error && <p style={{ color: "red" }}>{error}</p>}
 				<form onSubmit={handleSubmit}>
 					<div>
 						<label>Email:</label>
@@ -38,10 +36,10 @@ const CustomerLoginPage = () => {
 							required
 						/>
 					</div>
-					<div>
+					<div style={{ position: "relative" }}>
 						<label>Password:</label>
 						<input
-							type='password'
+							type={showPassword ? "text" : "password"}
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
 							required
@@ -56,6 +54,9 @@ const CustomerLoginPage = () => {
 							}}
 							onClick={() => setShowPassword((prev) => !prev)}></i>
 					</div>
+					{(localError || error) && (
+						<p style={{ color: "red" }}>{localError || error}</p>
+					)}
 					<button type='submit'>Login</button>
 				</form>
 			</div>

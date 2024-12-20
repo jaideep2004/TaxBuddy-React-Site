@@ -4,7 +4,7 @@ import { useCustomerAuth } from "./CustomerAuthContext";
 const CServiceStatus = () => {
 	const { services, serviceMap, employeeMap, loading } = useCustomerAuth();
 
-	if (loading) return <p>Loading...</p>;
+	// if (loading) return <p>Loading...</p>;
 
 	return (
 		<div className='ctax-dashboard-section'>

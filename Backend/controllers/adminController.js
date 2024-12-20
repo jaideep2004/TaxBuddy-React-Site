@@ -11,11 +11,13 @@ const hashPassword = (password, salt) => {
 };
 
 // Admin login
+
 const adminLogin = async (req, res) => {
 	const { email, password } = req.body;
 
 	try {
 		const user = await User.findOne({ email });
+
 		if (!user) {
 			return res.status(400).json({ message: "Invalid credentials" });
 		}
@@ -27,15 +29,21 @@ const adminLogin = async (req, res) => {
 			return res.status(400).json({ message: "Invalid credentials" });
 		}
 
+		// Include additional fields in the token payload
 		const token = jwt.sign(
-			{ userId: user._id, role: user.role },
+			{
+				_id: user._id, // Use _id to align with middleware expectations
+				role: user.role,
+				name: user.name, // Include the name for additional context if needed
+				email: user.email, // Include email if needed
+			},
 			process.env.JWT_SECRET,
-			{ expiresIn: "2h" }
+			{ expiresIn: "1h" }
 		);
 
 		res.json({ token });
 	} catch (err) {
-		console.error(err);
+		console.error("Error during admin login:", err);
 		res.status(500).json({ message: "Error logging in" });
 	}
 };

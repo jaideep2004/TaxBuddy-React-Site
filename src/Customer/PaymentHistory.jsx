@@ -4,9 +4,9 @@ import { useCustomerAuth } from "./CustomerAuthContext";
 const PaymentHistory = () => {
 	const { user, paymentHistory, loading } = useCustomerAuth();
 
-	if (loading) {
-		return <div>Loading...</div>;
-	}
+	// if (loading) {
+	// 	return <div>Loading...</div>;
+	// }
 
 	// Calculate total payments (if paymentHistory exists and is an array)
 	const totalPayments =
