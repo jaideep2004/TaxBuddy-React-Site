@@ -27,91 +27,91 @@ const userSchema = new mongoose.Schema(
 		pan: {
 			type: String,
 			required: function () {
-				return this.role === "customer";
+				return this.role === "customer" && this.isProfileComplete;
 			},
 			unique: true,
 		},
 		gst: {
 			type: String,
 			required: function () {
-				return this.role === "customer";
+				return this.role === "customer" && this.isProfileComplete;
 			},
 			unique: true,
 		},
 		address: {
 			type: String,
 			required: function () {
-				return this.role === "customer";
+				return this.role === "customer" && this.isProfileComplete;
 			},
 			unique: true,
 		},
 		city: {
 			type: String,
 			required: function () {
-				return this.role === "customer";
+				return this.role === "customer" && this.isProfileComplete;
 			},
 			unique: true,
 		},
 		state: {
 			type: String,
 			required: function () {
-				return this.role === "customer";
+				return this.role === "customer" && this.isProfileComplete;
 			},
 			unique: true,
 		},
 		country: {
 			type: String,
 			required: function () {
-				return this.role === "customer";
+				return this.role === "customer" && this.isProfileComplete;
 			},
 			unique: true,
 		},
 		postalcode: {
 			type: Number,
 			required: function () {
-				return this.role === "customer";
+				return this.role === "customer" && this.isProfileComplete;
 			},
 			unique: true,
 		},
 		natureEmployement: {
 			type: String,
 			required: function () {
-				return this.role === "customer";
+				return this.role === "customer" && this.isProfileComplete;
 			},
 			unique: true,
 		},
 		annualIncome: {
 			type: String,
 			required: function () {
-				return this.role === "customer";
+				return this.role === "customer" && this.isProfileComplete;
 			},
 			unique: true,
 		},
 		education: {
 			type: String,
 			required: function () {
-				return this.role === "customer";
+				return this.role === "customer" && this.isProfileComplete;
 			},
 			unique: true,
 		},
 		certifications: {
 			type: String,
 			required: function () {
-				return this.role === "customer";
+				return this.role === "customer" && this.isProfileComplete;
 			},
 			unique: true,
 		},
 		institute: {
 			type: String,
 			required: function () {
-				return this.role === "customer";
+				return this.role === "customer" && this.isProfileComplete;
 			},
 			unique: true,
 		},
 		completiondate: {
 			type: Date,
 			required: function () {
-				return this.role === "customer";
+				return this.role === "customer" && this.isProfileComplete;
 			},
 			unique: true,
 		},
@@ -126,7 +126,6 @@ const userSchema = new mongoose.Schema(
 			unique: true,
 		},
 		passwordHash: { type: String, required: true },
-
 		services: [
 			{
 				serviceId: { type: String, ref: "Service" },
@@ -166,6 +165,10 @@ const userSchema = new mongoose.Schema(
 				default: [],
 			},
 		], // Only for employees
+		isProfileComplete: {
+			type: Boolean,
+			default: false, // Set to false initially; updated after profile update
+		},
 	},
 	{ timestamps: true } // This adds the createdAt and updatedAt fields
 );
@@ -240,7 +243,7 @@ userSchema.set("toJSON", {
 	},
 });
 
-//active or deactive user
+// Active or deactive user
 userSchema.pre("save", function (next) {
 	// Automatically manage activeFrom and activeTill based on isActive
 	if (this.isModified("isActive")) {
@@ -253,6 +256,20 @@ userSchema.pre("save", function (next) {
 	}
 	next();
 });
+
+// Validate profile completion during update
+userSchema.methods.validateProfileCompletion = function () {
+	const missingFields = [];
+	if (!this.pan) missingFields.push("PAN");
+	if (!this.gst) missingFields.push("GST");
+	if (!this.address) missingFields.push("Address");
+	if (!this.city) missingFields.push("City");
+	if (!this.state) missingFields.push("State");
+	if (!this.country) missingFields.push("Country");
+	if (!this.postalcode) missingFields.push("Postal Code");
+
+	return missingFields;
+};
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

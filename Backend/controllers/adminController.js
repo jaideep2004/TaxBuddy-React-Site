@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const Service = require("../models/serviceModel");
-
+const Message = require("../models/messageModel");
 // Utility: Hash password using SHA-256
 const hashPassword = (password, salt) => {
 	const hash = crypto.createHmac("sha256", salt);
@@ -49,12 +49,35 @@ const adminLogin = async (req, res) => {
 };
 
 // Get all users
+
 const getAllUsers = async (req, res) => {
 	try {
-		const users = await User.find({});
-		res.json({ users });
-	} catch (err) {
-		res.status(500).json({ message: "Error fetching users" });
+		// Fetch all users
+		const users = await User.find();
+
+		// Populate services and messages for each user
+		const usersWithDetails = await Promise.all(
+			users.map(async (user) => {
+				// Fetch and populate services by matching customerId
+				const services = await Service.find(
+					{ customerId: user._id },
+					"name description status"
+				);
+
+				// Fetch messages for the user
+				const messages = await Message.find({ recipient: user._id });
+
+				// Return user details along with services and messages
+				return { ...user.toObject(), services, messages };
+			})
+		);
+
+		res.json(usersWithDetails); // Send the result to the client
+	} catch (error) {
+		console.error("Error fetching users with services and messages:", error);
+		res
+			.status(500)
+			.json({ message: "Error fetching users with services and messages" });
 	}
 };
 
@@ -63,7 +86,7 @@ const getAllServices = async (req, res) => {
 		// Fetch all fields, including createdAt
 		const services = await Service.find(
 			{},
-			"serviceId name description price status createdAt"
+			"serviceId name description actualPrice salePrice status hsncode createdAt"
 		);
 		res.json({ services });
 	} catch (err) {
@@ -72,27 +95,56 @@ const getAllServices = async (req, res) => {
 };
 
 // Get dashboard data
+
+
 const getDashboardData = async (req, res) => {
-	try {
-		const users = await User.find(
-			{},
-			"name email role assignedEmployees assignedCustomers serviceId createdAt"
-		);
-		const services = await Service.find(
-			{},
-			"name status description price createdAt"
-		);
-		res.json({ users, services });
-	} catch (err) {
-		res.status(500).json({ message: "Error fetching dashboard data" });
-	}
+    try {
+        // Fetch users with populated services
+        const users = await User.find({}).populate({
+            path: 'services.serviceId',
+            select: 'name description status'
+        });
+
+        // Fetch all services
+        const services = await Service.find({});
+
+        // Fetch all messages with populated references
+        const messages = await Message.find({})
+            .populate('sender', 'name email')
+            .populate('recipient', 'name email')
+            .populate('service', 'name description');
+
+        // Combine data into response
+        const dashboardData = {
+            users: users.map(user => ({
+                ...user.toObject(),
+                services: user.services.map(service => ({
+                    ...service,
+                    name: service.serviceId ? service.serviceId.name : 'Unknown Service'
+                }))
+            })),
+            services,
+            messages
+        };
+
+        res.json(dashboardData);
+    } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        res.status(500).json({ message: "Error fetching dashboard data" });
+    }
 };
 
 // Create new service
 const createService = async (req, res) => {
-	const { name, description, price } = req.body;
+	const { name, description, actualPrice, salePrice, hsncode } = req.body;
 	try {
-		const newService = new Service({ name, description, price });
+		const newService = new Service({
+			name,
+			description,
+			actualPrice,
+			salePrice,
+			hsncode,
+		});
 		await newService.save();
 		res.status(201).json({ service: newService });
 	} catch (err) {
@@ -227,7 +279,7 @@ const assignCustomerToEmployee = async (req, res) => {
 		// Validate the employee
 		const employee = await User.findById(employeeId);
 		if (!employee || employee.role !== "employee") {
-			return res.status(400).json({ message: "Invalid employee" });
+			return res.status(400).json({ message: "Invalid employee" }); 
 		}
 
 		// Validate the customer
@@ -343,12 +395,12 @@ const createUser = async (req, res) => {
 // Update a service
 const updateService = async (req, res) => {
 	const { serviceId } = req.params;
-	const { name, description, price } = req.body;
+	const { name, description, actualPrice, salePrice, hsncode } = req.body;
 
 	try {
 		const updatedService = await Service.findByIdAndUpdate(
 			serviceId,
-			{ name, description, price },
+			{ name, description, actualPrice, salePrice, hsncode },
 			{ new: true }
 		);
 
@@ -457,6 +509,8 @@ const assignEmployeeToManager = async (req, res) => {
 	}
 };
 
+
+
 module.exports = {
 	adminLogin,
 	getAllUsers,
@@ -473,4 +527,5 @@ module.exports = {
 	deleteService,
 	createManager,
 	assignEmployeeToManager,
+	
 };

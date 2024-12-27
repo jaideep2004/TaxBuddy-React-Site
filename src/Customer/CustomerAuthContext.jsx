@@ -1,45 +1,90 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../Admin/utils/axiosConfig";
 import { jwtDecode } from "jwt-decode";
 
 const CustomerAuthContext = createContext();
 
 export const CustomerAuthProvider = ({ children }) => {
-	// const [isLoggedIn, setIsLoggedIn] = useState(
-	// 	!!localStorage.getItem("customerToken")
-	// );
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
-	const [services, setServices] = useState([]); // Unified state for user-specific and all services
+	const [services, setServices] = useState([]);
 	const [serviceMap, setServiceMap] = useState({});
 	const [employeeMap, setEmployeeMap] = useState({});
 	const [error, setError] = useState(null);
+	const [message, setMessage] = useState("");
+
+	const [formData, setFormData] = useState({
+		pan: "",
+		gst: "",
+		address: "",
+		city: "",
+		state: "",
+		country: "",
+		postalcode: "",
+		natureEmployement: "",
+		annualIncome: "",
+		education: "",
+		certifications: "",
+		institute: "",
+		completiondate: "",
+	});
+
+	const [isEditing, setIsEditing] = useState(
+		Object.keys(formData).reduce((acc, key) => ({ ...acc, [key]: false }), {})
+	);
+
+	// Upload documents
+	const uploadDocuments = async (serviceId, files) => {
+		const formData = new FormData();
+		formData.append("serviceId", serviceId);
+		Array.from(files).forEach((file) => formData.append("documents", file));
+
+		try {
+			const token = localStorage.getItem("customerToken");
+			const { data } = await axios.post(
+				"http://localhost:5000/api/customers/upload-documents",
+				formData,
+				{ headers: { Authorization: `Bearer ${token}` } }
+			);
+			setMessage(data.message);
+		} catch (error) {
+			setMessage("Failed to upload documents");
+		}
+	};
 
 	useEffect(() => {
-		const token = localStorage.getItem("customerToken");
+		const validateTokenAndFetchData = async () => {
+			const token = localStorage.getItem("customerToken");
+			setLoading(true);
 
-		if (token) {
+			if (!token) {
+				setIsLoggedIn(false);
+				setLoading(false);
+				return;
+			}
+
 			try {
 				const decodedToken = jwtDecode(token);
-				// Check if the token has expired
-				if (decodedToken.exp < Date.now() / 1000) {
-					logout(); // Token expired, log out
-					setError("Session expired. Please log in again.");
-					console.error("Session expired. Please log in again.");
-				} else {
-					setIsLoggedIn(true);
-					fetchCustomerDashboard(); // Fetch data if the token is valid
+				const isTokenValid = decodedToken.exp * 1000 > Date.now();
+
+				if (!isTokenValid) {
+					throw new Error("Token expired");
 				}
-			} catch (error) {
-				console.error("Error decoding token:", error); // Log any decoding errors
-				// logout();
-				setError("Invalid token structure. Please log in again.");
+
+				setIsLoggedIn(true);
+				await fetchCustomerDashboard();
+			} catch (err) {
+				console.error("Token validation failed:", err.message);
+				setIsLoggedIn(false);
+				setError("Session expired. Please log in again.");
+				localStorage.removeItem("customerToken");
+			} finally {
+				setLoading(false);
 			}
-		} else {
-			setIsLoggedIn(false); // No token, set as logged out
-			console.log("No token found, user is logged out.");
-		}
+		};
+
+		validateTokenAndFetchData();
 	}, []);
 
 	const fetchCustomerDashboard = async () => {
@@ -47,9 +92,7 @@ export const CustomerAuthProvider = ({ children }) => {
 
 		if (!token) {
 			setError("Session expired. Please log in again.");
-			console.error("No token found. Session expired.");
 			logout();
-			setLoading(false);
 			return;
 		}
 
@@ -59,47 +102,35 @@ export const CustomerAuthProvider = ({ children }) => {
 				"http://localhost:5000/api/customers/cdashboard",
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
+
 			setUser(data.user);
 			setServices(data.user.services || []);
+			setFormData((prev) => ({
+				...prev,
+				pan: data.user.pan || "",
+				// Update other fields similarly
+			}));
+
 			await fetchServiceAndEmployeeMaps(token);
 		} catch (error) {
-			console.error("Error fetching customer dashboard:", error); // Log API call errors
-			setError(
-				error.response?.data?.message || "Failed to load dashboard data."
-			);
-			if (error.response?.status === 401) logout(); // Handle unauthorized errors
+			handleErrorResponse(error, "Failed to load dashboard data");
 		} finally {
 			setLoading(false);
-		}
-	};
-
-	const fetchAllServices = async (token) => {
-		try {
-			const response = await axios.get(
-				"http://localhost:5000/api/customers/user-services",
-				{
-					headers: { Authorization: `Bearer ${token}` },
-				}
-			);
-			return response.data.services || [];
-		} catch (error) {
-			console.error("Error fetching all services:", error); // Log errors during service fetching
-			return [];
 		}
 	};
 
 	const fetchServiceAndEmployeeMaps = async (token) => {
 		try {
 			const serviceResponse = await axios.get(
-				"http://localhost:5000/api/customers/user-services"
+				"http://localhost:5000/api/customers/user-services",
+				{ headers: { Authorization: `Bearer ${token}` } }
 			);
-			const serviceData = serviceResponse.data.services.reduce(
-				(map, service) => {
-					map[service._id] = service.name;
-					return map;
-				},
-				{}
-			);
+
+			const services = serviceResponse.data.services || [];
+			const serviceData = services.reduce((map, service) => {
+				map[service.serviceId] = service.name;
+				return map;
+			}, {});
 			setServiceMap(serviceData);
 
 			const employeeResponse = await axios.get(
@@ -107,21 +138,17 @@ export const CustomerAuthProvider = ({ children }) => {
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
 
-			const employeeData = Array.isArray(employeeResponse.data.users)
-				? employeeResponse.data.users
-						.filter((user) => user.role === "employee")
-						.reduce((map, employee) => {
-							map[employee._id] = {
-								name: employee.name,
-								email: employee.email,
-							};
-							return map;
-						}, {})
-				: {}; // Empty map if not an array
+			const employees = employeeResponse.data.users.filter(
+				(user) => user.role === "employee"
+			);
 
+			const employeeData = employees.reduce((map, emp) => {
+				map[emp._id] = { name: emp.name, email: emp.email };
+				return map;
+			}, {});
 			setEmployeeMap(employeeData);
 		} catch (error) {
-			console.error("Error fetching service or employee data:", error); // Log errors during service or employee fetching
+			console.error("Error fetching service or employee mappings:", error);
 		}
 	};
 
@@ -130,50 +157,23 @@ export const CustomerAuthProvider = ({ children }) => {
 		setError(null);
 
 		try {
-			const response = await axios.post(
+			const { data } = await axios.post(
 				"http://localhost:5000/api/customers/user-login",
 				{ email, password }
 			);
 
-			const token = response.data.token;
-			const user = response.data.user;
+			const { token, user } = data;
+			if (!token) throw new Error("Token not received from server.");
 
-			if (token) {
-				console.log("Received Token:", token); // Log token on successful login
-
-				try {
-					const decodedToken = jwtDecode(token);
-					console.log("Decoded Token:", decodedToken);
-					if (decodedToken.exp < Date.now() / 1000) {
-						logout();
-						setError("Session expired. Please log in again.");
-						console.error("Token expired.");
-					}
-
-					localStorage.setItem("customerToken", token); // Save token
-					setIsLoggedIn(true);
-					setUser(user);
-					setServices(user?.services || []); // Handle services
-
-					await fetchServiceAndEmployeeMaps(token);
-
-					return { success: true }; // Successful login
-				} catch (decodeError) {
-					console.error("Error decoding token:", decodeError); // Log token decoding errors
-					throw new Error("Invalid token structure received.");
-				}
-			} else {
-				throw new Error("Token not received from server.");
-			}
+			localStorage.setItem("customerToken", token);
+			setIsLoggedIn(true);
+			setUser(user);
+			setServices(user.services || []);
+			await fetchCustomerDashboard();
+			return { success: true };
 		} catch (err) {
-			console.error("Login error:", err.response?.data?.message || err.message); // Log login errors
-			setError(
-				err.response?.data?.message || "An error occurred during login."
-			);
-			return {
-				success: false,
-				message: err.response?.data?.message || "Login failed",
-			};
+			handleErrorResponse(err, "Login failed");
+			return { success: false, message: err.message };
 		} finally {
 			setLoading(false);
 		}
@@ -182,25 +182,86 @@ export const CustomerAuthProvider = ({ children }) => {
 	const logout = () => {
 		localStorage.removeItem("customerToken");
 		setIsLoggedIn(false);
-		setUser(null);
-		setServices([]);
-		setServiceMap({});
-		setEmployeeMap({});
-		console.log("Logged out.");
+	};
+
+	const handleErrorResponse = (error, defaultMessage) => {
+		if (error.response?.status === 401) {
+			logout();
+			setError("Unauthorized access. Please log in again.");
+		} else {
+			setError(error.response?.data?.message || defaultMessage);
+		}
+	};
+
+	const getAllServicesForCDash = async () => {
+		const token = localStorage.getItem("customerToken");
+
+		try {
+			const { data } = await axios.get(
+				"http://localhost:5000/api/customers/user-services",
+				{ headers: { Authorization: `Bearer ${token}` } }
+			);
+			return data.services || [];
+		} catch (error) {
+			handleErrorResponse(error, "Failed to fetch services");
+			return [];
+		}
 	};
 
 	return (
 		<CustomerAuthContext.Provider
 			value={{
+				uploadDocuments,
+				message,
 				isLoggedIn,
 				user,
+				loading,
 				services,
 				serviceMap,
 				employeeMap,
-				loading,
+				formData,
+				isEditing,
 				login,
 				logout,
-				getAllServicesForCDash: fetchAllServices, // Expose fetchAllServices function
+				fetchCustomerDashboard,
+				getAllServicesForCDash,
+				setFormData,
+				handleInputChange: (e) =>
+					setFormData({ ...formData, [e.target.name]: e.target.value }),
+				handleEditClick: (field) =>
+					setIsEditing((prev) => ({ ...prev, [field]: true })),
+				handleSaveProfile: async () => {
+					const token = localStorage.getItem("customerToken");
+
+					if (!token) {
+						alert("Session expired. Please log in again.");
+						logout();
+						return;
+					}
+
+					try {
+						const { data } = await axios.put(
+							"http://localhost:5000/api/customers/update-profile",
+							formData,
+							{ headers: { Authorization: `Bearer ${token}` } }
+						);
+
+						setUser(data.user);
+						await fetchCustomerDashboard();
+						setIsEditing(
+							Object.keys(isEditing).reduce(
+								(acc, key) => ({ ...acc, [key]: false }),
+								{}
+							)
+						);
+						alert("Profile updated successfully!");
+					} catch (err) {
+						handleErrorResponse(
+							err,
+							"An error occurred while updating the profile."
+						);
+					}
+				},
 			}}>
 			{children}
 		</CustomerAuthContext.Provider>

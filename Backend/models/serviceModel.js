@@ -9,8 +9,10 @@ const serviceSchema = new mongoose.Schema(
 		},
 		name: { type: String, required: true },
 		description: { type: String },
-		price: { type: Number, required: true },
-		status: { type: String, default: "inactive" },
+		actualPrice: { type: Number, required: true },
+		salePrice: { type: Number, required: true },
+		hsncode: { type: String, required: true },
+		status: { type: String, default: "In Process" },
 	},
 	{ timestamps: true }
 );
@@ -24,3 +26,5 @@ serviceSchema.pre("validate", async function (next) {
 });
 
 module.exports = mongoose.model("Service", serviceSchema);
+
+

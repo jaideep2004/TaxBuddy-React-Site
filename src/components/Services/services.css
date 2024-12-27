@@ -6,7 +6,9 @@
 	justify-content: center;
 	/* margin-top: 90px; */
 }
-
+#firstINput {
+	min-width: 730px;
+}
 .service-page-wrap {
 	/* border: 1px solid black; */
 	display: flex;
@@ -15,7 +17,7 @@
 	align-items: center;
 	justify-content: center;
 	/* background-image: linear-gradient(45deg, var(--secondary),var(--accent)); */
-	background-color: wheat;
+	background-color: var(--accent);
 }
 .service-banner {
 	/* border: 1px solid black; */
@@ -43,10 +45,9 @@
 	/* width: 100%; */
 	/* background-color: var(--primary); */
 	/* background-color: wheat; */
-	h1{
+	h1 {
 		color: var(--primary);
 		font-size: 40px;
-		
 	}
 }
 .service-left {
@@ -68,7 +69,7 @@
 	box-shadow: 1px 1px 2px var(--primary);
 	padding: 25px 40px;
 	border-radius: 15px;
-	background-color: white;
+	background-color: #f0f0f0;
 	/* width: 90%; */
 	display: flex;
 	align-items: center;
@@ -93,7 +94,8 @@
 		width: 90%;
 		margin-top: 15px;
 		font-size: 17px;
-		background-color: var(--accent);
+		background-color: var(--primary);
+		color: var(--secondary);
 		transition: all 0.3s ease;
 		&:hover {
 			cursor: pointer;
@@ -110,15 +112,14 @@
 		border: 1px solid var(--primary);
 		border-radius: 15px;
 		outline: none;
-		padding: 15px 75px 15px 15px ;
+		padding: 15px 75px 15px 15px;
 		appearance: none;
 		position: relative;
 		/* width: 100%; */
 		font-size: 17px;
 		min-width: 390px;
-
 	}
-	h1{
+	h1 {
 		/* color: var(--accent); */
 		color: var(--primary);
 		margin-bottom: 3px;
@@ -139,7 +140,6 @@
 	}
 }
 .sform-div2 {
-	
 	/* border: 1px solid black; */
 	width: 100%;
 	display: flex;
@@ -153,16 +153,27 @@
 	}
 }
 
-#serv-desc{
+#serv-desc {
 	/* width: 100%; */
 	display: flex;
-	background-color: var(--primary);
-	color: var(--secondary);
+	align-items: center;
+	background-color: var(--secondary);
+	color: var(--accent) !important;
 	gap: 40px;
-	padding: 15px 40px ;
+	padding: 15px 90px;
 	border-radius: 10px;
 	margin-top: 10px;
-	p,h4{
-		color: var(--secondary);	
+	border: 2px solid var(--primary);
+	h4{
+		display: flex;
+		gap: 10px;
+		
+		
+	}
+	p,
+	h4 {
+		font-weight: 700;
+		color: var(--primary);
+		font-size: 18px;
 	}
 }

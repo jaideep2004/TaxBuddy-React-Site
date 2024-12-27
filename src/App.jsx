@@ -24,7 +24,6 @@ import CustomerLoginPage from "./Customer/CustomerLoginPage";
 import { CustomerAuthProvider } from "./Customer/CustomerAuthContext";
 import { useNavigate } from "react-router-dom";
 import CustomerProtectedRoute from "./Customer/CustomerProtectedRoute";
-import { NavigationProvider } from "./components/NavigationContext";
 import CDashSection from "./Customer/CDashSection";
 function App() {
 	const [currentTheme, setCurrentTheme] = useState("theme1");

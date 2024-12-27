@@ -1,144 +1,158 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useCustomerAuth } from "./CustomerAuthContext";
+import "./customer.css"; // Import CSS for styling
 
 const CProfileSection = () => {
-	const { user, services, loading } = useCustomerAuth(); // Get user and services data from context
+	const { user, formData, handleSaveProfile, setFormData } = useCustomerAuth();
+	const [editableField, setEditableField] = useState(""); // Track which field is currently editable
 
-	const [profile, setProfile] = useState(null);
+	const handleFieldEdit = (field) => {
+		setEditableField(field); // Set the field as editable
+	};
 
-	useEffect(() => {
-		if (user) {
-			setProfile(user);
-		}
-	}, [user]);
+	const handleInputChange = (e) => {
+		const { name, value } = e.target;
+		setFormData((prevData) => ({
+			...prevData,
+			[name]: value,
+		}));
+	};
+	const getProfileInitial = () => {
+		return user.name ? user.name.charAt(0) : "?";
+	};
 
-	// if (loading) return <div>Loading...</div>;
-	if (!profile) return <div>No profile data available.</div>;
+	const renderTabContent = (tab) => {
+		const fields = {
+			profile: [
+				{ label: "Full Name", name: "name", value: formData.name || user.name },
+				{ label: "Email", name: "email", value: formData.email || user.email },
+				{
+					label: "Phone",
+					name: "mobile",
+					value: formData.mobile || user.mobile,
+				},
+				{
+					label: "Date of Birth",
+					name: "dob",
+					value: formData.dob || user.dob,
+				},
+				{
+					label: "Gender",
+					name: "gender",
+					value: formData.gender || user.gender,
+				},
+			],
+			taxInfo: [
+				{ label: "PAN", name: "pan", value: formData.pan || user.pan },
+				{ label: "GST", name: "gst", value: formData.gst || user.gst },
+			],
+			communicationInfo: [
+				{
+					label: "Address",
+					name: "address",
+					value: formData.address || user.address,
+				},
+				{ label: "City", name: "city", value: formData.city || user.city },
+				{ label: "State", name: "state", value: formData.state || user.state },
+				{
+					label: "Country",
+					name: "country",
+					value: formData.country || user.country,
+				},
+				{
+					label: "Postal Code",
+					name: "postalcode",
+					value: formData.postalcode || user.postalcode,
+				},
+			],
+			employmentInfo: [
+				{
+					label: "Nature of Employment",
+					name: "natureEmployement",
+					value: formData.natureEmployement || user.natureEmployement,
+				},
+				{
+					label: "Annual Income",
+					name: "annualIncome",
+					value: formData.annualIncome || user.annualIncome,
+				},
+			],
+			educationInfo: [
+				{
+					label: "Education",
+					name: "education",
+					value: formData.education || user.education,
+				},
+				{
+					label: "Institute",
+					name: "institute",
+					value: formData.institute || user.institute,
+				},
+				{
+					label: "Certifications",
+					name: "certifications",
+					value: formData.certifications || user.certifications,
+				},
+				{
+					label: "Completion Date",
+					name: "completiondate",
+					value: formData.completiondate || user.completiondate,
+				},
+			],
+		};
+
+		return (
+			<div className='tab-content'>
+				<h3>{tab.replace(/([A-Z])/g, " $1")}</h3>
+				{fields[tab].map((field) => (
+					<div key={field.name} className='field-row'>
+						<label htmlFor={field.name}>{field.label}:</label>
+
+						<input
+							id={field.name}
+							name={field.name}
+							value={field.value}
+							onChange={handleInputChange}
+							className={editableField === field.name ? "editable" : ""}
+							disabled={editableField !== field.name}
+						/>
+						<i
+							className='fa-solid fa-pen-to-square edit-icon'
+							onClick={() => handleFieldEdit(field.name)}
+						/>
+					</div>
+				))}
+			</div>
+		);
+	};
+
+	const [activeTab, setActiveTab] = useState("profile"); // Track active tab
 
 	return (
 		<div className='profile-container'>
-			<div className='profile-header'>
-				<h2>Profile Overview</h2>
-				<button className='edit-button'>Edit</button>
+			<div className='psidebar'>
+				<ul>
+					<li onClick={() => setActiveTab("profile")}>Customer Profile</li>
+					<li onClick={() => setActiveTab("taxInfo")}>Tax Info</li>
+					<li onClick={() => setActiveTab("communicationInfo")}>
+						Communication Info
+					</li>
+					<li onClick={() => setActiveTab("employmentInfo")}>
+						Employment Info
+					</li>
+					<li onClick={() => setActiveTab("educationInfo")}>Education Info</li>
+				</ul>
 			</div>
-
-			<div className='profile-card'>
-				<div>
-					<div className='profile-avatar'>
-						{/* Avatar Placeholder or image */}
-						<div className='avatar-placeholder'>{profile.name[0]}</div>
-					</div>
-					<div className='profile-item'>
-						<label>Username</label>
-						<input type='text' value={profile.username} readOnly />
-					</div>
-					<div className='profile-item'>
-						<label>Email</label>
-						<input type='text' value={profile.email} readOnly />
-					</div>
-					<div className='profile-item'>
-						<label>Mobile</label>
-						<input type='text' value={profile.mobile} readOnly />
-					</div>
-					<div className='profile-item'>
-						<label>Date of Birth</label>
-						<input
-							type='text'
-							value={new Date(profile.dob).toLocaleDateString()}
-							readOnly
-						/>
-					</div>
-					<div className='profile-item'>
-						<label>Gender</label>
-						<input type='text' value={profile.gender} readOnly />
-					</div>
-					<div className='profile-item'>
-						<label>Address</label>
-						<input type='text' value={profile.address} readOnly />
-					</div>
-					<div className='profile-item'>
-						<label>City</label>
-						<input type='text' value={profile.city} readOnly />
-					</div>
-					<div className='profile-item'>
-						<label>State</label>
-						<input type='text' value={profile.state} readOnly />
-					</div>
+			<div className='content'>
+				<div className='profile-header'>
+					<div className='profile-icon'>{getProfileInitial()}</div>
+					<h2>{user.name}</h2>
 				</div>
-				<div>
-					<div className='profile-item'>
-						<label>Country</label>
-						<input type='text' value={profile.country} readOnly />
-					</div>
-					<div className='profile-item'>
-						<label>Postal Code</label>
-						<input type='text' value={profile.postalcode} readOnly />
-					</div>
-
-					{/* Financial Information */}
-					<div className='profile-item'>
-						<label>Annual Income</label>
-						<input type='text' value={profile.annualIncome} readOnly />
-					</div>
-					<div className='profile-item'>
-						<label>Nature of Employment</label>
-						<input type='text' value={profile.natureEmployement} readOnly />
-					</div>
-					<div className='profile-item'>
-						<label>Education</label>
-						<input type='text' value={profile.education} readOnly />
-					</div>
-					<div className='profile-item'>
-						<label>Certifications</label>
-						<input type='text' value={profile.certifications} readOnly />
-					</div>
-					<div className='profile-item'>
-						<label>Institute</label>
-						<input type='text' value={profile.institute} readOnly />
-					</div>
-					<div className='profile-item'>
-						<label>Completion Date</label>
-						<input
-							type='text'
-							value={new Date(profile.completiondate).toLocaleDateString()}
-							readOnly
-						/>
-					</div>
-
-					{/* Services Purchased */}
-					<div className='profile-item'>
-						<label>Services Purchased</label>
-						<ul>
-							{profile.services && profile.services.length > 0 ? (
-								profile.services.map((service, index) => (
-									<li key={index}>
-										{services[service.serviceId] ||
-											"Service name not available"}
-									</li>
-								))
-							) : (
-								<li>No services purchased</li>
-							)}
-						</ul>
-					</div>
-
-					{/* Payment History */}
-					<div className='profile-item'>
-						<label>Payment History</label>
-						<ul>
-							{profile.paymentHistory && profile.paymentHistory.length > 0 ? (
-								profile.paymentHistory.map((payment, index) => (
-									<li key={index}>
-										Payment ID: {payment.paymentId}, Status: {payment.status},
-										Date: {new Date(payment.date).toLocaleDateString()}, Method:{" "}
-										{payment.paymentMethod || "N/A"}
-									</li>
-								))
-							) : (
-								<li>No payment history available</li>
-							)}
-						</ul>
-					</div>
+				{renderTabContent(activeTab)}
+				<div className='save-button-container'>
+					<button className='save-button' onClick={handleSaveProfile}>
+						Save Profile
+					</button>
 				</div>
 			</div>
 		</div>

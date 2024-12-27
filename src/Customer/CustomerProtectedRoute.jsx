@@ -13,3 +13,4 @@ const CustomerProtectedRoute = ({ element }) => {
 };
 
 export default CustomerProtectedRoute;
+

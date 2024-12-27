@@ -5,7 +5,7 @@ import "./services.css";
 import { useCustomerAuth } from "../../Customer/CustomerAuthContext";
 
 const ServicePage = () => {
-	const { login } = useCustomerAuth();
+	const { login, fetchCustomerDashboard } = useCustomerAuth();
 
 	const { serviceId } = useParams();
 	const navigate = useNavigate();
@@ -14,23 +14,10 @@ const ServicePage = () => {
 		name: "",
 		email: "",
 		mobile: "",
-		dob: "",
-		gender: "",
-		pan: "",
-		gst: "",
-		address: "",
-		city: "",
-		state: "",
-		country: "",
-		postalcode: "",
-		natureEmployement: "",
-		annualIncome: "",
-		education: "",
-		certifications: "",
-		institute: "",
-		completiondate: "",
 		username: "",
 		password: "",
+		dob: "", // Adding dob field
+		gender: "", // Adding gender field
 	});
 
 	// Fetch the service details from the server
@@ -40,7 +27,6 @@ const ServicePage = () => {
 				const response = await axios.get(
 					`http://localhost:5000/api/customers/user-services/${serviceId}`
 				);
-				console.log("Service details fetched successfully:", response.data);
 				setService(response.data.service);
 			} catch (error) {
 				if (error.response && error.response.status === 404) {
@@ -58,64 +44,45 @@ const ServicePage = () => {
 		setCustomerDetails({ ...customerDetails, [e.target.name]: e.target.value });
 	};
 
-	
-
+	// Register the customer and handle payment
+	//working razorpayy
 	const handleRegisterAndPay = async () => {
 		try {
-			console.log("Customer details before registration:", customerDetails);
-
-			// Ensure basic required fields are filled
+			// Field validation
+			const { name, email, mobile, username, password, dob, gender } =
+				customerDetails;
 			if (
-				!customerDetails.name ||
-				!customerDetails.email 
+				!name ||
+				!email ||
+				!mobile ||
+				!username ||
+				!password ||
+				!dob ||
+				!gender
 			) {
 				alert("Please fill in all required fields.");
 				return;
 			}
 
-			// Register the user
-			const registrationResponse = await axios.post(
-				"http://localhost:5000/api/customers/user-register",
-				customerDetails
-			);
-
-			console.log("Registration response:", registrationResponse);
-
-			const registeredUserId = registrationResponse?.data?.userId; // Get the user ID
-
-			if (!registeredUserId) {
-				alert("User registration failed. Please try again.");
-				return;
-			}
-
-			// Automatically log in the user
-			const loginResponse = await login(
-				customerDetails.email,
-				customerDetails.password
-			);
-
-			if (!loginResponse.success) {
-				alert(`Login failed: ${loginResponse.message}`);
-				return;
-			}
-
-			if (!service || !service.price) {
+			if (!service?.salePrice) {
 				alert("Service details are missing.");
 				return;
 			}
 
-			// Initiate payment with the correct amount
+			// Create order
 			const paymentResponse = await axios.post(
 				"http://localhost:5000/api/customers/user-payment",
-				{ amount: service.price }
+				{ amount: service.salePrice }
 			);
 
 			const { order } = paymentResponse?.data;
 
+			// Validate Razorpay script
 			if (typeof window.Razorpay === "undefined") {
 				throw new Error("Razorpay script not loaded correctly");
 			}
 
+			// Configure Razorpay options
 			const options = {
 				key: "rzp_test_brvO8EMMhXPsDD",
 				amount: order.amount,
@@ -123,44 +90,91 @@ const ServicePage = () => {
 				name: "Tax Filing Service",
 				description: service?.name,
 				order_id: order?.id,
+				prefill: {
+					name: customerDetails.name,
+					email: customerDetails.email,
+					contact: customerDetails.mobile,
+				},
+				notes: {
+					serviceId: serviceId,
+				},
+				theme: {
+					color: "#3399cc",
+				},
+				modal: {
+					ondismiss: function () {
+						alert("Payment cancelled. You have not been registered.");
+						setCustomerDetails({
+							name: "",
+							email: "",
+							mobile: "",
+							username: "",
+							password: "",
+							dob: "",
+							gender: "",
+						});
+						navigate("/");
+					},
+				},
 				handler: async function (response) {
 					try {
-						console.log("Razorpay payment response:", response);
+						// First register the user
+						const registrationResponse = await axios.post(
+							"http://localhost:5000/api/customers/user-register",
+							{
+								name,
+								email,
+								mobile,
+								username,
+								password,
+								dob,
+								gender,
+							}
+						);
 
-						// Pass userId (user._id) during payment success
+						const registeredUserId = registrationResponse?.data?.userId;
+						if (!registeredUserId) {
+							throw new Error("User registration failed");
+						}
+
+						// Log in the user
+						const loginResponse = await login(email, password);
+						if (!loginResponse.success) {
+							throw new Error(`Login failed: ${loginResponse.message}`);
+						}
+						await fetchCustomerDashboard();
+						// Save payment details
 						await axios.post(
 							"http://localhost:5000/api/customers/payment-success",
 							{
 								razorpay_payment_id: response.razorpay_payment_id,
-								amount: order?.amount,
-								userId: registeredUserId, 
+								razorpay_order_id: response.razorpay_order_id,
+								razorpay_signature: response.razorpay_signature,
+								amount: order.amount,
+								userId: registeredUserId,
 								serviceId: serviceId,
 							}
 						);
 
 						alert("Payment successful!");
-						navigate(`/customers/dashboard/${customerDetails.email}`);
+						navigate(`/customers/dashboard/${email}`);
 					} catch (error) {
-						console.error("Error while saving payment details:", error);
+						console.error("Error processing payment:", error);
 						alert(
-							"Payment successful, but could not save service details. Please contact support."
+							error.message || "An error occurred during payment processing"
 						);
 					}
 				},
-				prefill: {
-					name: customerDetails.name,
-					email: customerDetails.email,
-				},
 			};
 
+			// Initialize Razorpay
 			const razorpay = new window.Razorpay(options);
 			razorpay.open();
 		} catch (error) {
-			console.error("Payment process error:", error);
-			alert("Payment process failed. Please try again.");
+			console.error("Error during registration or payment:", error);
+			alert("An error occurred. Please try again.");
 		}
 	};
-
 
 	const boxStyle4 = {
 		backgroundImage: `url(${"../images/hero8.jpeg"})`,
@@ -178,7 +192,7 @@ const ServicePage = () => {
 					</div>
 					<div className='service-content'>
 						<div className='service-form'>
-							<h1>Register </h1>
+							<h1>Register Today!</h1>
 							<div className='sform-div'>
 								<div>
 									<label htmlFor=''>Name</label>
@@ -187,8 +201,11 @@ const ServicePage = () => {
 										name='name'
 										placeholder='Name'
 										onChange={handleChange}
+										id='firstINput'
 									/>
 								</div>
+							</div>
+							<div className='sform-div'>
 								<div>
 									<label htmlFor=''>Email</label>
 									<input
@@ -201,162 +218,16 @@ const ServicePage = () => {
 								<div>
 									<label htmlFor=''>Mobile</label>
 									<input
-										type='mobile'
+										type='text'
 										name='mobile'
 										placeholder='Mobile'
 										onChange={handleChange}
 									/>
 								</div>
 							</div>
-							<div className='sform-div2'>
-								<div>
-									<label htmlFor=''>DOB</label>
-									<input
-										type='date'
-										name='dob'
-										placeholder='DOB'
-										onChange={handleChange}
-									/>
-								</div>
-								<div>
-									<label htmlFor=''>Gender</label>
-									<select name='gender' id='' onChange={handleChange}>
-										<option value=''>Select A Gender</option>
-										<option value='man'>Man</option>
-										<option value='woman'>Woman</option>
-										<option value='others'>Others</option>
-										<i class='fas fa-caret-down'></i>
-									</select>
-								</div>
-							</div>
 							<div className='sform-div'>
 								<div>
-									<label htmlFor=''>Pan Card</label>
-									<input
-										type='text'
-										name='pan'
-										placeholder='PAN'
-										onChange={handleChange}
-									/>
-								</div>
-								<div>
-									<label htmlFor=''>GST</label>
-									<input
-										type='text'
-										name='gst'
-										placeholder='GST'
-										onChange={handleChange}
-									/>
-								</div>
-								<div>
-									<label htmlFor=''>Annual Income</label>
-									<input
-										type='text'
-										name='annualIncome'
-										placeholder='GST'
-										onChange={handleChange}
-									/>
-								</div>
-							</div>
-							<div className='sform-div'>
-								<div>
-									<label htmlFor=''>Address</label>
-									<input
-										type='text'
-										name='address'
-										placeholder='PAN'
-										onChange={handleChange}
-									/>
-								</div>
-								<div>
-									<label htmlFor=''>City</label>
-									<input
-										type='text'
-										name='city'
-										placeholder='GST'
-										onChange={handleChange}
-									/>
-								</div>
-								<div>
-									<label htmlFor=''>State</label>
-									<input
-										type='text'
-										name='state'
-										placeholder='GST'
-										onChange={handleChange}
-									/>
-								</div>
-							</div>
-							<div className='sform-div'>
-								<div>
-									<label htmlFor=''>Country</label>
-									<input
-										type='text'
-										name='country'
-										placeholder='PAN'
-										onChange={handleChange}
-									/>
-								</div>
-								<div>
-									<label htmlFor=''>Postal Code</label>
-									<input
-										type='text'
-										name='postalcode'
-										placeholder='GST'
-										onChange={handleChange}
-									/>
-								</div>
-								<div>
-									<label htmlFor=''>Nature of Employment</label>
-									<input
-										type='text'
-										name='natureEmployement'
-										placeholder='GST'
-										onChange={handleChange}
-									/>
-								</div>
-							</div>
-							<div className='sform-div'>
-								<div>
-									<label htmlFor=''>Education</label>
-									<input
-										type='text'
-										name='education'
-										placeholder='PAN'
-										onChange={handleChange}
-									/>
-								</div>
-								<div>
-									<label htmlFor=''>Certifications</label>
-									<select name='certifications' onChange={handleChange}>
-										<option value=''>Select a Certification</option>
-										<option value='cert1'>Certification 1</option>
-										<option value='cert2'>Certification 2</option>
-										<option value='cert3'>Certification 3</option>
-									</select>
-								</div>
-								<div>
-									<label htmlFor=''>Institute</label>
-									<input
-										type='text'
-										name='institute'
-										placeholder='GST'
-										onChange={handleChange}
-									/>
-								</div>
-							</div>
-							<div className='sform-div'>
-								<div>
-									<label htmlFor=''>Completion Date</label>
-									<input
-										type='date'
-										name='completiondate'
-										placeholder='PAN'
-										onChange={handleChange}
-									/>
-								</div>
-								<div>
-									<label htmlFor=''>Set Username</label>
+									<label htmlFor=''>Username</label>
 									<input
 										type='text'
 										name='username'
@@ -365,7 +236,7 @@ const ServicePage = () => {
 									/>
 								</div>
 								<div>
-									<label htmlFor=''>Set Password</label>
+									<label htmlFor=''>Password</label>
 									<input
 										type='password'
 										name='password'
@@ -374,9 +245,42 @@ const ServicePage = () => {
 									/>
 								</div>
 							</div>
+							<div className='sform-div'>
+								<div>
+									<label htmlFor=''>Date of Birth</label>
+									<input
+										type='date'
+										name='dob'
+										value={customerDetails.dob}
+										placeholder='Date of Birth'
+										onChange={handleChange}
+									/>
+								</div>
+								<div>
+									<label htmlFor=''>Gender</label>
+									<select
+										name='gender'
+										onChange={handleChange}
+										defaultValue=''
+										value={customerDetails.gender}>
+										<option value='' disabled>
+											Select Gender
+										</option>
+										<option value='Male'>Male</option>
+										<option value='Female'>Female</option>
+										<option value='Other'>Other</option>
+									</select>
+								</div>
+							</div>
 							<div id='serv-desc'>
 								<p>{service.description}</p>
-								<h4>₹{service.price}</h4>
+
+								<h4>
+									₹{service.salePrice} <br />
+									<span style={{ textDecoration: "line-through" }}>
+										₹{service.actualPrice}
+									</span>
+								</h4>
 							</div>
 							<button onClick={handleRegisterAndPay}>Register & Pay</button>
 						</div>

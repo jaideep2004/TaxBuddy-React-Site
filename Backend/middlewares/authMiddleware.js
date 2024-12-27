@@ -1,23 +1,3 @@
-// const jwt = require("jsonwebtoken");
-
-// const authMiddleware = (req, res, next) => {
-//   const token = req.header("Authorization")?.replace("Bearer ", "");
-
-//   if (!token) {
-//     return res.status(401).json({ message: "Access Denied. No token provided." });
-//   }
-
-//   try {
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//     req.user = decoded;
-//     next();
-//   } catch (error) {
-//     res.status(400).json({ message: "Invalid or expired token." });
-//   }
-// };
-
-// module.exports = authMiddleware;
-
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
@@ -41,9 +21,10 @@ const authMiddleware = (req, res, next) => {
 
 		// Attach the decoded user information to the request
 		req.user = {
+			userId: decoded._id, // Add this line to match what the controller expects
 			_id: decoded._id,
 			role: decoded.role,
-			name: decoded.name || "Unknown", // Optional fallback
+			name: decoded.name || "Unknown",
 		};
 
 		next(); // Proceed to the next middleware or route handler

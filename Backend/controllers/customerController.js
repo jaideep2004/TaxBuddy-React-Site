@@ -5,6 +5,7 @@ const User = require("../models/userModel");
 const Service = require("../models/serviceModel");
 const Razorpay = require("razorpay");
 
+
 const hashPassword = (password, salt) => {
 	const hash = crypto.createHmac("sha256", salt);
 	hash.update(password);
@@ -35,6 +36,24 @@ const getCustomerDashboard = async (req, res) => {
 			user: {
 				name: user.name,
 				email: user.email,
+				dob: user.dob,
+				mobile: user.mobile,
+				gender: user.gender,
+				pan: user.pan,
+				gst: user.gst,
+				address: user.address,
+				city: user.city,
+				state: user.state,
+				country: user.country,
+				postalcode: user.postalcode,
+				natureEmployement: user.natureEmployement,
+				annualIncome: user.annualIncome,
+				education: user.education,
+				certifications: user.certifications,
+				institute: user.institute,
+				completiondate: user.completiondate,
+				activefrom: user.activefrom,
+				activetill: user.activetill,
 				services: user.services.map((service) => ({
 					serviceName: service.serviceId?.name || "Unknown Service",
 					serviceDescription:
@@ -46,6 +65,7 @@ const getCustomerDashboard = async (req, res) => {
 						: "Unassigned",
 				})),
 				paymentHistory: user.paymentHistory,
+				assignedEmployees: user.assignedEmployees,
 			},
 		});
 	} catch (err) {
@@ -63,30 +83,8 @@ const getUserServices = async (req, res) => {
 	}
 };
 
-//customer register
 const registerCustomer = async (req, res) => {
-	const {
-		name,
-		email,
-		mobile,
-		dob,
-		gender,
-		pan,
-		gst,
-		address,
-		city,
-		state,
-		country,
-		postalcode,
-		natureEmployement,
-		annualIncome,
-		education,
-		certifications,
-		institute,
-		completiondate,
-		username,
-		password,
-	} = req.body;
+	const { name, email, mobile, username, password, dob, gender } = req.body;
 
 	if (!name || !email || !username || !password) {
 		return res.status(400).json({ message: "All fields are required" });
@@ -110,25 +108,28 @@ const registerCustomer = async (req, res) => {
 			name,
 			email,
 			mobile,
+			username,
 			dob,
 			gender,
-			pan,
-			gst,
-			address,
-			city,
-			state,
-			country,
-			postalcode,
-			natureEmployement,
-			annualIncome,
-			education,
-			certifications,
-			institute,
-			completiondate,
-			username,
 			passwordHash: hashedPassword,
 			salt,
 			role: "customer",
+			isProfileComplete: false, // Profile is not complete upon registration
+			// Initially, other fields like PAN, GST, etc., will be null or empty
+			pan: null,
+			gst: null,
+			address: null,
+			city: null,
+			state: null,
+			country: null,
+			postalcode: null,
+			natureEmployement: null,
+			annualIncome: null,
+			education: null,
+			certifications: null,
+			institute: null,
+			completiondate: null,
+			serviceStatus: "active", // Service status initially set to active
 		});
 
 		await newUser.save();
@@ -142,12 +143,90 @@ const registerCustomer = async (req, res) => {
 	}
 };
 
-//login customer
+const deleteUser = async (req, res) => {
+	try {
+		const { userId } = req.params;
+
+		// Find the user by ID and delete it
+		const user = await User.findByIdAndDelete(userId);
+
+		if (!user) {
+			return res.status(404).json({ message: "User not found" });
+		}
+
+		res.status(200).json({ message: "User deleted successfully" });
+	} catch (error) {
+		console.error("Error deleting user:", error);
+		res.status(500).json({ message: "Error deleting user" });
+	}
+};
+
+const updateCustomerProfile = async (req, res) => {
+	const { userId } = req.user;
+	const updateFields = ({
+		pan,
+		gst,
+		address,
+		city,
+		state,
+		country,
+		postalcode,
+		natureEmployement,
+		annualIncome,
+		education,
+		certifications,
+		institute,
+		completiondate,
+	} = req.body);
+
+	try {
+		const user = await User.findById(userId);
+		if (!user) {
+			return res.status(404).json({ message: "User not found" });
+		}
+
+		// Update only the fields provided in the request
+		Object.keys(updateFields).forEach((field) => {
+			if (updateFields[field] !== undefined) {
+				user[field] = updateFields[field];
+			}
+		});
+
+		// Check if the profile is complete
+		const requiredFields = [
+			"pan",
+			"gst",
+			"address",
+			"city",
+			"state",
+			"country",
+			"postalcode",
+			"natureEmployement",
+			"annualIncome",
+			"education",
+		];
+		const isProfileComplete = requiredFields.every((field) => user[field]);
+		user.isProfileComplete = isProfileComplete;
+
+		await user.save();
+
+		res.status(200).json({
+			message: "Profile updated successfully",
+			user, // Send back updated user data
+		});
+	} catch (error) {
+		console.error("Error updating profile:", error);
+		res.status(500).json({
+			message: "Error updating profile",
+			error: error.message,
+		});
+	}
+};
 
 const loginUser = async (req, res) => {
 	const { email, password } = req.body;
 
-	try {  
+	try {
 		// Find the user by email
 		const user = await User.findOne({ email });
 		if (!user) {
@@ -211,44 +290,6 @@ const initiatePayment = async (req, res) => {
 		res.status(500).json({ message: "Error initiating payment" });
 	}
 };
-
-// const handlePaymentSuccess = async (req, res) => {
-// 	try {
-// 		const { razorpay_payment_id, amount, userId, serviceId, employeeId } =
-// 			req.body;
-
-// 		const user = await User.findById(userId);
-// 		if (!user) {
-// 			return res.status(404).json({ message: "User not found" });
-// 		}
-
-// 		const amountInRupees = amount / 100;
-
-// 		// Add payment history
-// 		user.paymentHistory.push({
-// 			paymentId: razorpay_payment_id,
-// 			amount: amountInRupees,
-// 			date: new Date(),
-// 			status: "success",
-// 		});
-
-// 		// Add service details, including employeeId
-// 		user.services.push({
-// 			serviceId,
-// 			employeeId, // Assign employee managing the service
-// 			activated: true,
-// 			purchasedAt: new Date(),
-// 		});
-// 		console.log(req.body);
-
-// 		await user.save();
-
-// 		res.status(200).json({ message: "Payment and service added successfully" });
-// 	} catch (error) {
-// 		console.error("Error handling payment success:", error);
-// 		res.status(500).json({ message: "Error processing payment" });
-// 	}
-// };
 
 const handlePaymentSuccess = async (req, res) => {
 	try {
@@ -318,6 +359,35 @@ const getServiceById = async (req, res) => {
 	}
 };
 
+const uploadDocuments = async (req, res) => {
+	try {
+		const { serviceId } = req.body;
+
+		// Find the service by ID
+		const service = await Service.findById(serviceId);
+		if (!service) {
+			return res.status(404).json({ message: "Service not found" });
+		}
+
+		// Push the uploaded document paths into the service's document array
+		service.documents.push(...req.files.map((file) => file.path)); // Assuming files are uploaded
+
+		// Set the status to 'in-process' once documents are uploaded
+		service.status = "in-process";
+		await service.save();
+
+		return res.status(200).json({
+			message: "Documents uploaded successfully",
+			service,
+		});
+	} catch (error) {
+		return res.status(500).json({
+			message: "Error uploading documents",
+			error: error.message,
+		});
+	}
+};
+
 module.exports = {
 	registerCustomer,
 	loginUser,
@@ -326,4 +396,7 @@ module.exports = {
 	getUserServices,
 	getCustomerDashboard,
 	handlePaymentSuccess,
+	updateCustomerProfile,
+	deleteUser,
+	uploadDocuments,
 };

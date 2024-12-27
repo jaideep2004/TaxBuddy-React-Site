@@ -5,6 +5,7 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
 	const sections = [
 		"Dashboard",
 		"Service Status",
+		"Documents Upload",
 		"Payment History",
 		"Profile",
 		"Message Center",

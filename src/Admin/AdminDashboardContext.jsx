@@ -24,7 +24,9 @@ const AdminDashboardProvider = ({ children }) => {
 	const [newService, setNewService] = useState({
 		name: "",
 		description: "",
-		price: "",
+		actualPrice: "",
+		salePrice: "",
+		hsncode: "",
 	});
 	const [newEmployee, setNewEmployee] = useState({
 		name: "",
@@ -176,9 +178,9 @@ const AdminDashboardProvider = ({ children }) => {
 	// Create Service Handler
 	const handleCreateService = async () => {
 		resetError();
-		const { name, description, price } = newService;
+		const { name, description, actualPrice, salePrice, hsncode } = newService;
 
-		if (!name || !description || !price) {
+		if (!name || !description || !actualPrice || !salePrice || !hsncode) {
 			setError("Please fill in all fields.");
 			return;
 		}
@@ -187,7 +189,7 @@ const AdminDashboardProvider = ({ children }) => {
 			const token = localStorage.getItem("adminToken");
 			const { data } = await axios.post(
 				"http://localhost:5000/api/admin/services",
-				{ name, description, price },
+				{ name, description, actualPrice, salePrice, hsncode },
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
 			setServices([...services, data.service]);
@@ -195,7 +197,9 @@ const AdminDashboardProvider = ({ children }) => {
 			setNewService({
 				name: "",
 				description: "",
-				price: "",
+				actualPrice: "",
+				salePrice: "",
+				hsncode: "",
 			});
 		} catch (err) {
 			console.error("Service creation error:", err);
@@ -237,44 +241,40 @@ const AdminDashboardProvider = ({ children }) => {
 	};
 
 	const handleCreateEmployee = async () => {
-		const { name, email, role, serviceId, username, password } = newEmployee;
-
+		const { name, email, serviceId, username, password } = newEmployee;
+	
 		// Validate required fields
-		if (!name || !email || !role || !serviceId || !username || !password) {
+		if (!name || !email || !serviceId || !username || !password) {
 			setError("Please provide all fields.");
 			return;
 		}
-
+	
 		try {
 			const token = localStorage.getItem("adminToken");
-
-			// Send the request to the server to create a new employee
+	
 			const { data } = await axios.post(
 				"http://localhost:5000/api/admin/employee",
-				{ name, email, role, serviceId, username, password },
+				{ name, email, role: "employee", serviceId, username, password },
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
-
-			// Add the newly created employee to the users state
-			setUsers((prevUsers) => [...prevUsers, data.user]);
-
+	
+			setUsers((prevUsers) => [...prevUsers, data.employee]);
 			alert("Employee created successfully.");
-
-			// Reset the employee form
 			setNewEmployee({
 				name: "",
 				email: "",
-				role: "",
 				serviceId: "",
 				username: "",
 				password: "",
 			});
+			setShowEmployeeForm(false);
 		} catch (err) {
 			console.error("Error creating employee:", err);
 			setError("Error creating employee.");
 		}
 	};
-
+	
+	
 	const handleActivateUser = async (userId) => {
 		// Optimistically update the state
 		setUsers((prevUsers) =>
@@ -431,7 +431,6 @@ const AdminDashboardProvider = ({ children }) => {
 			alert("Failed to update service. Please try again.");
 		}
 	};
-
 	const handleDeleteService = async (serviceId) => {
 		try {
 			const token = localStorage.getItem("adminToken");

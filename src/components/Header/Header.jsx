@@ -61,11 +61,10 @@ const Header = ({ changeTheme }) => {
 								`nav-link ${isWhiteLinks ? "white-link" : "primary-link"} ${
 									isActive ? "active" : ""
 								}`
-							}
-							>
+							}>
 							Home
 						</NavLink>
-						
+
 						<NavLink
 							to='/services'
 							className={({ isActive }) =>
@@ -101,7 +100,7 @@ const Header = ({ changeTheme }) => {
 							Resources
 							<i class='fa-solid fa-caret-down'></i>
 						</NavLink>
-						
+
 						<NavLink
 							to='/contact'
 							className={({ isActive }) =>
@@ -113,11 +112,13 @@ const Header = ({ changeTheme }) => {
 						</NavLink>
 					</nav>
 				</div>
-				<div className='tax-header-btn'>
-					<button className='tax5-btn'>
-						Register Today <i class='fa-solid fa-arrow-right'></i>{" "}
-					</button>
-				</div>
+				<NavLink to='/customers/login'>
+					<div className='tax-header-btn'>
+						<button className='tax5-btn'>
+							Register Today <i class='fa-solid fa-arrow-right'></i>{" "}
+						</button>
+					</div>
+				</NavLink>
 			</div>
 		</header>
 	);

@@ -16,12 +16,22 @@ const ServicesSection = () => {
 	// Filter and sorting state
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filterOption, setFilterOption] = useState("newest");
-	const [columnFilter, setColumnFilter] = useState({
-		name: "",
-		description: "",
-		price: "",
-	});
-	const [filterCriteria, setFilterCriteria] = useState("name"); // Filter criteria (name, description, price)
+	const [dateFilter, setDateFilter] = useState({ fromDate: "", toDate: "" });
+	const [filterCriteria, setFilterCriteria] = useState("name"); // Filter criteria (name, id)
+
+	// Helper function to normalize time to midnight for accurate date comparisons
+	const normalizeDate = (dateStr) => {
+		const date = new Date(dateStr);
+		date.setHours(0, 0, 0, 0); // Set time to midnight
+		return date;
+	};
+
+	// Helper function to format the date as "12, Dec 2024"
+	const formatDate = (dateStr) => {
+		const date = new Date(dateStr);
+		const options = { day: "2-digit", month: "short", year: "numeric" };
+		return date.toLocaleDateString("en-GB", options).replace(/ /g, " ");
+	};
 
 	// Filtered Services based on column filters and search term
 	const filteredServices = [...services]
@@ -29,21 +39,22 @@ const ServicesSection = () => {
 			const lowerSearchTerm = searchTerm.toLowerCase();
 			return (
 				service.name.toLowerCase().includes(lowerSearchTerm) ||
-				service.description.toLowerCase().includes(lowerSearchTerm)
+				service._id.toLowerCase().includes(lowerSearchTerm)
 			);
 		})
 		.filter((service) => {
+			// Filtering by date range if set
+			const serviceDate = new Date(service.createdAt);
+			const fromDate = dateFilter.fromDate
+				? normalizeDate(dateFilter.fromDate)
+				: null;
+			const toDate = dateFilter.toDate
+				? normalizeDate(dateFilter.toDate)
+				: null;
+
 			return (
-				(columnFilter.name === "" ||
-					service.name
-						.toLowerCase()
-						.includes(columnFilter.name.toLowerCase())) &&
-				(columnFilter.description === "" ||
-					service.description
-						.toLowerCase()
-						.includes(columnFilter.description.toLowerCase())) &&
-				(columnFilter.price === "" ||
-					service.price.toString().includes(columnFilter.price))
+				(fromDate === null || serviceDate >= fromDate) &&
+				(toDate === null || serviceDate <= toDate)
 			);
 		})
 		.sort((a, b) => {
@@ -59,6 +70,12 @@ const ServicesSection = () => {
 	return (
 		<div className='tax-dashboard-services'>
 			<div className='filter-div'>
+				<select
+					value={filterCriteria}
+					onChange={(e) => setFilterCriteria(e.target.value)}>
+					<option value='name'>Filter by Name</option>
+					<option value='id'>Filter by ID</option>
+				</select>
 				<input
 					type='text'
 					placeholder={`Search by ${
@@ -68,24 +85,25 @@ const ServicesSection = () => {
 					onChange={(e) => setSearchTerm(e.target.value)}
 				/>
 				{/* Dropdown to Select Filter Criteria */}
-				<select
-					value={filterCriteria}
-					onChange={(e) => setFilterCriteria(e.target.value)}>
-					<option value='name'>Filter by Name</option>
-					<option value='description'>Filter by Description</option>
-					<option value='price'>Filter by Price</option>
-				</select>
 
-				{/* Search Input for the Filter Criteria */}
-
-				{/* Sorting Dropdown */}
-				{/* <select
-          value={filterOption}
-          onChange={(e) => setFilterOption(e.target.value)}
-        >
-          <option value="newest">Newest</option>
-          <option value="alphabetical">Alphabetically</option>
-        </select> */}
+				<div>
+					<input
+						type='date'
+						placeholder='From Date'
+						value={dateFilter.fromDate}
+						onChange={(e) =>
+							setDateFilter({ ...dateFilter, fromDate: e.target.value })
+						}
+					/>
+					<input
+						type='date'
+						placeholder='To Date'
+						value={dateFilter.toDate}
+						onChange={(e) =>
+							setDateFilter({ ...dateFilter, toDate: e.target.value })
+						}
+					/>
+				</div>
 			</div>
 
 			<table>
@@ -94,8 +112,8 @@ const ServicesSection = () => {
 						<th>Service ID</th>
 						<th>Date</th>
 						<th>Name</th>
-						<th>Description</th>
 						<th>Price</th>
+						<th>HSN Code</th> {/* New column for HSN Code */}
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -105,12 +123,18 @@ const ServicesSection = () => {
 							<td>{service._id}</td>
 							<td>
 								{service.createdAt
-									? new Date(service.createdAt).toLocaleDateString("en-GB")
+									? formatDate(service.createdAt) // Using formatDate function here
 									: "Not available"}
 							</td>
 							<td>{service.name}</td>
-							<td>{service.description || "No description"}</td>
-							<td>{service.price ? `$${service.price}` : "N/A"}</td>
+							<td>
+								₹{service.salePrice} <br />
+								<span style={{ textDecoration: "line-through" }}>
+									₹{service.actualPrice}
+								</span>
+							</td>
+							<td>{service.hsncode || "No HSN Code"}</td>{" "}
+							{/* Display HSN Code */}
 							<td className='tax-btn-cont'>
 								<button
 									className='tax-service-btn'
@@ -131,7 +155,7 @@ const ServicesSection = () => {
 
 			{/* Form for adding a new service */}
 			{showServiceForm && (
-				<div className='modal'>
+				<div className='smodal'>
 					<h3>Add Service</h3>
 					<input
 						type='text'
@@ -151,10 +175,26 @@ const ServicesSection = () => {
 					/>
 					<input
 						type='number'
-						placeholder='Service Price'
-						value={newService.price}
+						placeholder='Actual Service Price'
+						value={newService.actualPrice}
 						onChange={(e) =>
-							setNewService({ ...newService, price: e.target.value })
+							setNewService({ ...newService, actualPrice: e.target.value })
+						}
+					/>
+					<input
+						type='number'
+						placeholder='Sale Service Price'
+						value={newService.salePrice}
+						onChange={(e) =>
+							setNewService({ ...newService, salePrice: e.target.value })
+						}
+					/>
+					<input
+						type='text'
+						placeholder='HSN Code'
+						value={newService.hsncode}
+						onChange={(e) =>
+							setNewService({ ...newService, hsncode: e.target.value })
 						}
 					/>
 					<div id='modal-div'>
@@ -166,7 +206,7 @@ const ServicesSection = () => {
 
 			{/* Form for editing an existing service */}
 			{editingService && (
-				<div className='modal'>
+				<div className='smodal'>
 					<h3>Edit Service</h3>
 					<input
 						type='text'
@@ -189,12 +229,34 @@ const ServicesSection = () => {
 					/>
 					<input
 						type='number'
-						placeholder='Service Price'
-						value={editingService.price}
+						placeholder='Actual Service Price'
+						value={editingService.actualPrice}
 						onChange={(e) =>
 							setEditingService({
 								...editingService,
-								price: parseFloat(e.target.value) || 0,
+								actualPrice: parseFloat(e.target.value) || 0,
+							})
+						}
+					/>
+					<input
+						type='number'
+						placeholder='Sale Service Price'
+						value={editingService.salePrice}
+						onChange={(e) =>
+							setEditingService({
+								...editingService,
+								salePrice: parseFloat(e.target.value) || 0,
+							})
+						}
+					/>
+					<input
+						type='text'
+						placeholder='HSN Code'
+						value={editingService.hsncode}
+						onChange={(e) =>
+							setEditingService({
+								...editingService,
+								hsncode: e.target.value,
 							})
 						}
 					/>

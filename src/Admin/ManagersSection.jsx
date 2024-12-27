@@ -16,7 +16,7 @@ const ManagersSection = () => {
 		handleDeactivateUser,
 		handleDeleteUser,
 	} = useContext(AdminDashboardContext);
-
+	const [dateFilter, setDateFilter] = useState({ fromDate: "", toDate: "" });
 	const [error, setError] = useState("");
 	const [filterOption, setFilterOption] = useState("newest");
 	const [searchTerm, setSearchTerm] = useState("");
@@ -27,8 +27,18 @@ const ManagersSection = () => {
 	});
 	const [filterCriteria, setFilterCriteria] = useState("name");
 
-	// Filtered Managers based on column filters and search term
-	// Filtered Managers based on column filters and search term
+	const normalizeDate = (dateStr) => {
+		const date = new Date(dateStr);
+		date.setHours(0, 0, 0, 0); // Set time to midnight
+		return date;
+	};
+
+	// Helper function to format the date as "12, Dec 2024"
+	const formatDate = (dateStr) => {
+		const date = new Date(dateStr);
+		const options = { day: "2-digit", month: "short", year: "numeric" };
+		return date.toLocaleDateString("en-GB", options).replace(/ /g, " ");
+	};
 	const filteredManagers = [...managers]
 		.filter((manager) => {
 			const lowerSearchTerm = searchTerm.toLowerCase();
@@ -47,6 +57,21 @@ const ManagersSection = () => {
 					manager.email
 						.toLowerCase()
 						.includes(columnFilter.email.toLowerCase()))
+			);
+		})
+		.filter((manager) => {
+			// Filtering by date range if set
+			const managerDate = new Date(manager.createdAt);
+			const fromDate = dateFilter.fromDate
+				? normalizeDate(dateFilter.fromDate)
+				: null;
+			const toDate = dateFilter.toDate
+				? normalizeDate(dateFilter.toDate)
+				: null;
+
+			return (
+				(fromDate === null || managerDate >= fromDate) &&
+				(toDate === null || managerDate <= toDate)
 			);
 		})
 		.sort((a, b) => {
@@ -92,8 +117,7 @@ const ManagersSection = () => {
 
 	return (
 		<div className='tax-dashboard-employee'>
-			<div className='filter-div'>
-				{/* Dropdown to Select Filter Criteria */}
+			{/* <div className='filter-div'>
 				<select
 					value={filterCriteria}
 					onChange={(e) => setFilterCriteria(e.target.value)}>
@@ -101,7 +125,6 @@ const ManagersSection = () => {
 					<option value='email'>Filter by Email</option>
 				</select>
 
-				{/* Search Input for the Filter Criteria */}
 				<input
 					type='text'
 					placeholder={`Search by ${
@@ -110,15 +133,47 @@ const ManagersSection = () => {
 					value={searchTerm}
 					onChange={(e) => setSearchTerm(e.target.value)}
 				/>
-
-				{/* Sorting Dropdown */}
+			</div> */}
+			<div className='filter-div'>
+				<input
+					type='text'
+					placeholder={`Search by ${
+						filterCriteria.charAt(0).toUpperCase() + filterCriteria.slice(1)
+					}`}
+					value={searchTerm}
+					onChange={(e) => setSearchTerm(e.target.value)}
+				/>
+				{/* Dropdown to Select Filter Criteria */}
+				<select
+					value={filterCriteria}
+					onChange={(e) => setFilterCriteria(e.target.value)}>
+					<option value='name'>Filter by Name</option>
+					<option value='id'>Filter by ID</option>
+				</select>
+				<div>
+					<input
+						type='date'
+						placeholder='From Date'
+						value={dateFilter.fromDate}
+						onChange={(e) =>
+							setDateFilter({ ...dateFilter, fromDate: e.target.value })
+						}
+					/>
+					<input
+						type='date'
+						placeholder='To Date'
+						value={dateFilter.toDate}
+						onChange={(e) =>
+							setDateFilter({ ...dateFilter, toDate: e.target.value })
+						}
+					/>
+				</div>
 			</div>
-
 			<table>
 				<thead>
 					<tr>
 						<th>ID</th>
-						<th>Creation Date</th>
+						<th>Date</th>
 						<th>Name</th>
 						<th>Email</th>
 						<th>Assigned Service</th>
@@ -131,10 +186,10 @@ const ManagersSection = () => {
 						<tr key={manager._id}>
 							<td>{manager._id}</td>
 							<td>
-								{manager.createdAt
-									? new Date(manager.createdAt).toLocaleDateString("en-GB")
-									: "Not available"}
-							</td>
+                {manager.createdAt
+                  ? formatDate(manager.createdAt) // Using formatDate function here
+                  : "Not available"}
+              </td>
 
 							<td>{manager.name}</td>
 							<td>{manager.email}</td>
@@ -194,7 +249,7 @@ const ManagersSection = () => {
 				</tbody>
 			</table>
 			{showManagerForm && (
-				<div className='modal'>
+				<div className='smodal'>
 					<h3>Add Manager</h3>
 					<input
 						type='text'
