@@ -35,21 +35,46 @@ export const CustomerAuthProvider = ({ children }) => {
 	);
 
 	// Upload documents
-	const uploadDocuments = async (serviceId, files) => {
+
+	const uploadDocuments = async (serviceName, files) => {
+		const token = localStorage.getItem("customerToken");
+
+		// Find the service object from the services array that matches the serviceName
+		const service = services.find((s) => s.serviceName === serviceName);
+
+		if (!service) {
+			console.error("Service not found for the provided service name.");
+			throw new Error("Service not found");
+		}
+
 		const formData = new FormData();
-		formData.append("serviceId", serviceId);
-		Array.from(files).forEach((file) => formData.append("documents", file));
+		formData.append("serviceId", service.serviceId);
+
+		Array.from(files).forEach((file) => {
+			formData.append("documents", file);
+		});
 
 		try {
-			const token = localStorage.getItem("customerToken");
 			const { data } = await axios.post(
 				"http://localhost:5000/api/customers/upload-documents",
 				formData,
-				{ headers: { Authorization: `Bearer ${token}` } }
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Content-Type": "multipart/form-data",
+					},
+				}
 			);
-			setMessage(data.message);
+
+			// Refresh dashboard data after successful upload
+			await fetchCustomerDashboard();
+			return data;
 		} catch (error) {
-			setMessage("Failed to upload documents");
+			console.error(
+				"Upload failed:",
+				error.response ? error.response.data.message : error.message
+			);
+			throw error;
 		}
 	};
 
@@ -104,7 +129,20 @@ export const CustomerAuthProvider = ({ children }) => {
 			);
 
 			setUser(data.user);
-			setServices(data.user.services || []);
+
+			// Add the formatted services mapping
+			const formattedServices = data.user.services.map((service) => ({
+				serviceId: service.serviceId,
+				serviceName: service.serviceName || service.name,
+				serviceDescription: service.description || "N/A", // Include description
+				purchasedAt: service.purchasedAt || null, // Include purchasedAt
+				status: service.status || "N/A",
+				activationStatus: service.activated ? "Active" : "Inactive", // Include activation status
+				managedBy: service.managedBy || "Not Assigned", // Include managedBy
+				documents: service.documents || [],
+			}));
+
+			setServices(formattedServices);
 			setFormData((prev) => ({
 				...prev,
 				pan: data.user.pan || "",
@@ -127,26 +165,15 @@ export const CustomerAuthProvider = ({ children }) => {
 			);
 
 			const services = serviceResponse.data.services || [];
+			console.log("Fetched services:", services); // Add this line to debug
+
 			const serviceData = services.reduce((map, service) => {
 				map[service.serviceId] = service.name;
 				return map;
 			}, {});
+			console.log("Service Map:", serviceData); // Debug the serviceMap
+
 			setServiceMap(serviceData);
-
-			const employeeResponse = await axios.get(
-				"http://localhost:5000/api/admin/users",
-				{ headers: { Authorization: `Bearer ${token}` } }
-			);
-
-			const employees = employeeResponse.data.users.filter(
-				(user) => user.role === "employee"
-			);
-
-			const employeeData = employees.reduce((map, emp) => {
-				map[emp._id] = { name: emp.name, email: emp.email };
-				return map;
-			}, {});
-			setEmployeeMap(employeeData);
 		} catch (error) {
 			console.error("Error fetching service or employee mappings:", error);
 		}

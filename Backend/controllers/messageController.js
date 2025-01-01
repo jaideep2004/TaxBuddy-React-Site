@@ -3,6 +3,56 @@ const Message = require("../models/messageModel");
 
 // Send to a message
 
+// const sendMessage = async (req, res) => {
+// 	console.log("Request body:", req.body);
+// 	console.log("Headers:", req.headers);
+
+// 	const { recipientId, content, service } = req.body;
+// 	const sender = req.user?.id || req.body.sender;
+
+// 	if (!sender || sender === "undefined") {
+// 		return res.status(400).json({ message: "Sender is invalid or missing" });
+// 	}
+
+// 	if (!recipientId || !content || !service) {
+// 		return res.status(400).json({
+// 			message: "Missing required fields: recipientId, content, or service",
+// 		});
+// 	}
+
+// 	try {
+// 		const messageData = {
+// 			sender,
+// 			recipient: recipientId,
+// 			content,
+// 			service,
+// 			files:
+// 				req.files?.map((file) => ({
+// 					fileUrl: `${req.protocol}://${req.get("host")}/uploads/${
+// 						file.filename
+// 					}`,
+// 					fileName: file.originalname,
+// 					fileType: file.mimetype,
+// 				})) || [],
+// 		};
+
+// 		const newMessage = new Message(messageData);
+// 		console.log("Creating message with data:", messageData);
+
+// 		await newMessage.save();
+// 		res.status(201).json({
+// 			message: "Message sent successfully",
+// 			newMessage,
+// 		});
+// 	} catch (err) {
+// 		console.error("Error sending message:", err);
+// 		res.status(500).json({
+// 			message: "Error sending message",
+// 			error: err.message,
+// 		});
+// 	}
+// };
+
 const sendMessage = async (req, res) => {
 	console.log("Request body:", req.body);
 	console.log("Headers:", req.headers);
@@ -28,9 +78,9 @@ const sendMessage = async (req, res) => {
 			service,
 			files:
 				req.files?.map((file) => ({
-					fileUrl: `${req.protocol}://${req.get("host")}/uploads/${
-						file.filename
-					}`,
+					fileUrl: `${req.protocol}://${req.get(
+						"host"
+					)}/uploads/${req.user.userId.toString()}/${file.filename}`,
 					fileName: file.originalname,
 					fileType: file.mimetype,
 				})) || [],
@@ -55,6 +105,50 @@ const sendMessage = async (req, res) => {
 
 //reply
 
+// const replyToMessage = async (req, res) => {
+// 	const { messageId } = req.params;
+// 	const { replyContent } = req.body;
+// 	const repliedBy = req.user?._id;
+
+// 	if (!replyContent) {
+// 		return res.status(400).json({ message: "Reply content is missing" });
+// 	}
+
+// 	try {
+// 		const message = await Message.findById(messageId);
+// 		if (!message) {
+// 			return res.status(404).json({ message: "Message not found" });
+// 		}
+
+// 		const files = (req.files || []).map((file) => ({
+// 			fileUrl: `/uploads/${file.filename}`,
+// 			fileName: file.originalname,
+// 			fileType: file.mimetype,
+// 		}));
+
+// 		const replyData = {
+// 			repliedBy,
+// 			content: replyContent,
+// 			files,
+// 			createdAt: new Date(),
+// 		};
+
+// 		message.replyContent.push(replyData);
+// 		message.isReplied = true;
+// 		message.isRead = true;
+
+// 		await message.save();
+// 		res
+// 			.status(200)
+// 			.json({ message: "Reply sent successfully", updatedMessage: message });
+// 	} catch (err) {
+// 		console.error("Error replying to message:", err);
+// 		res
+// 			.status(500)
+// 			.json({ message: "Error replying to message", error: err.message });
+// 	}
+// };
+
 const replyToMessage = async (req, res) => {
 	const { messageId } = req.params;
 	const { replyContent } = req.body;
@@ -71,7 +165,9 @@ const replyToMessage = async (req, res) => {
 		}
 
 		const files = (req.files || []).map((file) => ({
-			fileUrl: `/uploads/${file.filename}`,
+			fileUrl: `${req.protocol}://${req.get(
+				"host"
+			)}/uploads/${req.user.userId.toString()}/${file.filename}`,
 			fileName: file.originalname,
 			fileType: file.mimetype,
 		}));

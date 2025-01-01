@@ -68,7 +68,6 @@
 }
 .customer-dashboard {
 	display: flex;
-	/* margin: 100px 0px 60px 0px; */
 	position: relative;
 }
 .csidebar {
@@ -420,7 +419,7 @@
 .message-list {
 	list-style: none;
 	margin: 0;
-	padding: 0;
+	padding: 15px;
 }
 
 .message-item {

@@ -6,11 +6,12 @@ const {
 	replyToMessage,
 } = require("../controllers/messageController");
 const authMiddleware = require("../middlewares/authMiddleware");
-const upload = require("../middlewares/upload"); // Multer middleware
+
+const uploadMiddleware = require("../middlewares/upload");
 const router = express.Router();
 
 // Send a message
-router.post("/send", authMiddleware, upload, sendMessage);
+router.post("/send", authMiddleware, uploadMiddleware, sendMessage);
 
 // Get all messages
 router.get("/", authMiddleware, getMessages);
@@ -19,6 +20,6 @@ router.get("/", authMiddleware, getMessages);
 router.patch("/:messageId/read", authMiddleware, markMessageAsRead);
 
 // Reply to a message
-router.patch("/:messageId/reply", upload, authMiddleware, replyToMessage);
+router.patch("/:messageId/reply", uploadMiddleware, authMiddleware, replyToMessage);
 
 module.exports = router;

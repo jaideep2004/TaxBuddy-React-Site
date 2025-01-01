@@ -2,6 +2,9 @@ import React, { createContext, useState, useEffect, useMemo } from "react";
 import axios from "./utils/axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+import { useNotification } from "../NotificationContext";
 
 const AdminDashboardContext = createContext();
 
@@ -16,6 +19,8 @@ const AdminDashboardProvider = ({ children }) => {
 	const [services, setServices] = useState([]);
 	const [users, setUsers] = useState([]);
 	const [messages, setMessages] = useState([]);
+
+	const { showNotification } = useNotification();
 	//login
 	const [isAuthenticated, setIsAuthenticated] = useState(
 		!!localStorage.getItem("adminToken")
@@ -193,7 +198,8 @@ const AdminDashboardProvider = ({ children }) => {
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
 			setServices([...services, data.service]);
-			alert("Service created successfully.");
+
+			showNotification("Service created successfully.", "success");
 			setNewService({
 				name: "",
 				description: "",
@@ -202,6 +208,7 @@ const AdminDashboardProvider = ({ children }) => {
 				hsncode: "",
 			});
 		} catch (err) {
+			showNotification("Service creation error", "error");
 			console.error("Service creation error:", err);
 			setError(err.response?.data?.message || "Error creating service.");
 		}
@@ -209,55 +216,54 @@ const AdminDashboardProvider = ({ children }) => {
 
 	// Other functions follow the same error handling pattern
 	const handleCreateManager = async () => {
-		resetError();
-		const { name, email, role, serviceId, username, password } = newManager;
+		const { name, email, serviceId, username, password } = newManager;
 
-		if (!name || !email || !role || !serviceId || !username || !password) {
+		if (!name || !email || !serviceId || !username || !password) {
 			setError("Please provide all fields.");
 			return;
 		}
 
 		try {
 			const token = localStorage.getItem("adminToken");
-			const data = await axios.post(
+			const response = await axios.post(
 				"http://localhost:5000/api/admin/manager",
-				{ name, email, role, serviceId, username, password },
+				{ name, email, role: "manager", serviceId, username, password },
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
-			setUsers((prevUsers) => [...prevUsers, data.user]);
+
+			// Wait for the dashboard data to refresh
+			await fetchDashboardData();
 
 			alert("Manager created successfully.");
 			setNewManager({
 				name: "",
 				email: "",
-				role: "",
 				serviceId: "",
 				username: "",
 				password: "",
 			});
 		} catch (err) {
-			setError(err.response?.data?.message || "Error creating user.");
+			setError("Error creating manager.");
 		}
 	};
 
 	const handleCreateEmployee = async () => {
 		const { name, email, serviceId, username, password } = newEmployee;
-	
+
 		// Validate required fields
 		if (!name || !email || !serviceId || !username || !password) {
 			setError("Please provide all fields.");
 			return;
 		}
-	
+
 		try {
 			const token = localStorage.getItem("adminToken");
-	
 			const { data } = await axios.post(
 				"http://localhost:5000/api/admin/employee",
 				{ name, email, role: "employee", serviceId, username, password },
 				{ headers: { Authorization: `Bearer ${token}` } }
 			);
-	
+
 			setUsers((prevUsers) => [...prevUsers, data.employee]);
 			alert("Employee created successfully.");
 			setNewEmployee({
@@ -269,12 +275,11 @@ const AdminDashboardProvider = ({ children }) => {
 			});
 			setShowEmployeeForm(false);
 		} catch (err) {
-			console.error("Error creating employee:", err);
 			setError("Error creating employee.");
+			console.error("Error creating employee:", err);
 		}
 	};
-	
-	
+
 	const handleActivateUser = async (userId) => {
 		// Optimistically update the state
 		setUsers((prevUsers) =>

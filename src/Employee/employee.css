@@ -1,0 +1,119 @@
+.tax-employee-login {
+	/* border: 1px solid black; */
+	display: flex;
+
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin: 150px 0px 60px 0px;
+	div {
+		/* border: 1px solid black; */
+		display: flex;
+
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 90%;
+		h1 {
+			font-size: 35px;
+			color: var(--primary);
+			margin-bottom: 20px;
+		}
+		form {
+			border: 1px solid black;
+			padding: 20px 40px 20px 10px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			background-color: var(--primary);
+			border-radius: 15px;
+
+			button {
+				border: 2px solid var(--accent);
+				width: 100%;
+				margin: 15px 0px 0px 31px;
+				padding: 12px 30px;
+				font-size: 17px;
+
+				border-radius: 10px;
+				background-color: var(--accent);
+				color: var(--secondary);
+				cursor: pointer;
+				&:hover {
+					transition: all 0.3s ease;
+					background-color: var(--secondary);
+					color: var(--accent);
+				}
+			}
+
+			div {
+				display: flex;
+				flex-direction: column;
+				align-items: start;
+
+				label {
+					color: var(--secondary);
+					margin: 10px;
+				}
+				input {
+					min-width: 300px;
+					padding: 13px;
+					outline: none;
+					font-size: 17px;
+					border-radius: 15px;
+					border: none;
+				}
+			}
+		}
+	}
+}
+
+.employee-dashboard{
+	display: flex;
+	position: relative;
+}
+
+.esidebar {
+	width: 320px;
+	background-color: var(--primary);
+	color: white;
+	min-height: 600px;
+	height: 110vh;
+}
+.esidebar ul {
+	list-style-type: none;
+	padding: 10px;
+	margin-top: 62px;
+	display: flex;
+	flex-direction: column;
+}
+
+.esidebar li {
+	padding: 20px;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	&:hover {
+		background-color: var(--accent);
+		text-decoration-color: var(--accent);
+	}
+}
+.li-active {
+	background-color: var(--accent);
+}
+
+.esidebar button {
+	padding: 10px 30px;
+	font-size: 17px;
+	background-color: var(--accent);
+	color: white;
+	border: none;
+	margin-top: 105px;
+	border: none;
+	border-radius: 15px;
+
+	&:hover {
+		cursor: pointer;
+		background-color: red;
+	}
+}

@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { AdminDashboardContext } from "./AdminDashboardContext";
+import { useNotification } from "../NotificationContext";
 
 const ServicesSection = () => {
 	const [showServiceForm, setShowServiceForm] = useState(false);
@@ -66,7 +67,31 @@ const ServicesSection = () => {
 				return 0; // Default, no sorting
 			}
 		});
-
+	const { showNotification } = useNotification();
+	const handleCreate = async (serviceId) => {
+		try {
+			await handleCreateService(serviceId);
+			showNotification("Service created successfully", "success");
+		} catch (error) {
+			showNotification("Failed to create service", "error");
+		}
+	};
+	const handleUpdate = async (serviceId) => {
+		try {
+			await handleCreateService(serviceId);
+			showNotification("Service Updated successfully", "success");
+		} catch (error) {
+			showNotification("Failed to update service", "error");
+		}
+	};
+	const handleDelete = async (serviceId) => {
+		try {
+			await handleCreateService(serviceId);
+			showNotification("Service Deleted successfully", "success");
+		} catch (error) {
+			showNotification("Failed to delete service", "error");
+		}
+	};
 	return (
 		<div className='tax-dashboard-services'>
 			<div className='filter-div'>
@@ -198,7 +223,7 @@ const ServicesSection = () => {
 						}
 					/>
 					<div id='modal-div'>
-						<button onClick={handleCreateService}>Create</button>
+						<button onClick={handleCreate}>Create</button>
 						<button onClick={() => setShowServiceForm(false)}>Cancel</button>
 					</div>
 				</div>
@@ -263,7 +288,7 @@ const ServicesSection = () => {
 					<div id='modal-div'>
 						<button
 							onClick={() => {
-								handleUpdateService(editingService);
+								handleUpdate(editingService);
 								setEditingService(null); // Close modal after update
 							}}>
 							Update

@@ -74,18 +74,29 @@ const AdminMessageCenter = () => {
 		(replyFiles[messageId] || []).forEach((file) =>
 			formData.append("files", file)
 		);
+		console.log(formData);
 
 		try {
+			// await axios.patch(
+			// 	`http://localhost:5000/api/messages/${messageId}/reply`,
+			// 	formData,
+			// 	{
+			// 		headers: {
+			// 			Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+			// 			"Content-Type": "multipart/form-data",
+			// 		},
+			// 	}
+			// );
 			await axios.patch(
 				`http://localhost:5000/api/messages/${messageId}/reply`,
 				formData,
 				{
 					headers: {
 						Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-						"Content-Type": "multipart/form-data",
 					},
 				}
 			);
+
 			setReplyContent((prev) => ({ ...prev, [messageId]: "" }));
 			setReplyFiles((prev) => ({ ...prev, [messageId]: [] }));
 			fetchMessages();

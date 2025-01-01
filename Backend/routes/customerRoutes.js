@@ -1,6 +1,7 @@
 const express = require("express");
 const authMiddleware = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/upload");
+const uploadMiddleware = require("../middlewares/upload");
 const {
 	registerCustomer,
 	loginUser,
@@ -29,6 +30,6 @@ router.post("/user-payment", initiatePayment);
 router.get("/user-services", getUserServices);
 router.post("/payment-success", handlePaymentSuccess);
 router.put("/update-profile", authMiddleware, updateCustomerProfile);
-router.post("/upload-documents", authMiddleware, upload, uploadDocuments);
+router.post("/upload-documents", authMiddleware, uploadMiddleware, uploadDocuments);
 
 module.exports = router;

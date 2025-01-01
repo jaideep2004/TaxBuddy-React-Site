@@ -4,7 +4,9 @@ const connectDB = require("./config/db");
 const adminRoutes = require("./routes/adminRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const employeeRoutes = require("./routes/employeeRoutes");
 const cors = require("cors");
+const path = require('path');
 
 dotenv.config();
 connectDB();
@@ -15,7 +17,8 @@ app.use(express.json()); // Middleware to parse JSON
 app.use("/api/admin", adminRoutes); // Admin routes
 app.use("/api/customers", customerRoutes); // Admin routes
 app.use("/api/messages", messageRoutes); // Admin routes
-
+app.use("/api/employees", employeeRoutes); // Employee routes
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

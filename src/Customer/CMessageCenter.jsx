@@ -89,7 +89,7 @@ const CMessageCenter = () => {
 					{messages.map((msg, index) => (
 						<li key={msg._id || index} className='message-item'>
 							{/* Original Message */}
-							<div className='message-wrapper customer'>
+							<div className='initial-message'>
 								<div className='message-info'>
 									<span>
 										<strong>{msg.sender?.name || "You"}</strong> to{" "}
@@ -101,7 +101,7 @@ const CMessageCenter = () => {
 								</div>
 								<p className='message-content'>{msg.content}</p>
 								{msg.files?.map((file, idx) => (
-									<div key={idx} className='message-file'>
+									<div key={idx} className='reply-file'>
 										{file.fileType?.startsWith("image/") ? (
 											<img
 												src={file.fileUrl}
@@ -122,39 +122,41 @@ const CMessageCenter = () => {
 							</div>
 
 							{/* Replies */}
-							{msg.replyContent?.length > 0 &&
-								msg.replyContent.map((reply, replyIdx) => (
-									<div key={replyIdx} className='message-wrapper admin'>
-										<div className='message-info'>
-											<span>
-												<strong>{reply.repliedBy || "Support Team"}</strong>
-											</span>
-											<small className='message-timestamp'>
-												{formatDate(reply.createdAt)}
-											</small>
-										</div>
-										<p className='message-content'>{reply.content}</p>
-										{reply.files?.map((file, fileIdx) => (
-											<div key={fileIdx} className='message-file'>
-												{file.fileType?.startsWith("image/") ? (
-													<img
-														src={file.fileUrl}
-														alt={file.fileName}
-														className='message-image'
-													/>
-												) : (
-													<a
-														href={file.fileUrl}
-														target='_blank'
-														rel='noopener noreferrer'
-														className='file-link'>
-														{file.fileName}
-													</a>
-												)}
+							<div className='replies-container'>
+								{msg.replyContent?.length > 0 &&
+									msg.replyContent.map((reply, replyIdx) => (
+										<div key={replyIdx} className='reply-item'>
+											<div className='reply-info'>
+												<span>
+													<strong>{reply.repliedBy || "Support Team"}</strong>
+												</span>
+												<small className='message-timestamp'>
+													{formatDate(reply.createdAt)}
+												</small>
 											</div>
-										))}
-									</div>
-								))}
+											<p className='message-content'>{reply.content}</p>
+											{reply.files?.map((file, fileIdx) => (
+												<div key={fileIdx} className='message-file'>
+													{file.fileType?.startsWith("image/") ? (
+														<img
+															src={file.fileUrl}
+															alt={file.fileName}
+															className='message-image'
+														/>
+													) : (
+														<a
+															href={file.fileUrl}
+															target='_blank'
+															rel='noopener noreferrer'
+															className='file-link'>
+															{file.fileName}
+														</a>
+													)}
+												</div>
+											))}
+										</div>
+									))}
+							</div>
 						</li>
 					))}
 				</ul>

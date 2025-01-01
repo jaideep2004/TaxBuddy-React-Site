@@ -1,5 +1,8 @@
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+require("dotenv").config(); // Add this at the top of your file
+
 const User = require("../models/userModel");
 const Service = require("../models/serviceModel");
 const Message = require("../models/messageModel");
@@ -8,6 +11,30 @@ const hashPassword = (password, salt) => {
 	const hash = crypto.createHmac("sha256", salt);
 	hash.update(password);
 	return hash.digest("hex");
+};
+
+// Email transport configuration
+const transporter = nodemailer.createTransport({
+	service: "gmail", // Use your email service provider
+	auth: {
+		user: process.env.EMAIL_USER, // Your email address
+		pass: process.env.EMAIL_PASS, // Your email app-specific password
+	},
+});
+
+// Function to send emails
+const sendEmail = async (to, subject, text) => {
+	try {
+		await transporter.sendMail({
+			from: process.env.EMAIL_USER,
+			to,
+			subject,
+			text,
+		});
+		console.log(`Email sent to ${to}`);
+	} catch (error) {
+		console.error(`Failed to send email to ${to}:`, error);
+	}
 };
 
 // Admin login
@@ -96,42 +123,41 @@ const getAllServices = async (req, res) => {
 
 // Get dashboard data
 
-
 const getDashboardData = async (req, res) => {
-    try {
-        // Fetch users with populated services
-        const users = await User.find({}).populate({
-            path: 'services.serviceId',
-            select: 'name description status'
-        });
+	try {
+		// Fetch users with populated services
+		const users = await User.find({}).populate({
+			path: "services.serviceId",
+			select: "name description status",
+		});
 
-        // Fetch all services
-        const services = await Service.find({});
+		// Fetch all services
+		const services = await Service.find({});
 
-        // Fetch all messages with populated references
-        const messages = await Message.find({})
-            .populate('sender', 'name email')
-            .populate('recipient', 'name email')
-            .populate('service', 'name description');
+		// Fetch all messages with populated references
+		const messages = await Message.find({})
+			.populate("sender", "name email")
+			.populate("recipient", "name email")
+			.populate("service", "name description");
 
-        // Combine data into response
-        const dashboardData = {
-            users: users.map(user => ({
-                ...user.toObject(),
-                services: user.services.map(service => ({
-                    ...service,
-                    name: service.serviceId ? service.serviceId.name : 'Unknown Service'
-                }))
-            })),
-            services,
-            messages
-        };
+		// Combine data into response
+		const dashboardData = {
+			users: users.map((user) => ({
+				...user.toObject(),
+				services: user.services.map((service) => ({
+					...service,
+					name: service.serviceId ? service.serviceId.name : "Unknown Service",
+				})),
+			})),
+			services,
+			messages,
+		};
 
-        res.json(dashboardData);
-    } catch (err) {
-        console.error("Error fetching dashboard data:", err);
-        res.status(500).json({ message: "Error fetching dashboard data" });
-    }
+		res.json(dashboardData);
+	} catch (err) {
+		console.error("Error fetching dashboard data:", err);
+		res.status(500).json({ message: "Error fetching dashboard data" });
+	}
 };
 
 // Create new service
@@ -199,59 +225,28 @@ const deleteUser = async (req, res) => {
 	}
 };
 
-// Create a new employee
 const createEmployee = async (req, res) => {
 	const { name, email, role, serviceId, username, password } = req.body;
 
-	console.log("Received request to create employee with data:", req.body);
-
 	try {
-		// Validate required fields
 		if (!name || !email || !role || !username || !password) {
-			console.log("Validation failed: Missing required fields.");
 			return res.status(400).json({ message: "All fields are required" });
 		}
 
-		// Validate role
-		if (!["employee", "admin"].includes(role)) {
-			console.log(`Validation failed: Invalid role "${role}"`);
-			return res.status(400).json({ message: "Invalid role" });
+		if (role !== "employee") {
+			return res.status(400).json({ message: "Role must be 'employee'" });
 		}
 
-		// Ensure serviceId is valid for employees
-		if (role === "employee") {
-			console.log("Role is employee; validating serviceId...");
-			if (!serviceId) {
-				console.log("Validation failed: Missing serviceId for employee role.");
-				return res
-					.status(400)
-					.json({ message: "Service ID is required for employees" });
-			}
-
-			const service = await Service.findById(serviceId);
-			if (!service) {
-				console.log(`Validation failed: Invalid serviceId "${serviceId}"`);
-				return res.status(400).json({ message: "Invalid Service ID" });
-			}
-		}
-
-		// Check if the email is already in use
-		console.log(`Checking if email "${email}" already exists...`);
 		const existingUser = await User.findOne({ email });
 		if (existingUser) {
-			console.log(`Validation failed: Email "${email}" already exists.`);
 			return res
 				.status(400)
 				.json({ message: "User already exists with this email" });
 		}
 
-		// Hash the password
-		console.log("Hashing the password...");
 		const salt = crypto.randomBytes(16).toString("hex");
 		const hashedPassword = hashPassword(password, salt);
 
-		// Create the employee
-		console.log("Creating new employee...");
 		const newEmployee = new User({
 			name,
 			email,
@@ -263,7 +258,12 @@ const createEmployee = async (req, res) => {
 		});
 
 		await newEmployee.save();
-		console.log("New employee created successfully:", newEmployee);
+
+		await sendEmail(
+			email,
+			"Welcome to the Team",
+			`Hello ${name},\n\nYour account has been created as an employee. Please log in with your credentials.\n\nUsername: ${username}\nPassword: ${password}`
+		);
 
 		res.status(201).json({ employee: newEmployee });
 	} catch (err) {
@@ -272,48 +272,149 @@ const createEmployee = async (req, res) => {
 	}
 };
 
+// Assign a customer to an employee
 const assignCustomerToEmployee = async (req, res) => {
-	const { customerId, employeeId } = req.body;
+	const { employeeId, customerId } = req.body;
 
 	try {
-		// Validate the employee
 		const employee = await User.findById(employeeId);
 		if (!employee || employee.role !== "employee") {
-			return res.status(400).json({ message: "Invalid employee" }); 
+			return res.status(400).json({ message: "Invalid employee" });
 		}
 
-		// Validate the customer
 		const customer = await User.findById(customerId);
 		if (!customer || customer.role !== "customer") {
 			return res.status(400).json({ message: "Invalid customer" });
 		}
 
-		// Assign the customer to the employee
 		customer.assignedEmployeeId = employeeId;
-
-		// Update the services array to include the employeeId for all active services
 		customer.services = customer.services.map((service) => {
 			if (service.activated) {
-				service.employeeId = employeeId; // Assign the employee
+				service.employeeId = employeeId;
 			}
 			return service;
 		});
 
 		await customer.save();
 
-		// Add the customer to the employee's assignedCustomers array
 		if (!employee.assignedCustomers.includes(customerId)) {
 			employee.assignedCustomers.push(customerId);
 			await employee.save();
 		}
+
+		await sendEmail(
+			employee.email,
+			"New Customer Assigned",
+			`Hello ${employee.name},\n\nA new customer has been assigned to you.\n\nCustomer ID: ${customerId}\nCustomer Name: ${customer.name}`
+		);
+
+		await sendEmail(
+			customer.email,
+			"Employee Assigned",
+			`Hello ${customer.name},\n\nAn employee has been assigned to assist you.\n\nEmployee Name: ${employee.name}\nEmployee Email: ${employee.email}`
+		);
 
 		res.json({
 			message: "Customer assigned to employee successfully",
 			customer,
 		});
 	} catch (err) {
-		console.error(err);
+		console.error("Error assigning customer to employee:", err);
 		res.status(500).json({ message: "Error assigning customer to employee" });
+	}
+};
+
+// Create a new manager
+const createManager = async (req, res) => {
+	const { name, email, role, serviceId, username, password } = req.body;
+
+	try {
+		if (!name || !email || !role || !username || !password) {
+			return res.status(400).json({ message: "All fields are required" });
+		}
+
+		if (role !== "manager") {
+			return res.status(400).json({ message: "Role must be 'manager'" });
+		}
+
+		const existingUser = await User.findOne({ email });
+		if (existingUser) {
+			return res
+				.status(400)
+				.json({ message: "User already exists with this email" });
+		}
+
+		const salt = crypto.randomBytes(16).toString("hex");
+		const hashedPassword = hashPassword(password, salt);
+
+		const newManager = new User({
+			name,
+			email,
+			role,
+			serviceId,
+			username,
+			passwordHash: hashedPassword,
+			salt,
+		});
+
+		await newManager.save();
+
+		await sendEmail(
+			email,
+			"Welcome to the Team",
+			`Hello ${name},\n\nYour account has been created as a manager. Please log in with your credentials.\n\nUsername: ${username}\nPassword: ${password}`
+		);
+
+		res.status(201).json({ manager: newManager });
+	} catch (err) {
+		console.error("Error creating manager:", err);
+		res.status(500).json({ message: "Error creating manager" });
+	}
+};
+
+// Assign an employee to a manager
+const assignEmployeeToManager = async (req, res) => {
+	const { managerId, employeeId } = req.body;
+
+	try {
+		const manager = await User.findById(managerId);
+		if (!manager || manager.role !== "manager") {
+			return res.status(400).json({ message: "Invalid manager" });
+		}
+
+		const employee = await User.findById(employeeId);
+		if (!employee || employee.role !== "employee") {
+			return res.status(400).json({ message: "Invalid employee" });
+		}
+
+		employee.assignedManagerId = managerId;
+		await employee.save();
+
+		if (!manager.assignedEmployees.includes(employeeId)) {
+			manager.assignedEmployees.push(employeeId);
+			await manager.save();
+		}
+
+		await sendEmail(
+			manager.email,
+			"New Employee Assigned",
+			`Hello ${manager.name},\n\nA new employee has been assigned to you.\n\nEmployee Name: ${employee.name}\nEmployee Email: ${employee.email}`
+		);
+
+		await sendEmail(
+			employee.email,
+			"Manager Assigned",
+			`Hello ${employee.name},\n\nYou have been assigned a manager.\n\nManager Name: ${manager.name}\nManager Email: ${manager.email}`
+		);
+
+		res.json({
+			message: "Employee assigned to manager successfully",
+			manager,
+			employee,
+		});
+	} catch (err) {
+		console.error("Error assigning employee to manager:", err);
+		res.status(500).json({ message: "Error assigning employee to manager" });
 	}
 };
 
@@ -438,79 +539,6 @@ const deleteService = async (req, res) => {
 	}
 };
 
-const createManager = async (req, res) => {
-	const { name, email, username, password } = req.body;
-
-	try {
-		// Check if the email is already in use
-		const existingUser = await User.findOne({ email });
-		if (existingUser) {
-			return res
-				.status(400)
-				.json({ message: "User already exists with this email" });
-		}
-
-		// Hash the password
-		const salt = crypto.randomBytes(16).toString("hex");
-		const hashedPassword = hashPassword(password, salt);
-
-		// Create the manager
-		const newManager = new User({
-			name,
-			email,
-			username,
-			passwordHash: hashedPassword,
-			salt,
-			role: "manager",
-		});
-
-		await newManager.save();
-		res.status(201).json({ manager: newManager });
-	} catch (err) {
-		console.error("Error creating manager:", err);
-		res.status(500).json({ message: "Error creating manager" });
-	}
-};
-
-const assignEmployeeToManager = async (req, res) => {
-	const { managerId, employeeId } = req.body;
-
-	try {
-		// Validate the manager
-		const manager = await User.findById(managerId);
-		if (!manager || manager.role !== "manager") {
-			return res.status(400).json({ message: "Invalid manager" });
-		}
-
-		// Validate the employee
-		const employee = await User.findById(employeeId);
-		if (!employee || employee.role !== "employee") {
-			return res.status(400).json({ message: "Invalid employee" });
-		}
-
-		// Assign the employee to the manager
-		employee.assignedManagerId = managerId;
-		await employee.save();
-
-		// Add the employee to the manager's list of assigned employees
-		if (!manager.assignedEmployees.includes(employeeId)) {
-			manager.assignedEmployees.push(employeeId);
-			await manager.save();
-		}
-
-		res.json({
-			message: "Employee assigned to manager successfully",
-			manager,
-			employee,
-		});
-	} catch (err) {
-		console.error("Error assigning employee to manager:", err);
-		res.status(500).json({ message: "Error assigning employee to manager" });
-	}
-};
-
-
-
 module.exports = {
 	adminLogin,
 	getAllUsers,
@@ -527,5 +555,4 @@ module.exports = {
 	deleteService,
 	createManager,
 	assignEmployeeToManager,
-	
 };

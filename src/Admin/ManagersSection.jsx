@@ -117,23 +117,6 @@ const ManagersSection = () => {
 
 	return (
 		<div className='tax-dashboard-employee'>
-			{/* <div className='filter-div'>
-				<select
-					value={filterCriteria}
-					onChange={(e) => setFilterCriteria(e.target.value)}>
-					<option value='name'>Filter by Name</option>
-					<option value='email'>Filter by Email</option>
-				</select>
-
-				<input
-					type='text'
-					placeholder={`Search by ${
-						filterCriteria.charAt(0).toUpperCase() + filterCriteria.slice(1)
-					}`}
-					value={searchTerm}
-					onChange={(e) => setSearchTerm(e.target.value)}
-				/>
-			</div> */}
 			<div className='filter-div'>
 				<input
 					type='text'
@@ -186,19 +169,18 @@ const ManagersSection = () => {
 						<tr key={manager._id}>
 							<td>{manager._id}</td>
 							<td>
-                {manager.createdAt
-                  ? formatDate(manager.createdAt) // Using formatDate function here
-                  : "Not available"}
-              </td>
+								{manager.createdAt
+									? formatDate(manager.createdAt) // Using formatDate function here
+									: "Not available"}
+							</td>
 
 							<td>{manager.name}</td>
 							<td>{manager.email}</td>
 							<td>
-								{/* Find the assigned service name */}
-								{manager.serviceId
+								{manager.serviceId && services && services.length > 0
 									? services.find(
 											(service) => service._id === manager.serviceId
-									  )?.name
+									  )?.name || "No service assigned"
 									: "No service assigned"}
 							</td>
 							<td>
@@ -267,17 +249,6 @@ const ManagersSection = () => {
 							setNewManager({ ...newManager, email: e.target.value })
 						}
 					/>
-					<select
-						value={newManager.role}
-						onChange={(e) =>
-							setNewManager({ ...newManager, role: e.target.value })
-						}>
-						<option value=''>Select Role</option>
-						<option value='manager'>Manager</option>
-						<option value='admin'>Admin</option>
-						<option value='employee'>Employee</option>
-						<option value='customer'>Customer</option>
-					</select>
 
 					<select
 						value={newManager.serviceId}
@@ -315,7 +286,7 @@ const ManagersSection = () => {
 			)}
 
 			{showAssignEmployeeForm && (
-				<div className='modal'>
+				<div className='smodal'>
 					<input
 						type='text'
 						placeholder='Employee ID'
